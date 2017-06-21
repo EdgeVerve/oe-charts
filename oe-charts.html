@@ -34,18 +34,30 @@
                     }
                 },
                 data: {
-                    type: Array
+                    type: Array,
+                    value: function () {
+                        return [];
+                    }
                 },
                 /*  when category changes, a function from utility will get invoked. */
                 category: {
-                    type: String
+                    type: String,
+                    value: function () {
+                        return "";
+                    }
                 },
                 series: {
-                    type: Array
+                    type: Array,
+                    value: function () {
+                        return [];
+                    }
                 },
                 /*  when data url changes, a function from utility will get invoked. */
                 dataUrl: {
-                    type: String
+                    type: String,
+                    value: function () {
+                        return "";
+                    }
                 }
             },
             observers: ['parameterChanged(series.*,data.*,category,dataUrl,chartType)'],
