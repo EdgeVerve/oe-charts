@@ -27,11 +27,10 @@
             },
             /*  when data url changes, a function from utility will get invoked. */
             dataUrl: {
-                type: String,
-                observer: 'dataUrlChanged'
+                type: String
             }
         },
-        observers: ['parameterChanged(series.*,category)'],
+        observers: ['parameterChanged(series.*,category,dataUrl)'],
         attached: function () {
             this.init();
             this.aggregateFunctions = {
@@ -86,10 +85,15 @@
             }.bind(this));
         },
         parameterChanged: function () {
-            this.checkAndRender(this.data, this.category, this.series);
+            if (this.dataUrl) {
+                this.dataUrlChanged(this.dataUrl);
+            }
+            else {
+                this.checkAndRender(this.data, this.category, this.series);
+            }
         },
         restructureData: function (data, category, series) {
-            if (!category || !series)
+            if (!category || !series || series.length === 0)
                 return;
             var groups = _.groupBy(data, category);
             var categoryData = Object.keys(groups).map(function (d) {
