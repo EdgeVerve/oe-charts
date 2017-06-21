@@ -1,0 +1,24 @@
+{
+  "name": "oe-charts",
+  "authors": [
+    "Sourav <sourav_kumar09@edgeverve.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "3.5.5",
+    "lodash": "^4.17.4",
+    "jquery": "^3.2.1",
+    "polymer": "Polymer/polymer#^1.1.0",
+    "oe-ajax": "*"
+  }
+}

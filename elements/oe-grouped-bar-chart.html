@@ -1,0 +1,28 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../behaviors/utility-behaviors.html">
+<link rel="stylesheet" type="text/css" href="../dist/xCharts.css">
+<link rel="stylesheet" type="text/css" href="../dist/tipsy.css" />
+<dom-module id="oe-grouped-bar-chart">
+    <template>
+        <style>
+
+        </style>
+        <div id="chartContainer">
+
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: "oe-grouped-bar-chart",
+            behaviors: [Chart.UtilityBehavior],
+            properties: {
+                chartType: {
+                    type: String,
+                    value: function () {
+                        return "groupedBar";
+                    }
+                }
+            }
+        })
+    </script>
+</dom-module>

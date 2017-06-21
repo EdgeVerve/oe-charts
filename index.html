@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF8">
+    <link rel="stylesheet" type="text/css" href="dist/xCharts.css">
+    <link rel="stylesheet" type="text/css" href="dist/tipsy.css" />
+    <style>
+        .tipsy {
+            opacity: 1 !important;
+        }
+
+        .tipsy-inner {
+            background-color: #FFF !important;
+            color: #000 !important;
+            max-width: 150px !important;
+            text-align: center !important;
+            padding: 0;
+            border-radius: 10px;
+        }
+
+        .tipsy-arrow {
+            display: none !important;
+        }
+
+        oe-chart {
+            width: 300px;
+            height: 300px;
+        }
+
+        #container>* {
+            margin: 50px;
+        }
+
+        #container {
+            /*display: flex;
+            flex-wrap: wrap;*/
+        }
+    </style>
+    <script type="text/javascript" src="bower_components/d3/d3.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="dist/jquery.tipsy.js"></script>
+
+    <script type="text/javascript" src="dataFile.js"></script>
+    <link href="elements/oe-area-chart.html" rel="import">
+    <link href="elements/oe-donut-chart.html" rel="import">
+    <link href="elements/oe-grouped-bar-chart.html" rel="import">
+    <link href="elements/oe-grouped-column-chart.html" rel="import">
+    <link href="elements/oe-line-chart.html" rel="import">
+    <link href="elements/oe-pie-chart.html" rel="import">
+    <link href="elements/oe-stacked-bar-chart.html" rel="import">
+    <link href="elements/oe-stacked-column-chart.html" rel="import">
+    <link href="oe-charts.html" rel="import">
+
+</head>
+
+<body>
+    <template is="dom-bind" id="mainContainer">
+        <div id="container">
+            <oe-chart chart-type="groupedColumn"></oe-chart>
+            <oe-chart chart-type="groupedBar"></oe-chart>
+            <oe-chart chart-type="stackedColumn"></oe-chart>
+            <oe-chart chart-type="stackedBar"></oe-chart>
+            <oe-chart chart-type="pie"></oe-chart>
+            <oe-chart chart-type="donut"></oe-chart>
+            <oe-chart chart-type="line"></oe-chart>
+            <oe-chart chart-type="area"></oe-chart>
+        </div>
+    </template>
+    <script>
+        function getRandomData(num) {
+            return Math.random() * num;
+        }
+
+        var sampledata = [{
+            country: "USA",
+            state: 'california',
+            population: getRandomData(1000000),
+            area: getRandomData(1000000)
+        }, {
+            country: "USA",
+            state: 'florida',
+            population: getRandomData(1000000),
+            area: getRandomData(1000000)
+        }, {
+            country: "USA",
+            state: 'alaska',
+            population: getRandomData(1000000),
+            area: getRandomData(1000000)
+        }, {
+            country: "USA",
+            state: 'texas',
+            population: getRandomData(1000000),
+            area: getRandomData(1000000)
+        }, {
+            country: 'india',
+            state: 'mumbai',
+            population: getRandomData(1000000),
+            area: getRandomData(1000000)
+        }, {
+            country: 'india',
+            state: 'delhi',
+            population: getRandomData(1000000),
+            area: getRandomData(1000000)
+        }, {
+            country: 'india',
+            state: 'karnatka',
+            population: getRandomData(1000000),
+            area: getRandomData(1000000)
+        }, {
+            country: 'india',
+            state: 'punjab',
+            population: getRandomData(1000000),
+            area: getRandomData(1000000)
+        }, {
+            country: 'China',
+            state: 'hainan',
+            population: getRandomData(1000000),
+            area: getRandomData(1000000)
+        }, {
+            country: 'China',
+            state: 'yunnan',
+            population: getRandomData(1000000),
+            area: getRandomData(1000000)
+        }, {
+            country: 'China',
+            state: 'fujian',
+            population: getRandomData(1000000),
+            area: getRandomData(1000000)
+        }, {
+            country: 'China',
+            state: 'shandong',
+            population: getRandomData(1000000),
+            area: getRandomData(1000000)
+        }, {
+            country: 'China',
+            state: 'jilin',
+            population: getRandomData(1000000),
+            area: getRandomData(1000000)
+        }];
+
+
+        document.body.onload = function () {
+            var app = document.getElementById('mainContainer');
+            app.sampleData = sampledata;
+            var charts = app.content.querySelectorAll("oe-chart");
+            [].forEach.call(charts, function (chart) {
+                // chart.setAttribute('category', 'country');
+                // chart.setAttribute('series', JSON.stringify([{
+                //     "property": "population",
+                //     "aggregation": "sum",
+                //     "color": "red"
+                // }, {
+                //     "property": "area",
+                //     "aggregation": "sum",
+                //     "color": "green"
+                // }]));
+                // chart.setAttribute('data', JSON.stringify(sampledata));
+
+                chart.setAttribute('category', 'name');
+                chart.setAttribute('series', JSON.stringify([{
+                    "property": "age",
+                    "color": "rgb(94, 247, 233)"
+                }]));
+                chart.setAttribute('data-url', "http://localhost:3000/api/aaaaas");
+            });
+        };
+    </script>
+    </select>
+</body>
+
+</html>

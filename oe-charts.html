@@ -1,0 +1,93 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="behaviors/utility-behaviors.html">
+<link rel="import" href="elements/oe-area-chart.html">
+<link rel="import" href="elements/oe-donut-chart.html">
+<link rel="import" href="elements/oe-grouped-bar-chart.html">
+<link rel="import" href="elements/oe-grouped-column-chart.html">
+<link rel="import" href="elements/oe-line-chart.html">
+<link rel="import" href="elements/oe-pie-chart.html">
+<link rel="import" href="elements/oe-stacked-bar-chart.html">
+<link rel="import" href="elements/oe-stacked-column-chart.html">
+<link rel="stylesheet" type="text/css" href="dist/xCharts.css">
+<link rel="stylesheet" type="text/css" href="dist/tipsy.css" />
+<dom-module id="oe-charts">
+    <template>
+        <style>
+
+        </style>
+        <div>
+            <template is="dom-if" restamp if="[[_compare(chartType,'groupedBar')]]">
+                <oe-grouped-bar-chart category="[[category]]" data-url="[[dataUrl]]" series="[[series]]" data="[[data]]"></oe-grouped-bar-chart>
+            </template>
+            <template is="dom-if" restamp if="[[_compare(chartType,'groupedColumn')]]">
+                <oe-grouped-column-chart category="[[category]]" data-url="[[dataUrl]]" series="[[series]]" data="[[data]]"></oe-grouped-column-chart>
+            </template>
+            <template is="dom-if" restamp if="[[_compare(chartType,'area')]]">
+                <oe-area-chart category="[[category]]" data-url="[[dataUrl]]" series="[[series]]" data="[[data]]"></oe-area-chart>
+            </template>
+            <template is="dom-if" restamp if="[[_compare(chartType,'line')]]">
+                <oe-line-chart category="[[category]]" data-url="[[dataUrl]]" series="[[series]]" data="[[data]]"></oe-line-chart>
+            </template>
+            <template is="dom-if" restamp if="[[_compare(chartType,'pie')]]">
+                <oe-pie-chart category="[[category]]" data-url="[[dataUrl]]" series="[[series]]" data="[[data]]"></oe-pie-chart>
+            </template>
+            <template is="dom-if" restamp if="[[_compare(chartType,'donut')]]">
+                <oe-donut-chart category="[[category]]" data-url="[[dataUrl]]" series="[[series]]" data="[[data]]"></oe-donut-chart>
+            </template>
+            <template is="dom-if" restamp if="[[_compare(chartType,'stackedBar')]]">
+                <oe-stacked-bar-chart category="[[category]]" data-url="[[dataUrl]]" series="[[series]]" data="[[data]]"></oe-stacked-bar-chart>
+            </template>
+            <template is="dom-if" restamp if="[[_compare(chartType,'stackedColumn')]]">
+                <oe-stacked-column-chart category="[[category]]" data-url="[[dataUrl]]" series="[[series]]" data="[[data]]"></oe-stacked-column-chart>
+            </template>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: "oe-charts",
+            properties: {
+                data: {
+                    type: Array,
+                    value: function () {
+                        return [];
+                    }
+                },
+                renderContainerId: {
+                    type: String,
+                    value: function () {
+                        return "chartContainer";
+                    }
+                },
+                category: {
+                    type: String,
+                    value: function () {
+                        return "";
+                    }
+                },
+                series: {
+                    type: Array,
+                    value: function () {
+                        return [];
+                    }
+                },
+                /*  when data url changes, a function from utility will get invoked. */
+                dataUrl: {
+                    type: String,
+                    value: function () {
+                        return "";
+                    }
+                },
+                chartType: {
+                    type: String,
+                    value: function () {
+                        // default chart type is grouped column
+                        return "groupedColumn"
+                    }
+                }
+            },
+            _compare: function (a, b) {
+                return a.toLowerCase() === b.toLowerCase();
+            }
+        })
+    </script>
+</dom-module>

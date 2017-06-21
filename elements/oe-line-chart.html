@@ -1,0 +1,29 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../behaviors/utility-behaviors.html">
+<script src="../dist/xCharts.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="../dist/xCharts.css">
+<link rel="stylesheet" type="text/css" href="../dist/tipsy.css" />
+<dom-module id="oe-line-chart">
+    <template>
+        <style>
+
+        </style>
+        <div id="chartContainer">
+
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: "oe-line-chart",
+            behaviors: [Chart.UtilityBehavior],
+            properties: {
+                chartType: {
+                    type: String,
+                    value: function () {
+                        return "line";
+                    }
+                }
+            }
+        })
+    </script>
+</dom-module>
