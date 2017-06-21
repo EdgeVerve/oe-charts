@@ -146,24 +146,24 @@
             app.sampleData = sampledata;
             var charts = app.content.querySelectorAll("oe-charts");
             [].forEach.call(charts, function (chart) {
-                // chart.setAttribute('category', 'country');
-                // chart.setAttribute('series', JSON.stringify([{
-                //     "property": "population",
-                //     "aggregation": "sum",
-                //     "color": "red"
-                // }, {
-                //     "property": "area",
-                //     "aggregation": "sum",
-                //     "color": "green"
-                // }]));
-                // chart.setAttribute('data', JSON.stringify(sampledata));
-
-                chart.setAttribute('category', 'name');
+                chart.setAttribute('category', 'country');
                 chart.setAttribute('series', JSON.stringify([{
-                    "property": "age",
-                    "color": "rgb(94, 101, 233)"
+                    "property": "population",
+                    "aggregation": "sum",
+                    "color": "red"
+                }, {
+                    "property": "area",
+                    "aggregation": "sum",
+                    "color": "green"
                 }]));
-                chart.setAttribute('data-url', "http://localhost:3000/api/aaaaas");
+                chart.setAttribute('data', JSON.stringify(sampledata));
+
+                // chart.setAttribute('category', 'name');
+                // chart.setAttribute('series', JSON.stringify([{
+                //     "property": "age",
+                //     "color": "rgb(94, 101, 233)"
+                // }]));
+                // chart.setAttribute('data-url', "http://localhost:3000/api/aaaaas");
             });
         };
     </script>
