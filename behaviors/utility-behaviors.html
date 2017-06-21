@@ -20,8 +20,7 @@
             },
             /*  when category changes, a function from utility will get invoked. */
             category: {
-                type: String,
-                observer: 'categoryChanged'
+                type: String
             },
             series: {
                 type: Array
@@ -32,6 +31,7 @@
                 observer: 'dataUrlChanged'
             }
         },
+        observers: ['parameterChanged(series.*,category)'],
         attached: function () {
             this.init();
             this.aggregateFunctions = {
@@ -53,13 +53,14 @@
             this.checkAndRender(this.data);
         },
         checkAndRender: function (data) {
-            if (data) {
-                if (this.ifStructuredData(data))
-                    this.render(data);
-                else {
-                    this.render(this.restructureData(data, this.category, this.series));
-                }
+            if (Array.isArray(data) && data.length === 0)
+                return;
+            if (this.ifStructuredData(data))
+                this.render(data);
+            else {
+                this.render(this.restructureData(data, this.category, this.series));
             }
+
         },
         render: function (data) {
             if (!this.ifStructuredData(data))
@@ -84,7 +85,7 @@
                     this.checkAndRender(resp);
             }.bind(this));
         },
-        categoryChanged: function () {
+        parameterChanged: function () {
             this.checkAndRender(this.data, this.category, this.series);
         },
         restructureData: function (data, category, series) {
