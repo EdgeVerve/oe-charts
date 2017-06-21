@@ -30,7 +30,7 @@
                 type: String
             }
         },
-        observers: ['parameterChanged(series.*,category,dataUrl)'],
+        observers: ['parameterChanged(series.*,data.*,category,dataUrl)'],
         attached: function () {
             this.init();
             this.aggregateFunctions = {
