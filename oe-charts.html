@@ -1,55 +1,30 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="behaviors/utility-behaviors.html">
-<link rel="import" href="elements/oe-area-chart.html">
-<link rel="import" href="elements/oe-donut-chart.html">
-<link rel="import" href="elements/oe-grouped-bar-chart.html">
-<link rel="import" href="elements/oe-grouped-column-chart.html">
-<link rel="import" href="elements/oe-line-chart.html">
-<link rel="import" href="elements/oe-pie-chart.html">
-<link rel="import" href="elements/oe-stacked-bar-chart.html">
-<link rel="import" href="elements/oe-stacked-column-chart.html">
+<link rel="import" href="../oe-ajax/oe-ajax.html">
+
 <link rel="stylesheet" type="text/css" href="dist/xCharts.css">
 <link rel="stylesheet" type="text/css" href="dist/tipsy.css" />
+
+<script type="text/javascript" src="../lodash/lodash.js"></script>
+<script type="text/javascript" src="../d3/d3.min.js"></script>
+<script type="text/javascript" src="../jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="dist/jquery.tipsy.js"></script>
+<script type="text/javascript" src="dist/xCharts.min.js"></script>
+
 <dom-module id="oe-charts">
     <template>
-        <style>
+        <div id="chartContainer">
 
-        </style>
-        <div>
-            <template is="dom-if" restamp if="[[_compare(chartType,'groupedBar')]]">
-                <oe-grouped-bar-chart category="[[category]]" data-url="[[dataUrl]]" series="[[series]]" data="[[data]]"></oe-grouped-bar-chart>
-            </template>
-            <template is="dom-if" restamp if="[[_compare(chartType,'groupedColumn')]]">
-                <oe-grouped-column-chart category="[[category]]" data-url="[[dataUrl]]" series="[[series]]" data="[[data]]"></oe-grouped-column-chart>
-            </template>
-            <template is="dom-if" restamp if="[[_compare(chartType,'area')]]">
-                <oe-area-chart category="[[category]]" data-url="[[dataUrl]]" series="[[series]]" data="[[data]]"></oe-area-chart>
-            </template>
-            <template is="dom-if" restamp if="[[_compare(chartType,'line')]]">
-                <oe-line-chart category="[[category]]" data-url="[[dataUrl]]" series="[[series]]" data="[[data]]"></oe-line-chart>
-            </template>
-            <template is="dom-if" restamp if="[[_compare(chartType,'pie')]]">
-                <oe-pie-chart category="[[category]]" data-url="[[dataUrl]]" series="[[series]]" data="[[data]]"></oe-pie-chart>
-            </template>
-            <template is="dom-if" restamp if="[[_compare(chartType,'donut')]]">
-                <oe-donut-chart category="[[category]]" data-url="[[dataUrl]]" series="[[series]]" data="[[data]]"></oe-donut-chart>
-            </template>
-            <template is="dom-if" restamp if="[[_compare(chartType,'stackedBar')]]">
-                <oe-stacked-bar-chart category="[[category]]" data-url="[[dataUrl]]" series="[[series]]" data="[[data]]"></oe-stacked-bar-chart>
-            </template>
-            <template is="dom-if" restamp if="[[_compare(chartType,'stackedColumn')]]">
-                <oe-stacked-column-chart category="[[category]]" data-url="[[dataUrl]]" series="[[series]]" data="[[data]]"></oe-stacked-column-chart>
-            </template>
         </div>
     </template>
     <script>
         Polymer({
             is: "oe-charts",
             properties: {
-                data: {
-                    type: Array,
+                chartType: {
+                    type: String,
                     value: function () {
-                        return [];
+                        // default chart type is grouped column
+                        return "groupedColumn"
                     }
                 },
                 renderContainerId: {
@@ -58,33 +33,176 @@
                         return "chartContainer";
                     }
                 },
+                data: {
+                    type: Array
+                },
+                /*  when category changes, a function from utility will get invoked. */
                 category: {
-                    type: String,
-                    value: function () {
-                        return "";
-                    }
+                    type: String
                 },
                 series: {
-                    type: Array,
-                    value: function () {
-                        return [];
-                    }
+                    type: Array
                 },
                 /*  when data url changes, a function from utility will get invoked. */
                 dataUrl: {
                     type: String
-                },
-                chartType: {
-                    type: String,
-                    value: function () {
-                        // default chart type is grouped column
-                        return "groupedColumn"
-                    }
                 }
             },
-            _compare: function (a, b) {
-                return a.toLowerCase() === b.toLowerCase();
+            observers: ['parameterChanged(series.*,data.*,category,dataUrl,chartType)'],
+            attached: function () {
+                this.init();
+                this.aggregateFunctions = {
+                    'sum': function (data) {
+                        return data.reduce(function (a, b) {
+                            return a + b;
+                        });
+                    },
+                    'average': function (data) {
+                        var sum = data.reduce(function (a, b) {
+                            return a + b;
+                        });
+                        return sum / data.length;
+                    },
+                    'count': function (data) {
+                        return data.length;
+                    }
+                }
+                this.chartTypes = {
+                    'area': 'area',
+                    'line': 'line',
+                    'pie': 'pie',
+                    'donut': 'donut',
+                    'groupedcolumn': 'groupedColumn',
+                    'groupedbar': 'groupedBar',
+                    'stackedcolumn': 'stackedColumn',
+                    'stackedbar': 'stackedBar'
+                }
+                this.parameterChanged();
+            },
+            checkAndRender: function (data) {
+                if (Array.isArray(data) && data.length === 0)
+                    return;
+                if (this.ifStructuredData(data))
+                    this.render(data);
+                else {
+                    this.render(this.restructureData(data, this.category, this.series));
+                }
+
+            },
+            render: function (data) {
+                if (!this.ifStructuredData(data))
+                    return;
+                var chart = new xChart.chart(this.renderContainerId);
+                var container = this.querySelector('#' + this.renderContainerId);
+                if (container.offsetHeight < 300 || container.offsetWidth < 300)
+                    return;
+                chart.setOptions({
+                    chartClientId: 'chart_' + this.getGUID(),
+                    chartType: this.chartTypes[this.chartType.toLowerCase()],
+                    overlap: false
+                });
+                chart.render(data);
+            },
+            dataUrlChanged: function (dataUrl) {
+                if (!dataUrl)
+                    return;
+                console.log('fetching data from  - ' + dataUrl);
+                this.makeAjaxCall(dataUrl, 'get', null, null, null, function (err, resp) {
+                    if (resp)
+                        this.checkAndRender(resp);
+                }.bind(this));
+            },
+            parameterChanged: function () {
+                if (this.dataUrl) {
+                    this.dataUrlChanged(this.dataUrl);
+                }
+                else {
+                    this.checkAndRender(this.data, this.category, this.series);
+                }
+            },
+            restructureData: function (data, category, series) {
+                if (!data || !category || !series || series.length === 0)
+                    return;
+                var groups = _.groupBy(data, category);
+                var categoryData = Object.keys(groups).map(function (d) {
+                    return {
+                        "longName": d,
+                        "name": d,
+                        "value": d
+                    };
+                });
+                var seriesData = series.map(function (d) {
+                    d.aggregation = d.aggregation || 'sum';
+                    var aggFunc = this.aggregateFunctions[d.aggregation];
+                    return {
+                        "longName": d.longName || d.property,
+                        "name": d.name || d.property,
+                        "value": d.property,
+                        "data": this.getSeriesData(groups, d.property, aggFunc),
+                        "fmtData": [],
+                        "minValue": {},
+                        "maxValue": {},
+                        "axis": null,
+                        "color": d.color
+                    };
+                }.bind(this));
+                var formattedData = {
+                    categories: categoryData,
+                    series: seriesData
+                };
+                return formattedData;
+            },
+            getSeriesData: function (data, series, aggregation) {
+                return _.map(data, function (d) {
+                    return d.map(function (e) {
+                        return parseFloat(e[series]);
+                    });
+                }).map(function (k) {
+                    return aggregation(k);
+                });
+            },
+            ifStructuredData: function (data) {
+                if (typeof data === 'object') {
+                    if (data.categories && data.series && Array.isArray(data.categories) && Array.isArray(data.series))
+                        return true;
+                }
+                return false;
+            },
+            getGUID: function () {
+                var randoms = (window.crypto || window.msCrypto).getRandomValues(new Uint32Array(2)); // eslint-disable-line no-undef
+                return randoms[0].toString(36).substring(2, 15) +
+                    randoms[1].toString(36).substring(2, 15);
+            },
+            init: function () {
+                //setting random id to the chart container
+                var container = this.querySelector('#chartContainer');
+                var chartName = 'chart-' + this.getGUID();
+                container.setAttribute('id', chartName);
+                this.set('renderContainerId', chartName);
+                container.style.width = "700px";
+                container.style.height = "300px";
+            },
+            makeAjaxCall: function (url, method, body, filters, header, cb) {
+                var ajax = document.createElement('oe-ajax');
+                ajax.url = url;
+                ajax.method = method;
+                if (body) {
+                    ajax.body = JSON.stringify(body);
+                }
+                ajax.contentType = "application/json";
+                ajax.addEventListener('response', function (resp, err) {
+                    this.fire('end-spinner');
+                    cb(null, resp.detail.response);
+                }.bind(this));
+                ajax.addEventListener('error', function (err) {
+                    this.fire('end-spinner');
+                    cb(err, null);
+                }.bind(this));
+                this.fire('start-spinner', {
+                    url: ajax.url
+                });
+                ajax.generateRequest();
             }
-        })
+        });
     </script>
 </dom-module>
