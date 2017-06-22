@@ -11,210 +11,217 @@
 <script type="text/javascript" src="dist/xCharts.min.js"></script>
 
 <dom-module id="oe-charts">
-    <template>
-        <div id="chartContainer">
+	<template>
+		<div id="chartContainer" style$="height:[[chartHeight]]px;width:[[chartWidth]]px">
 
-        </div>
-    </template>
-    <script>
-        Polymer({
-            is: "oe-charts",
-            properties: {
-                chartType: {
-                    type: String,
-                    value: function () {
-                        // default chart type is grouped column
-                        return "groupedColumn"
-                    }
-                },
-                renderContainerId: {
-                    type: String,
-                    value: function () {
-                        return "chartContainer";
-                    }
-                },
-                data: {
-                    type: Array,
-                    value: function () {
-                        return [];
-                    }
-                },
-                /*  when category changes, a function from utility will get invoked. */
-                category: {
-                    type: String,
-                    value: function () {
-                        return "";
-                    }
-                },
-                series: {
-                    type: Array,
-                    value: function () {
-                        return [];
-                    }
-                },
-                /*  when data url changes, a function from utility will get invoked. */
-                dataUrl: {
-                    type: String,
-                    value: function () {
-                        return "";
-                    }
-                }
-            },
-            observers: ['parameterChanged(series.*,data.*,category,dataUrl,chartType)'],
-            attached: function () {
-                this.init();
-                this.aggregateFunctions = {
-                    'sum': function (data) {
-                        return data.reduce(function (a, b) {
-                            return a + b;
-                        });
-                    },
-                    'average': function (data) {
-                        var sum = data.reduce(function (a, b) {
-                            return a + b;
-                        });
-                        return sum / data.length;
-                    },
-                    'count': function (data) {
-                        return data.length;
-                    }
-                }
-                this.chartTypes = {
-                    'area': 'area',
-                    'line': 'line',
-                    'pie': 'pie',
-                    'donut': 'donut',
-                    'groupedcolumn': 'groupedColumn',
-                    'groupedbar': 'groupedBar',
-                    'stackedcolumn': 'stackedColumn',
-                    'stackedbar': 'stackedBar'
-                }
-                this.parameterChanged();
-            },
-            checkAndRender: function (data) {
-                if (Array.isArray(data) && data.length === 0)
-                    return;
-                if (this.ifStructuredData(data))
-                    this.render(data);
-                else {
-                    this.render(this.restructureData(data, this.category, this.series));
-                }
+		</div>
+	</template>
+	<script>
+		Polymer({
+			is: "oe-charts",
+			properties: {
+				chartType: {
+					type: String,
+					value: function() {
+						// default chart type is grouped column
+						return "groupedColumn"
+					}
+				},
+				renderContainerId: {
+					type: String,
+					value: function() {
+						return "chartContainer";
+					}
+				},
+				data: {
+					type: Array,
+					value: function() {
+						return [];
+					}
+				},
+				/*  when category changes, a function from utility will get invoked. */
+				category: {
+					type: String,
+					value: function() {
+						return "";
+					}
+				},
+				series: {
+					type: Array,
+					value: function() {
+						return [];
+					}
+				},
+				/*  when data url changes, a function from utility will get invoked. */
+				dataUrl: {
+					type: String,
+					value: function() {
+						return "";
+					},
+					observer: 'dataUrlChanged'
+				},
+				chartWidth: {
+					type: Number,
+					value: 300
+				},
+				chartHeight: {
+					type: Number,
+					value: 300
+				}
+			},
+			observers: ['parameterChanged(series.*,data.*,category,chartType,chartHeight,chartWidth)'],
+			attached: function() {
+				this.init();
+				this.aggregateFunctions = {
+					'sum': function(data) {
+						return data.reduce(function(a, b) {
+							return a + b;
+						});
+					},
+					'average': function(data) {
+						var sum = data.reduce(function(a, b) {
+							return a + b;
+						});
+						return sum / data.length;
+					},
+					'count': function(data) {
+						return data.length;
+					}
+				}
+				this.chartTypes = {
+					'area': 'area',
+					'line': 'line',
+					'pie': 'pie',
+					'donut': 'donut',
+					'groupedcolumn': 'groupedColumn',
+					'groupedbar': 'groupedBar',
+					'stackedcolumn': 'stackedColumn',
+					'stackedbar': 'stackedBar'
+				}
+				this.parameterChanged();
+			},
+			checkAndRender: function(data) {
+				if (Array.isArray(data) && data.length === 0)
+					return;
+				if (!this.chartTypes || !this.aggregateFunctions) {
+					return;
+				}
+				if (this.ifStructuredData(data))
+					this.render(data);
+				else {
+					this.render(this.restructureData(data, this.category, this.series));
+				}
 
-            },
-            render: function (data) {
-                if (!this.ifStructuredData(data))
-                    return;
-                var chart = new xChart.chart(this.renderContainerId);
-                var container = this.querySelector('#' + this.renderContainerId);
-                if (container.offsetHeight < 300 || container.offsetWidth < 300)
-                    return;
-                chart.setOptions({
-                    chartClientId: 'chart_' + this.getGUID(),
-                    chartType: this.chartTypes[this.chartType.toLowerCase()],
-                    overlap: false
-                });
-                chart.render(data);
-            },
-            dataUrlChanged: function (dataUrl) {
-                if (!dataUrl)
-                    return;
-                console.log('fetching data from  - ' + dataUrl);
-                this.makeAjaxCall(dataUrl, 'get', null, null, null, function (err, resp) {
-                    if (resp)
-                        this.checkAndRender(resp);
-                }.bind(this));
-            },
-            parameterChanged: function () {
-                if (this.dataUrl) {
-                    this.dataUrlChanged(this.dataUrl);
-                }
-                else {
-                    this.checkAndRender(this.data, this.category, this.series);
-                }
-            },
-            restructureData: function (data, category, series) {
-                if (!data || !category || !series || series.length === 0)
-                    return;
-                var groups = _.groupBy(data, category);
-                var categoryData = Object.keys(groups).map(function (d) {
-                    return {
-                        "longName": d,
-                        "name": d,
-                        "value": d
-                    };
-                });
-                var seriesData = series.map(function (d) {
-                    d.aggregation = d.aggregation || 'sum';
-                    var aggFunc = this.aggregateFunctions[d.aggregation];
-                    return {
-                        "longName": d.longName || d.property,
-                        "name": d.name || d.property,
-                        "value": d.property,
-                        "data": this.getSeriesData(groups, d.property, aggFunc),
-                        "fmtData": [],
-                        "minValue": {},
-                        "maxValue": {},
-                        "axis": null,
-                        "color": d.color
-                    };
-                }.bind(this));
-                var formattedData = {
-                    categories: categoryData,
-                    series: seriesData
-                };
-                return formattedData;
-            },
-            getSeriesData: function (data, series, aggregation) {
-                return _.map(data, function (d) {
-                    return d.map(function (e) {
-                        return parseFloat(e[series]);
-                    });
-                }).map(function (k) {
-                    return aggregation(k);
-                });
-            },
-            ifStructuredData: function (data) {
-                if (typeof data === 'object') {
-                    if (data.categories && data.series && Array.isArray(data.categories) && Array.isArray(data.series))
-                        return true;
-                }
-                return false;
-            },
-            getGUID: function () {
-                var randoms = (window.crypto || window.msCrypto).getRandomValues(new Uint32Array(2)); // eslint-disable-line no-undef
-                return randoms[0].toString(36).substring(2, 15) +
-                    randoms[1].toString(36).substring(2, 15);
-            },
-            init: function () {
-                //setting random id to the chart container
-                var container = this.querySelector('#chartContainer');
-                var chartName = 'chart-' + this.getGUID();
-                container.setAttribute('id', chartName);
-                this.set('renderContainerId', chartName);
-                container.style.width = "700px";
-                container.style.height = "300px";
-            },
-            makeAjaxCall: function (url, method, body, filters, header, cb) {
-                var ajax = document.createElement('oe-ajax');
-                ajax.url = url;
-                ajax.method = method;
-                if (body) {
-                    ajax.body = JSON.stringify(body);
-                }
-                ajax.contentType = "application/json";
-                ajax.addEventListener('response', function (resp, err) {
-                    this.fire('end-spinner');
-                    cb(null, resp.detail.response);
-                }.bind(this));
-                ajax.addEventListener('error', function (err) {
-                    this.fire('end-spinner');
-                    cb(err, null);
-                }.bind(this));
-                this.fire('start-spinner', {
-                    url: ajax.url
-                });
-                ajax.generateRequest();
-            }
-        });
-    </script>
+			},
+			render: function(data) {
+				if (!this.ifStructuredData(data))
+					return;
+				var chart = new xChart.chart(this.renderContainerId);
+				var container = this.querySelector('#' + this.renderContainerId);
+				if (container.offsetHeight < 300 || container.offsetWidth < 300)
+					return;
+				chart.setOptions({
+					chartClientId: 'chart_' + this.getGUID(),
+					chartType: this.chartTypes[this.chartType.toLowerCase()],
+					overlap: false
+				});
+				chart.render(data);
+			},
+			dataUrlChanged: function() {
+				if (!this.dataUrl)
+					return;
+				console.log('fetching data from  - ' + this.dataUrl);
+				this.makeAjaxCall(this.dataUrl, 'get', null, null, null, function(err, resp) {
+					if (resp) {
+						this.set('data', resp);
+					}
+				}.bind(this));
+			},
+			parameterChanged: function() {
+				this.checkAndRender(this.data, this.category, this.series);
+			},
+			restructureData: function(data, category, series) {
+				if (!data || !category || !series || series.length === 0)
+					return;
+				var groups = _.groupBy(data, category);
+				var categoryData = Object.keys(groups).map(function(d) {
+					return {
+						"longName": d,
+						"name": d,
+						"value": d
+					};
+				});
+				var seriesData = series.map(function(d) {
+					d.aggregation = d.aggregation || 'sum';
+					var aggFunc = this.aggregateFunctions[d.aggregation];
+					return {
+						"longName": d.longName || d.property,
+						"name": d.name || d.property,
+						"value": d.property,
+						"data": this.getSeriesData(groups, d.property, aggFunc),
+						"fmtData": [],
+						"minValue": {},
+						"maxValue": {},
+						"axis": null,
+						"color": d.color
+					};
+				}.bind(this));
+				var formattedData = {
+					categories: categoryData,
+					series: seriesData
+				};
+				return formattedData;
+			},
+			getSeriesData: function(data, series, aggregation) {
+				return _.map(data, function(d) {
+					return d.map(function(e) {
+						return parseFloat(e[series]);
+					});
+				}).map(function(k) {
+					return aggregation(k);
+				});
+			},
+			ifStructuredData: function(data) {
+				if (typeof data === 'object') {
+					if (data.categories && data.series && Array.isArray(data.categories) && Array.isArray(data.series))
+						return true;
+				}
+				return false;
+			},
+			getGUID: function() {
+				var randoms = (window.crypto || window.msCrypto).getRandomValues(new Uint32Array(2)); // eslint-disable-line no-undef
+				return randoms[0].toString(36).substring(2, 15) +
+					randoms[1].toString(36).substring(2, 15);
+			},
+			init: function() {
+				//setting random id to the chart container
+				var container = this.querySelector('#chartContainer');
+				var chartName = 'chart-' + this.getGUID();
+				container.setAttribute('id', chartName);
+				this.set('renderContainerId', chartName);
+			},
+			makeAjaxCall: function(url, method, body, filters, header, cb) {
+				var ajax = document.createElement('oe-ajax');
+				ajax.url = url;
+				ajax.method = method;
+				if (body) {
+					ajax.body = JSON.stringify(body);
+				}
+				ajax.contentType = "application/json";
+				ajax.addEventListener('response', function(resp, err) {
+					this.fire('end-spinner');
+					cb(null, resp.detail.response);
+				}.bind(this));
+				ajax.addEventListener('error', function(err) {
+					this.fire('end-spinner');
+					cb(err, null);
+				}.bind(this));
+				this.fire('start-spinner', {
+					url: ajax.url
+				});
+				ajax.generateRequest();
+			}
+		});
+
+	</script>
 </dom-module>

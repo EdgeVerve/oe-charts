@@ -29,38 +29,59 @@
             height: 300px;
         }
 
-        #container>* {
-            margin: 50px;
-        }
-
-        #container {
-            /*display: flex;
-            flex-wrap: wrap;*/
-        }
+		.header{
+			display: flex;
+			    align-items: baseline;
+		}
+		.header h3{
+			padding: 0px 16px;
+		}
+		.chart-container{
+			max-height: 500px;
+			max-width: 800px;
+		}
     </style>
     <link rel="import" href="oe-charts.html">
 
 </head>
 
 <body>
-    <template is="dom-bind" id="mainContainer">
-        <div id="container">
-            <oe-charts chart-type="groupedColumn"></oe-charts>
-            <!--<oe-charts chart-type="groupedBar"></oe-charts>
-            <oe-charts chart-type="stackedColumn"></oe-charts>
-            <oe-charts chart-type="stackedBar"></oe-charts>
-            <oe-charts chart-type="pie"></oe-charts>
-            <oe-charts chart-type="donut"></oe-charts>
-            <oe-charts chart-type="line"></oe-charts>
-            <oe-charts chart-type="area"></oe-charts>-->
+    <div id="container">
+			<div class="header">
+				<h3>Chart Type</h3>
+				<select onchange="demoControl.typeFn(event)">
+				  <option value="groupedchart">Grouped Chart</option>
+				  <option value="pie">Pie </option>
+				  <option value="groupedbar">Grouped Bar</option>
+				  <option value="donut">Donut</option>
+				</select>
+				<h3>Chart Width</h3>
+				<input onchange="demoControl.widthFn(event)" value="300"/>
+				<h3>Chart Height</h3>
+				<input onchange="demoControl.heightFn(event)" value="300"/>
+			</div>
+			<div class="chart-container">
+				<oe-charts id="chart-ele" chart-type="groupedchart"></oe-charts>
+			</div>
         </div>
-    </template>
     <script>
-        function getRandomData(num) {
+
+		var demoControl = (function(){
+			var chart = document.getElementById("chart-ele");
+			function getRandomData(num) {
             return Math.random() * num;
         }
-
-        var sampledata = [{
+			function chartTypeChanged(e){
+		chart.setAttribute('chart-type',e.currentTarget.value);
+}
+			function chartWidthChanged(e){
+				chart.setAttribute('chart-width',e.target.value);
+			}
+			function chartHeightChanged(e){
+				chart.setAttribute('chart-height',e.target.value);
+			}
+			var sampledata = [
+			{
             country: "USA",
             state: 'california',
             population: getRandomData(1000000),
@@ -127,34 +148,39 @@
             area: getRandomData(1000000)
         }];
 
+			function loadRender(){
+			 chart.setAttribute('category', 'country');
+			 chart.setAttribute('series', JSON.stringify([{
+				 "property": "population",
+				 "aggregation": "sum",
+				 "color": "red"
+			 }, {
+				 "property": "area",
+				 "aggregation": "sum",
+				 "color": "green"
+			 }]));
+			 chart.setAttribute('data', JSON.stringify(sampledata));
 
-        document.body.onload = function () {
-            var app = document.getElementById('mainContainer');
-            app.sampleData = sampledata;
-            var charts = app.content.querySelectorAll("oe-charts");
-            [].forEach.call(charts, function (chart) {
-                // chart.setAttribute('category', 'country');
-                // chart.setAttribute('series', JSON.stringify([{
-                //     "property": "population",
-                //     "aggregation": "sum",
-                //     "color": "red"
-                // }, {
-                //     "property": "area",
-                //     "aggregation": "sum",
-                //     "color": "green"
-                // }]));
-                // chart.setAttribute('data', JSON.stringify(sampledata));
-
-                chart.setAttribute('category', 'name');
+                /*chart.setAttribute('category', 'name');
                 chart.setAttribute('series', JSON.stringify([{
                     "property": "age",
                     "color": "rgb(94, 101, 233)"
                 }]));
-                chart.setAttribute('data-url', "http://localhost:3000/api/aaaaas");
-            });
-        };
+                chart.setAttribute('data-url', "http://localhost:3000/api/Students");*/
+		}
+
+			return {
+				loanFn:loadRender,
+				typeFn:chartTypeChanged,
+				widthFn:chartWidthChanged,
+				heightFn:chartHeightChanged
+			}
+		})()
+
+
+
+		document.body.onload = demoControl.loanFn;
     </script>
-    </select>
 </body>
 
 </html>
