@@ -12,6 +12,12 @@
 
 <dom-module id="oe-charts">
 	<template>
+		<style>
+			:host{
+				display: block;
+				position: relative;
+			}
+		</style>
 		<div id="chartContainer" style$="height:[[chartHeight]]px;width:[[chartWidth]]px">
 
 		</div>
@@ -67,6 +73,11 @@
 				chartHeight: {
 					type: Number,
 					value: 300
+				},
+				inheritParentDimension:{
+					type:Boolean,
+					value:false,
+					observer:'_handleInheritance'
 				}
 			},
 			observers: ['parameterChanged(series.*,data.*,category,chartType,chartHeight,chartWidth)'],
@@ -99,6 +110,21 @@
 					'stackedbar': 'stackedBar'
 				}
 				this.parameterChanged();
+			},
+			_handleInheritance:function(){
+				var parentElem = this.parentElement;
+				if(this.inheritParentDimension){
+					this._dimensionInteraval = setInterval(function(){
+						if(this.chartHeight !== parentElem.offsetHeight){
+							this.set('chartHeight',parentElem.offsetHeight);
+						}
+						if(this.chartWidth !== parentElem.offsetWidth){
+							this.set('chartWidth',parentElem.offsetWidth);
+						}
+					}.bind(this),100);
+				}else{
+					clearInterval(this._dimensionInteraval)
+				}
 			},
 			checkAndRender: function(data) {
 				if (Array.isArray(data) && data.length === 0)

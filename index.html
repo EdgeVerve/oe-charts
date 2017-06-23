@@ -37,8 +37,11 @@
 			padding: 0px 16px;
 		}
 		.chart-container{
-			max-height: 500px;
-			max-width: 800px;
+			height: 300px;
+			width: 300px;
+			border:1px solid blue;
+			overflow: auto;
+			resize: both;
 		}
     </style>
     <link rel="import" href="oe-charts.html">
@@ -59,6 +62,8 @@
 				<input onchange="demoControl.widthFn(event)" value="300"/>
 				<h3>Chart Height</h3>
 				<input onchange="demoControl.heightFn(event)" value="300"/>
+				<h3>Inherit Parent</h3>
+				<input type="checkbox" onchange="demoControl.inheritFn(event)"/>
 			</div>
 			<div class="chart-container">
 				<oe-charts id="chart-ele" chart-type="groupedchart"></oe-charts>
@@ -74,6 +79,13 @@
 			function chartTypeChanged(e){
 		chart.setAttribute('chart-type',e.currentTarget.value);
 }
+			function changeInheritance(e){
+				if(e.currentTarget.checked){
+					chart.setAttribute('inherit-parent-dimension','');
+				}else{
+					chart.removeAttribute('inherit-parent-dimension');
+				}
+			}
 			function chartWidthChanged(e){
 				chart.setAttribute('chart-width',e.target.value);
 			}
@@ -173,7 +185,8 @@
 				loanFn:loadRender,
 				typeFn:chartTypeChanged,
 				widthFn:chartWidthChanged,
-				heightFn:chartHeightChanged
+				heightFn:chartHeightChanged,
+				inheritFn:changeInheritance
 			}
 		})()
 
