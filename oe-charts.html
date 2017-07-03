@@ -1,10 +1,10 @@
+<script type="text/javascript" src="../d3/d3.min.js"></script>
+<script type="text/javascript" src="../lodash/lodash.js"></script>
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../oe-ajax/oe-ajax.html">
+<link rel="import" href="oe-chart-behavior.html">
 
-<link rel="stylesheet" type="text/css" href="dist/xCharts.css">
-<script type="text/javascript" src="../lodash/lodash.js"></script>
-<script type="text/javascript" src="../d3/d3.min.js"></script>
-<script type="text/javascript" src="dist/xCharts.js"></script>
+<link rel="stylesheet" type="text/css" href="xCharts.css">
 
 <dom-module id="oe-charts">
 	<template>
@@ -76,6 +76,7 @@
 					observer: '_handleInheritance'
 				}
 			},
+			behaviors: [OEchartBehavior],
 			observers: ['parameterChanged(series.*,data.*,category,chartType,chartHeight,chartWidth)'],
 			attached: function () {
 				this.init();
@@ -138,7 +139,7 @@
 			render: function (data) {
 				if (!this.ifStructuredData(data))
 					return;
-				var chart = new xChart.chart(this.renderContainerId);
+				var chart = new this.xChart.chart(this.renderContainerId);
 				var container = this.querySelector('#' + this.renderContainerId);
 				if (container.offsetHeight < 300 || container.offsetWidth < 300)
 					return;
