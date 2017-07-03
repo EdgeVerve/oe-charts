@@ -1,0 +1,32 @@
+{
+  "name": "oe-charts",
+  "authors": [
+    "Sourav <sourav_kumar09@edgeverve.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "3.5.5",
+    "lodash": "^4.3.0",
+    "polymer": "Polymer/polymer#^1.1.0",
+    "oe-ajax": "*"
+  },
+  "_release": "1c45aa1109",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "1c45aa1109c396a69f863f9473587c154bc7e9b3"
+  },
+  "_source": "http://10.73.97.24/oecloud.io/oe-charts.git",
+  "_target": "master",
+  "_originalSource": "http://10.73.97.24/oecloud.io/oe-charts.git"
+}
