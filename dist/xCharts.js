@@ -188,7 +188,6 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             if (chartObject === this.renderedChart && this.chartType === this.chartOptions.chartType) {
                 this.renderedChart.redraw(this.data, this._eventHandlers);
             } else {
-                //$('#' + this.renderContainerId + '_select').remove(); //To remove drop-down from pie and donut charts
                 var el = document.querySelector('#' + this.renderContainerId + '_select');
                 if (el && el.parentElement) {
                     el.parentElement.removeChild(el);
@@ -1116,7 +1115,6 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
         area.prototype.draw = function (data) {
 
             var color = this.color;
-            // $('#' + this.renderContainerId + "_svg").remove();
             var el = document.querySelector("#" + this.renderContainerId + "_svg");
             if (el && el.parentElement)
                 el.parentElement.removeChild(el);
@@ -1538,7 +1536,6 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var margin = this.margin;
             var color = this.color;
             var chartOptions = this.chartOptions;
-            // $('#' + this.renderContainerId + "_svg").remove();
             var el = document.querySelector("#" + this.renderContainerId + "_svg");
             if (el && el.parentElement)
                 el.parentElement.removeChild(el);
@@ -1958,7 +1955,6 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var margin = this.margin;
             var renderContainerId = this.renderContainerId;
             var configuration = this.configuration;
-            // $('#' + this.renderContainerId + "_svg").remove();
             var el = document.querySelector("#" + this.renderContainerId + "_svg");
             if (el && el.parentElement)
                 el.parentElement.removeChild(el);
@@ -2293,7 +2289,6 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var color = this.color;
             var margin = this.margin;
             var chartOptions = this.chartOptions;
-            // $('#' + this.renderContainerId + "_svg").remove();
             var el = document.querySelector("#" + this.renderContainerId + "_svg");
             if (el && el.parentElement)
                 el.parentElement.removeChild(el);
@@ -2911,7 +2906,6 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var chartOptions = this.chartOptions;
             this.bottomMarginSet = false;
             var seriesScales = [];
-            // $('#' + this.renderContainerId + "_svg").remove();
             var el = document.querySelector("#" + this.renderContainerId + "_svg");
             if (el && el.parentElement)
                 el.parentElement.removeChild(el);
@@ -3873,7 +3867,6 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var renderContainerId = this.renderContainerId;
             var configuration = Object.assign({}, data.gaugeConfiguration);
             var chartOptions = this.chartOptions;
-            // $('#' + this.renderContainerId + "_svg").remove();
             var el = document.querySelector("#" + this.renderContainerId + "_svg");
             if (el && el.parentElement)
                 el.parentElement.removeChild(el);
@@ -4350,7 +4343,6 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var color = this.color;
             var margin = this.margin;
             var chartOptions = this.chartOptions;
-            // $('#' + this.renderContainerId + "_svg").remove();
             var el = document.querySelector("#" + this.renderContainerId + "_svg");
             if (el && el.parentElement)
                 el.parentElement.removeChild(el);
@@ -4540,7 +4532,6 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
 
             var color = this.color;
             var margin = this.margin;
-            // $('#' + this.renderContainerId + "_svg").remove();
             var el = document.querySelector("#" + this.renderContainerId + "_svg");
             if (el && el.parentElement)
                 el.parentElement.removeChild(el);
@@ -4727,600 +4718,6 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
         }
         return line;
     })();
-    //Map
-    //PI.xChart\src\js\plots\map.js
-    xChart.map = (function () {
-        function map(renderContainerId, color, chartOptions) {
-
-            //Information stored here will persist
-            this.renderContainerId = renderContainerId;
-            this.canvasWidth = document.getElementById(renderContainerId).offsetWidth;
-            this.canvasHeight = document.getElementById(renderContainerId).offsetHeight;
-            this.margin = Object.assign({}, chartOptions.margin);
-            this.zoomLevel = chartOptions.zoomLevel;
-            this.drillMap = chartOptions.drillMap;
-            this.color = color;
-            this.overlapDraw = false;
-            this.chartOptions = chartOptions;
-
-            //To use the helper utility functions
-            this.utility = new xChart.utility();
-
-            //variables
-            this.regionData = [];
-            this.countryData = [];
-            this.regionarray = [];
-            this.countryarray = [];
-            this.countryLabels = [];
-            this.regionLabels = [];
-            this.zoom;
-            this.pan;
-            var self = this;
-
-            this.DrawCircles = function (svg, g, zoomLevel, newData, originalData) {
-
-                var data = [];
-                var circleClass = 'mapCircle';
-                if (this.overlapDraw == true && typeof originalData != "undefined") {
-                    data = originalData;
-                    data = data.concat(newData);
-                    circleClass = 'mapOverLapCircle';
-                } else
-                    data = newData;
-
-                if (this.overlapDraw == false && svg.selectAll(".mapCircle")[0].length > 0)
-                    return;
-
-                var scale = 0.25 * self.canvasHeight;
-                var center = [0, 45];
-                var projection = d3.geo.mercator()
-                    .translate([0, 0])
-                    .center(center)
-                    .scale(scale);
-
-                //var minSize = [scale / 0, scale / 16, scale / 16, scale / 28, scale / 28, scale / 48, scale / 48];
-                var minSize = [2, 2, 2, 1, 1]
-                var maxSize = [scale / 0, scale / 4, scale / 4, scale / 8, scale / 8, scale / 12, scale / 12];
-
-                var index = Math.ceil(zoomLevel);
-                var y = d3.scale.linear().range([minSize[index], Math.round(maxSize[index])]);
-
-                var Vals;
-                if (this.overlapDraw == true) {
-                    Vals = originalData.map(function (obj) {
-                        return obj.data;
-                    });
-                } else {
-                    Vals = data.map(function (obj) {
-                        return obj.data;
-                    });
-                }
-
-                var max = Math.max.apply(null, Vals);
-                var min = Math.min.apply(null, Vals);
-                y.domain([0, max]);
-
-                //code to draw circle           
-                var circles = g.selectAll("circle")
-                    .data(data)
-                    .enter()
-                    .append("circle")
-                    .attr("class", circleClass)
-                    .attr("cx", function (d) {
-                        return projection([d.lon, d.lat])[0];
-                    })
-                    .attr("cy", function (d) {
-                        return projection([d.lon, d.lat])[1];
-                    })
-                    .attr("r", function (d) {
-                        return 0;
-                    });
-
-                if (this.overlapDraw == true) {
-                    circles.style({
-                        fill: function (d) {
-                            return '#FFC200';
-                        },
-                        stroke: function (d) {
-                            return '#FFC200';
-                        },
-                        opacity: 1
-                    });
-                } else {
-                    circles.style({
-                        fill: function (d) {
-                            return d.color;
-                        },
-                        stroke: function (d) {
-                            return d.color;
-                        },
-                        opacity: 1
-                    });
-                }
-                if (zoomLevel >= 1 && zoomLevel < 2)
-                    circles.attr('name', 'regioncircle');
-                else
-                    circles.attr('name', 'countrycircle');
-
-
-                circles.transition()
-                    .duration(1000)
-                    .attr("r", function (d) {
-                        return y(d.data);
-                    })
-                    .each('end', function (d) {
-                        if (d.index === data.length - 1)
-                            this.dispatch.RenderComplete(this);
-                    }.bind(this));
-
-                self.utility.tooltip(svg, '.' + circleClass, true, false);
-            }
-
-            this.DrawLabels = function (svg, g, zoomLevel, data) {
-                if (svg.selectAll("[name='countriestext']")[0].length > 0 || svg.selectAll("[name='regiontext']")[0].length > 0)
-                    return;
-                var width = self.canvasWidth;
-                height = self.canvasHeight;
-                var scale = 0.25 * height;
-                var center = [0, 45];
-                var projection = d3.geo.mercator()
-                    .translate([0, 0])
-                    .center(center)
-                    .scale(scale);
-
-                var fontsize = 5;
-                if (zoomLevel >= 1 && zoomLevel < 2) {
-                    fontsize = Math.round((scale * 0.25) / zoomLevel);
-                } else if (zoomLevel >= 2 && zoomLevel <= 4) {
-                    fontsize = Math.round((scale * 0.15) / zoomLevel);
-                }
-
-                //var minSize = [scale / 0, scale / 16, scale / 16, scale / 28, scale / 28, scale / 48, scale / 48];
-                var minSize = [2, 2, 2, 1, 1]
-                var maxSize = [scale / 0, scale / 4, scale / 4, scale / 8, scale / 8, scale / 12, scale / 12];
-                var index = Math.ceil(zoomLevel);
-                var y = d3.scale.linear().range([minSize[index], Math.round(maxSize[index])]);
-
-                var Vals = data.map(function (obj) {
-                    return obj.data;
-                });
-                var max = Math.max.apply(null, Vals);
-                var min = Math.min.apply(null, Vals);
-                y.domain([0, max]);
-
-
-                var texts = g.selectAll('text')
-                    .data(data)
-                    .enter()
-                    .append('text')
-                    .style({
-                        'font-family': ' Calibri'
-                    })
-                    .attr("x", function (d) {
-                        return projection([d.lon, d.lat])[0];
-                    })
-                    .attr("y", function (d) {
-                        return projection([d.lon, d.lat])[1] + y(d.data) + 2;
-                    })
-                    .attr("dy", ".35em")
-                    .attr("class", 'mapText')
-                    .text(function (d) {
-                        return d.categoryLongName;
-                    }).style("text-anchor", "middle")
-                    .style("font-size", fontsize);
-
-                if (zoomLevel >= 1 && zoomLevel < 2) {
-
-                    texts.attr('name', 'regiontext');
-                } else if (zoomLevel >= 2 && zoomLevel <= 4) {
-                    texts.attr('name', 'countriestext');
-                }
-            }
-            this.PopulateArray = function (data, zoomLevel, index) {
-                var ary = [];
-                for (var j = 0; j < data.categories.length; ++j) {
-                    var c = {};
-                    c.categoryLongName = data.categories[j].name;
-                    c.data = data.series[index].data[j];
-                    c.fmtData = data.series[index].fmtData[j];
-                    c.seriesLongName = data.series[index].longName;
-                    c.index = j;
-                    c.categoryValue = data.categories[j].value;
-                    c.categoryDimName = data.categories[j].dimName;
-
-                    if (data.series[index].color != undefined)
-                        c.color = data.series[index].color;
-                    else
-                        c.color = chartOptions.defaultColors[index];
-
-                    var retVal = PopulateLonLat(c, c.categoryLongName, zoomLevel);
-                    if (retVal != false) {
-                        ary.push(c);
-                    }
-
-                }
-                return ary;
-            }
-
-            this.PopulateLabelsArray = function (data, zoomLevel) {
-                var ary = [];
-                for (var j = 0; j < data.categories.length; ++j) {
-                    var c = {};
-                    c.categoryLongName = data.categories[j].name;
-                    c.data = data.series[0].data[j];
-                    var retVal = PopulateLonLat(c, c.categoryLongName, zoomLevel);
-                    if (retVal != false) {
-                        ary.push(c);
-                    }
-
-                }
-                return ary;
-            }
-
-            function PopulateLonLat(e, location, zoomLevel) {
-                var regionData = self.regionData;
-                var countryData = self.countryData;
-                if (zoomLevel >= 1 && zoomLevel < 2) {
-
-                    for (var i = 0; i < regionData.length; ++i) {
-                        if (regionData[i].name.toLowerCase() == location.toLowerCase()) {
-                            e.lon = regionData[i].lon;
-                            e.lat = regionData[i].lat;
-                            return;
-                        }
-                    }
-                    console.log("Error:lat and long details not found for :" + location)
-                    return false;
-                } else if (zoomLevel >= 2 && zoomLevel < 4) {
-                    for (var i = 0; i < countryData.length; ++i) {
-                        if (countryData[i].name.toLowerCase() == location.toLowerCase()) {
-                            e.lon = countryData[i].lon;
-                            e.lat = countryData[i].lat;
-                            return;
-                        }
-                    }
-                    console.log("Error:lat and long details not found for :" + location)
-                    return false;
-                }
-            }
-            this.move = function () {
-                var zoom = self.zoom;
-                var svg = d3.select('#' + self.renderContainerId + '_svg');
-                var g = d3.select('#' + self.renderContainerId + '_svg_g');
-                var zoomLevel = zoom.scale();
-                self.zoomLevel = zoomLevel;
-                var t = d3.event.translate,
-                    s = d3.event.scale;
-                var width = self.canvasWidth,
-                    height = self.canvasHeight;
-                t[0] = Math.min(width / 2 * (s - 1), Math.max(width / 2 * (1 - s), t[0]));
-                t[1] = Math.min(height / 2 * (s - 1) + 230 * s, Math.max(height / 2 * (1 - s) - 230 * s, t[1]));
-                zoom.translate(t);
-                g.style("stroke-width", 1 / s)
-                    .transition().duration(1000)
-                    .attr("transform", "translate(" + t + ")scale(" + s + ")");
-
-                if (zoomLevel >= 1 && zoomLevel < 2) {
-
-                    //remove labels
-                    if (svg.selectAll("[name='countriestext']").length > 0)
-                        svg.selectAll("[name='countriestext']").remove();
-                    //remove circles
-                    if (svg.selectAll("[name='countrycircle']").length > 0) {
-                        svg.selectAll("[name='countrycircle']").remove();
-                    }
-                    if (svg.selectAll("[name='regioncircle']")[0].length == 0) {
-
-                        self.DrawCircles(svg, g, zoomLevel, self.regionarray);
-                        self.DrawLabels(svg, g, zoomLevel, self.regionLabels);
-                    }
-                } else if (zoomLevel >= 2 && zoomLevel <= 4) {
-                    if (svg.selectAll("[name='regiontext']").length > 0) {
-                        svg.selectAll("[name='regiontext']").remove()
-                    }
-                    if (svg.selectAll("[name='regioncircle']").length > 0) {
-                        svg.selectAll("[name='regioncircle']").remove();
-                    }
-                    if (svg.selectAll("[name='countrycircle']")[0].length == 0) {
-                        if (self.countryarray.length == 0) {
-                            self.drillMap(zoomLevel);
-                        } else {
-
-                            self.DrawCircles(svg, g, zoomLevel, self.countryarray);
-                            self.DrawLabels(svg, g, zoomLevel, self.countryLabels);
-
-                        }
-
-                    }
-
-                }
-                //else if(zoomLevel>=5 && zoomLevel<=8)
-                //{
-                //code to get city/next level Data
-                //}
-            }
-
-        };
-
-        // xChart.map's prototype properties.
-
-        map.prototype.dispatch = d3.dispatch('RenderComplete');
-
-        map.prototype.draw = function (data) {
-            if (typeof this.zoomLevel == "undefined" && this.zoomLevel == null) {
-                this.zoomLevel = 1;
-            }
-            if ($('#' + this.renderContainerId + "_svg").length > 0) {
-                var el = document.querySelector("#" + this.renderContainerId + "_svg");
-                if (el && el.parentElement) {
-                    el.parentElement.removeChild(el);
-                }
-            }
-            var zoomLevel = this.zoomLevel;
-            var drillMap = this.drillMap;
-            var renderContainerId = this.renderContainerId;
-            var self = this;
-            var chartOptions = this.chartOptions;
-            if (zoomLevel >= 1 && zoomLevel < 2) {
-
-                //var margin = { top: 0.03 * canvasHeight, right: Math.min(0.1 * canvasWidth, 20), bottom: 0.03 * canvasHeight, left: Math.min(0.05 * canvasWidth, 15) },
-                var width = this.canvasWidth,
-                    height = this.canvasHeight;
-                var scale = 0.25 * this.canvasHeight;
-                var center = [0, 45];
-                var projection = d3.geo.mercator()
-                    .translate([0, 0])
-                    .center(center)
-                    .scale(scale);
-
-                this.zoom = d3.behavior.zoom()
-                    .scaleExtent([1, 8])
-                    .on("zoom", this.move);
-
-                this.pan = d3.behavior.zoom()
-                    .scaleExtent([1, 1])
-                    .on("zoom", this.move);
-
-                var path = d3.geo.path()
-                    .projection(projection);
-
-                var svg = d3.select("#" + renderContainerId).append("svg")
-                    .attr("width", width)
-                    .attr("id", renderContainerId + "_svg")
-                    .attr('class', 'map')
-                    .attr("height", height)
-                    .append("g")
-                    .attr("id", renderContainerId + "_svg_outerGroup")
-                    .attr('class', 'outerGroupMap')
-                    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-                    .call(this.zoom)
-
-                svg.append("rect")
-                    .style({
-                        'fill': '#ACC7F2'
-                    })
-                    .attr('class', 'rectMap')
-                    .attr("x", -width / 2)
-                    .attr("y", -height / 2)
-                    .attr("width", width)
-                    .attr("height", height);
-
-
-
-                var g = svg.append("g")
-                    .attr("id", renderContainerId + "_svg_g")
-                    .attr('class', 'innerGroupMap');
-
-                var g1;
-                d3.json(_BaseUrl + "/countries/countries.json", function (error, countries) {
-
-                    g1 = g.append("g")
-                        .attr("id", "countries")
-                        .attr("class", "countiresGroup")
-                        .selectAll("g")
-                        .data(topojson.feature(countries, countries.objects.countries).features)
-                        .enter()
-                        .append('g');
-
-                    g1.append("path")
-                        .style({
-                            'stroke': '#939196',
-                            'fill': '#F4F3EF',
-                            'stroke-width': '0.5px',
-                            'stroke-linejoin': 'round',
-                            'stroke-opacity': '0.35',
-                            'stroke-linecap': 'round'
-                        })
-                        .attr("id", function (d) {
-                            return d.id;
-                        })
-                        .attr("d", path);
-
-                    //Utility function call to add filter def to svg
-                    //self.utility.addRadialFilter(svg, self.renderContainerId);
-
-                    var tempStr = data.ChartClientId + '_inOut';
-                    d3.selectAll('button[zoom-action="' + tempStr + '"]').on('click', function () {
-
-                        d3.event.preventDefault();
-                        var zoom = self.zoom;
-                        var scale = zoom.scale(),
-                            extent = zoom.scaleExtent(),
-                            translate = zoom.translate(),
-                            x = translate[0],
-                            y = translate[1],
-                            factor = (this.id.indexOf('zoom_in') > 0) ? 1.2 : 1 / 1.2,
-                            target_scale = scale * factor;
-
-                        // If we're already at an extent, done
-                        if (target_scale === extent[0] || target_scale === extent[1]) {
-                            return false;
-                        }
-                        // If the factor is too much, scale it down to reach the extent exactly
-                        var clamped_target_scale = Math.max(extent[0], Math.min(extent[1], target_scale));
-                        if (clamped_target_scale != target_scale) {
-                            target_scale = clamped_target_scale;
-                            factor = target_scale / scale;
-                        }
-
-                        // Center each vector, stretch, then put back
-                        x = (x - center[0]) * factor + center[0];
-                        y = (y - center[1]) * factor + center[1];
-
-                        // Transition to the new view over 350ms
-                        d3.transition().duration(350).tween("zoom", function () {
-                            var interpolate_scale = d3.interpolate(scale, target_scale),
-                                interpolate_trans = d3.interpolate(translate, [x, y]);
-                            return function (t) {
-                                zoom.scale(interpolate_scale(t))
-                                    .translate(interpolate_trans(t));
-                                zoomed();
-                            };
-                        });
-                    });
-
-                    self.renderData(data);
-                });
-
-            }
-
-
-            function zoomed() {
-                var zoom = self.zoom;
-                var zoomLevel = zoom.scale();
-                self.zoomLevel = zoomLevel;
-
-                g.attr("transform", "translate(" + zoom.translate() + ")scale(" + zoom.scale() + ")");
-                if (zoomLevel >= 1 && zoomLevel < 2) {
-
-                    //remove labels
-                    if (svg.selectAll("[name='countriestext']").length > 0)
-                        svg.selectAll("[name='countriestext']").remove();
-                    //remove circles
-                    if (svg.selectAll("[name='countrycircle']").length > 0) {
-                        svg.selectAll("[name='countrycircle']").remove();
-                    }
-                    if (svg.selectAll("[name='regioncircle']")[0].length == 0) {
-                        self.DrawCircles(svg, g, zoomLevel, self.regionarray);
-                        self.DrawLabels(svg, g, zoomLevel, self.regionLabels);
-                    }
-                } else if (zoomLevel >= 2 && zoomLevel <= 4) {
-                    if (svg.selectAll("[name='regiontext']").length > 0) {
-                        svg.selectAll("[name='regiontext']").remove()
-                    }
-                    if (svg.selectAll("[name='regioncircle']").length > 0) {
-                        svg.selectAll("[name='regioncircle']").remove();
-                    }
-
-                    if (svg.selectAll("[name='countrycircle']")[0].length == 0) {
-                        if (self.countryarray.length == 0) {
-                            drillMap(zoomLevel);
-                        } else {
-                            self.DrawCircles(svg, g, zoomLevel, self.countryarray);
-                            self.DrawLabels(svg, g, zoomLevel, self.countryLabels);
-                        }
-                    }
-
-                }
-
-            }
-        }
-
-        map.prototype.redraw = function (data) {
-            var zoomLevel = this.zoomLevel;
-            var drillMap = this.drillMap;
-            var renderContainerId = this.renderContainerId;
-            this.renderData(data);
-
-        }
-
-        map.prototype.drawOverlap = function (data, oData) {
-            this.overlapDraw = true;
-            var svg = d3.select('#' + this.renderContainerId + '_svg');
-            var g = d3.select('#' + this.renderContainerId + '_svg_g');
-
-            d3.select('#' + this.renderContainerId + "_svg_outerGroup").call(d3.behavior.zoom().on("zoom", this.pan));
-            var chartOptions = this.chartOptions;
-            var originalData = [];
-            if (this.zoomLevel >= 1 && this.zoomLevel < 2) {
-                this.regionarray = [];
-                for (var i = 0; i < data.series.length; i++) {
-                    var region = [];
-                    region = this.PopulateArray(data, this.zoomLevel, i, true);
-                    this.regionarray = this.regionarray.concat(region);
-                }
-                originalData = [];
-                for (var i = 0; i < oData.series.length; i++) {
-                    var region = [];
-                    region = this.PopulateArray(oData, this.zoomLevel, i);
-                    originalData = originalData.concat(region);
-                }
-                this.DrawCircles(svg, g, this.zoomLevel, this.regionarray, originalData);
-
-            } else if (this.zoomLevel >= 2 && this.zoomLevel <= 4) {
-                this.countryarray = [];
-                for (var i = 0; i < data.series.length; i++) {
-                    var country = [];
-                    country = this.PopulateArray(data, this.zoomLevel, i, true);
-                    this.countryarray = this.countryarray.concat(country);
-                }
-                originalData = [];
-                for (var i = 0; i < oData.series.length; i++) {
-                    var country = [];
-                    country = this.PopulateArray(oData, this.zoomLevel, i);
-                    originalData = originalData.concat(country);
-                }
-                this.DrawCircles(svg, g, this.zoomLevel, this.countryarray, originalData);
-
-            }
-        }
-
-        map.prototype.renderData = function (data) {
-            var zoomLevel = this.zoomLevel;
-            var svg = d3.select('#' + this.renderContainerId + '_svg');
-            var g = d3.select('#' + this.renderContainerId + '_svg_g');
-
-            var self = this;
-            if (zoomLevel >= 1 && zoomLevel < 2) {
-                d3.csv(_BaseUrl + "/countries/Region.csv", function (error, regions) {
-                    self.regionData = regions;
-                    self.regionarray = [];
-                    for (var i = 0; i < data.series.length; i++) {
-                        var region = [];
-                        region = self.PopulateArray(data, self.zoomLevel, i);
-                        self.regionarray = self.regionarray.concat(region);
-                    }
-                    self.regionLabels = self.PopulateLabelsArray(data, zoomLevel);
-                    self.DrawCircles(svg, g, zoomLevel, self.regionarray);
-                    self.DrawLabels(svg, g, zoomLevel, self.regionLabels);
-                });
-            } else if (zoomLevel >= 2 && zoomLevel <= 4) {
-                d3.csv(_BaseUrl + "/countries/Countries.csv", function (error, countries) {
-                    self.countryData = countries;
-                    self.countryarray = [];
-                    for (var i = 0; i < data.series.length; i++) {
-                        var country = [];
-                        country = self.PopulateArray(data, zoomLevel, i);
-                        self.countryarray = self.countryarray.concat(country);
-                    }
-                    self.countryLabels = self.PopulateLabelsArray(data, zoomLevel);
-                    self.DrawCircles(svg, g, zoomLevel, self.countryarray);
-                    self.DrawLabels(svg, g, zoomLevel, self.countryLabels);
-                });
-            }
-
-        }
-
-        map.prototype.removeOverlap = function (data) {
-            this.overlapDraw = false;
-            d3.select('#' + this.renderContainerId + "_svg_outerGroup").call(this.zoom);
-            var svg = d3.select('#' + this.renderContainerId + '_svg');
-            if (svg.selectAll(".mapOverLapCircle").length > 0)
-                svg.selectAll(".mapOverLapCircle").remove();
-        }
-
-        return map;
-    })();
     //normalizedStackedColumn Chart
     //PI.xChart\src\js\plots\normalizedStackedColumn.js
     xChart.normalizedStackedColumn = (function () {
@@ -5349,7 +4746,6 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             this.sCHeight = sCHeight;
             this.sCStartPoint = sCStartPoint;
 
-            // $('#' + this.renderContainerId + "_svg").remove();
             var el = document.querySelector("#" + this.renderContainerId + "_svg");
             if (el && el.parentElement)
                 el.parentElement.removeChild(el);
@@ -6014,7 +5410,6 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
 
             margin.right = 50;
 
-            // $('#' + this.renderContainerId + "_svg").remove();
             var el = document.querySelector("#" + this.renderContainerId + "_svg");
             if (el && el.parentElement)
                 el.parentElement.removeChild(el);
@@ -7692,7 +7087,6 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var subCategoryScaleArray = this.subCategoryScale;
             var xWidthArray = this.xWidth;
             var chartOptions = this.chartOptions;
-            // $('#' + this.renderContainerId + "_svg").remove();
             var el = document.querySelector("#" + this.renderContainerId + "_svg");
             if (el && el.parentElement)
                 el.parentElement.removeChild(el);
@@ -8008,7 +7402,6 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var sBStartPoint = [];
             this.sBStartPoint = sBStartPoint;
             var chartOptions = this.chartOptions;
-            // $('#' + this.renderContainerId + "_svg").remove();
             var el = document.querySelector("#" + this.renderContainerId + "_svg");
             if (el && el.parentElement)
                 el.parentElement.removeChild(el);
@@ -8756,7 +8149,6 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             this.sCHeight = sCHeight;
             this.sCStartPoint = sCStartPoint;
             var chartOptions = this.chartOptions;
-            // $('#' + this.renderContainerId + "_svg").remove();
             var el = document.querySelector("#" + this.renderContainerId + "_svg");
             if (el && el.parentElement)
                 el.parentElement.removeChild(el);
@@ -9419,7 +8811,6 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
 
             var config = configuration;
 
-            // $('#' + this.renderContainerId + "_svg").remove();
             var el = document.querySelector("#" + this.renderContainerId + "_svg");
             if (el && el.parentElement)
                 el.parentElement.removeChild(el);
