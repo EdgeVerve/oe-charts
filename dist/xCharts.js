@@ -188,7 +188,11 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             if (chartObject === this.renderedChart && this.chartType === this.chartOptions.chartType) {
                 this.renderedChart.redraw(this.data, this._eventHandlers);
             } else {
-                $('#' + this.renderContainerId + '_select').remove(); //To remove drop-down from pie and donut charts
+                //$('#' + this.renderContainerId + '_select').remove(); //To remove drop-down from pie and donut charts
+                var el = document.querySelector('#' + this.renderContainerId + '_select');
+                if (el && el.parentElement) {
+                    el.parentElement.removeChild(el);
+                }
                 this.renderedChart = chartObject;
                 this.chartType = this.chartOptions.chartType;
                 this.renderedChart.draw(this.data, this._eventHandlers);
@@ -1099,7 +1103,7 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             this.renderContainerId = renderContainerId;
             this.canvasWidth = document.getElementById(this.renderContainerId).offsetWidth;
             this.canvasHeight = document.getElementById(this.renderContainerId).offsetHeight;
-            this.margin = jQuery.extend(true, {}, chartOptions.margin);
+            this.margin = Object.assign({}, chartOptions.margin);
             this.color = color;
             //To use the helper utility functions
             this.utility = new xChart.utility();
@@ -1112,7 +1116,10 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
         area.prototype.draw = function (data) {
 
             var color = this.color;
-            $('#' + this.renderContainerId + "_svg").remove();
+            // $('#' + this.renderContainerId + "_svg").remove();
+            var el = document.querySelector("#" + this.renderContainerId + "_svg");
+            if (el && el.parentElement)
+                el.parentElement.removeChild(el);
 
             var chartOptions = this.chartOptions;
             var width = this.canvasWidth - this.margin.left - this.margin.right,
@@ -1513,7 +1520,7 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             this.renderContainerId = renderContainerId;
             this.canvasWidth = document.getElementById(this.renderContainerId).offsetWidth;
             this.canvasHeight = document.getElementById(this.renderContainerId).offsetHeight;
-            this.margin = jQuery.extend(true, {}, chartOptions.margin);
+            this.margin = Object.assign({}, chartOptions.margin);
             this.color = color;
 
             //To use the helper utility functions
@@ -1531,7 +1538,10 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var margin = this.margin;
             var color = this.color;
             var chartOptions = this.chartOptions;
-            $('#' + this.renderContainerId + "_svg").remove();
+            // $('#' + this.renderContainerId + "_svg").remove();
+            var el = document.querySelector("#" + this.renderContainerId + "_svg");
+            if (el && el.parentElement)
+                el.parentElement.removeChild(el);
 
             var width = this.canvasWidth - margin.left - margin.right,
                 height = this.canvasHeight - margin.top - margin.bottom;
@@ -1948,7 +1958,10 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var margin = this.margin;
             var renderContainerId = this.renderContainerId;
             var configuration = this.configuration;
-            $('#' + this.renderContainerId + "_svg").remove();
+            // $('#' + this.renderContainerId + "_svg").remove();
+            var el = document.querySelector("#" + this.renderContainerId + "_svg");
+            if (el && el.parentElement)
+                el.parentElement.removeChild(el);
             var chartOptions = this.chartOptions;
             var w = this.canvasWidth - this.margin.left - this.margin.right,
                 h = this.canvasHeight - this.margin.top - this.margin.bottom;
@@ -2263,7 +2276,7 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             this.renderContainerId = renderContainerId;
             this.canvasWidth = document.getElementById(this.renderContainerId).offsetWidth;
             this.canvasHeight = document.getElementById(this.renderContainerId).offsetHeight;
-            this.margin = jQuery.extend(true, {}, chartOptions.margin);
+            this.margin = Object.assign({}, chartOptions.margin);
             this.color = color;
             this.margin.left = 80;
 
@@ -2280,7 +2293,10 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var color = this.color;
             var margin = this.margin;
             var chartOptions = this.chartOptions;
-            $('#' + this.renderContainerId + "_svg").remove();
+            // $('#' + this.renderContainerId + "_svg").remove();
+            var el = document.querySelector("#" + this.renderContainerId + "_svg");
+            if (el && el.parentElement)
+                el.parentElement.removeChild(el);
 
             var width = this.canvasWidth - margin.left - margin.right,
                 height = this.canvasHeight - margin.top - margin.bottom;
@@ -2794,7 +2810,7 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             this.renderContainerId = renderContainerId;
             this.canvasWidth = document.getElementById(this.renderContainerId).offsetWidth;
             this.canvasHeight = document.getElementById(this.renderContainerId).offsetHeight;
-            this.margin = jQuery.extend(true, {}, chartOptions.margin);
+            this.margin = Object.assign({}, chartOptions.margin);
             this.color = color;
             this.axisRedrawThreshold = chartOptions.axisRedrawThreshold;
             this.aec = chartOptions.aec;
@@ -2895,7 +2911,10 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var chartOptions = this.chartOptions;
             this.bottomMarginSet = false;
             var seriesScales = [];
-            $('#' + this.renderContainerId + "_svg").remove();
+            // $('#' + this.renderContainerId + "_svg").remove();
+            var el = document.querySelector("#" + this.renderContainerId + "_svg");
+            if (el && el.parentElement)
+                el.parentElement.removeChild(el);
 
             //Adjust margin to accomodate multiple axes
             var left = this.chartOptions.seriesLabel ? 50 : 30,
@@ -3660,7 +3679,7 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             for (var i = 0; i < OverlappedData.series.length; i++) {
                 if (OverlappedData.series[i].line == true) {
                     var obj = {};
-                    obj.series = jQuery.extend(true, {}, overSeries[i]);
+                    obj.series = Object.assign({}, overSeries[i]);
                     obj.index = i;
                     seriesForLineChart.push(obj);
                     for (var j = 0; j < overSeries[i].data.length; j++)
@@ -3852,9 +3871,12 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
 
             var margin = this.margin;
             var renderContainerId = this.renderContainerId;
-            var configuration = jQuery.extend(true, {}, data.gaugeConfiguration);
+            var configuration = Object.assign({}, data.gaugeConfiguration);
             var chartOptions = this.chartOptions;
-            $('#' + this.renderContainerId + "_svg").remove();
+            // $('#' + this.renderContainerId + "_svg").remove();
+            var el = document.querySelector("#" + this.renderContainerId + "_svg");
+            if (el && el.parentElement)
+                el.parentElement.removeChild(el);
 
             var w = this.canvasWidth - margin.left - margin.right,
                 h = this.canvasHeight - margin.top - margin.bottom;
@@ -4307,7 +4329,7 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             this.renderContainerId = renderContainerId;
             this.canvasWidth = document.getElementById(this.renderContainerId).offsetWidth;
             this.canvasHeight = document.getElementById(this.renderContainerId).offsetHeight;
-            this.margin = jQuery.extend(true, {}, chartOptions.margin);
+            this.margin = Object.assign({}, chartOptions.margin);
             this.color = color;
             this.subCategoryScale;
 
@@ -4328,7 +4350,10 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var color = this.color;
             var margin = this.margin;
             var chartOptions = this.chartOptions;
-            $('#' + this.renderContainerId + "_svg").remove();
+            // $('#' + this.renderContainerId + "_svg").remove();
+            var el = document.querySelector("#" + this.renderContainerId + "_svg");
+            if (el && el.parentElement)
+                el.parentElement.removeChild(el);
 
             var width = this.canvasWidth - margin.left - margin.right,
                 height = this.canvasHeight - margin.top - margin.bottom;
@@ -4515,7 +4540,10 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
 
             var color = this.color;
             var margin = this.margin;
-            $('#' + this.renderContainerId + "_svg").remove();
+            // $('#' + this.renderContainerId + "_svg").remove();
+            var el = document.querySelector("#" + this.renderContainerId + "_svg");
+            if (el && el.parentElement)
+                el.parentElement.removeChild(el);
             var chartOptions = this.chartOptions;
             var width = this.canvasWidth - margin.left - margin.right,
                 height = this.canvasHeight - margin.top - margin.bottom;
@@ -4708,7 +4736,7 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             this.renderContainerId = renderContainerId;
             this.canvasWidth = document.getElementById(renderContainerId).offsetWidth;
             this.canvasHeight = document.getElementById(renderContainerId).offsetHeight;
-            this.margin = jQuery.extend(true, {}, chartOptions.margin);
+            this.margin = Object.assign({}, chartOptions.margin);
             this.zoomLevel = chartOptions.zoomLevel;
             this.drillMap = chartOptions.drillMap;
             this.color = color;
@@ -5023,7 +5051,10 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
                 this.zoomLevel = 1;
             }
             if ($('#' + this.renderContainerId + "_svg").length > 0) {
-                $('#' + this.renderContainerId + "_svg").remove();
+                var el = document.querySelector("#" + this.renderContainerId + "_svg");
+                if (el && el.parentElement) {
+                    el.parentElement.removeChild(el);
+                }
             }
             var zoomLevel = this.zoomLevel;
             var drillMap = this.drillMap;
@@ -5300,7 +5331,7 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             this.renderContainerId = renderContainerId;
             this.canvasWidth = document.getElementById(this.renderContainerId).offsetWidth;
             this.canvasHeight = document.getElementById(this.renderContainerId).offsetHeight;
-            this.margin = jQuery.extend(true, {}, chartOptions.margin);
+            this.margin = Object.assign({}, chartOptions.margin);
             this.color = color;
             this.axisRedrawThreshold = chartOptions.axisRedrawThreshold;
             this.aec = chartOptions.aec;
@@ -5318,7 +5349,10 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             this.sCHeight = sCHeight;
             this.sCStartPoint = sCStartPoint;
 
-            $('#' + this.renderContainerId + "_svg").remove();
+            // $('#' + this.renderContainerId + "_svg").remove();
+            var el = document.querySelector("#" + this.renderContainerId + "_svg");
+            if (el && el.parentElement)
+                el.parentElement.removeChild(el);
 
             //To use the helper utility functions
             this.utility = new xChart.utility();
@@ -5962,7 +5996,7 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             this.renderContainerId = renderContainerId;
             this.canvasWidth = document.getElementById(this.renderContainerId).offsetWidth;
             this.canvasHeight = document.getElementById(this.renderContainerId).offsetHeight;
-            this.margin = jQuery.extend(true, {}, chartOptions.margin);
+            this.margin = Object.assign({}, chartOptions.margin);
             //To use the helper utility functions
             this.utility = new xChart.utility();
             this.chartOptions = chartOptions;
@@ -5980,7 +6014,10 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
 
             margin.right = 50;
 
-            $('#' + this.renderContainerId + "_svg").remove();
+            // $('#' + this.renderContainerId + "_svg").remove();
+            var el = document.querySelector("#" + this.renderContainerId + "_svg");
+            if (el && el.parentElement)
+                el.parentElement.removeChild(el);
             var chartOptions = this.chartOptions;
             var width = this.canvasWidth - margin.left - margin.right,
                 height = this.canvasHeight - margin.top - margin.bottom;
@@ -6320,7 +6357,7 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             this.renderContainerId = renderContainerId;
             this.canvasWidth = document.getElementById(this.renderContainerId).offsetWidth;
             this.canvasHeight = document.getElementById(this.renderContainerId).offsetHeight;
-            this.margin = jQuery.extend(true, {}, chartOptions.margin);
+            this.margin = Object.assign({}, chartOptions.margin);
             this.color = chartOptions.defaultColors;
             this.chartType = chartOptions.chartType;
             this.noOfPieSlices = chartOptions.noOfPieSlices;
@@ -6349,12 +6386,16 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var w = this.canvasWidth;
             var h = this.canvasHeight;
 
+            var el = document.querySelector('#' + renderContainerId + "_svg");
+            if (el && el.parentElement) {
+                el.parentElement.removeChild(el);
+            }
+            el = document.querySelector('#' + renderContainerId + "_select");
+            if (el && el.parentElement) {
+                el.parentElement.removeChild(el);
+            }
 
-
-            $('#' + renderContainerId + "_svg").remove();
-            $('#' + renderContainerId + "_select").remove();
-
-            var originalData = jQuery.extend(true, {}, data);
+            var originalData = Object.assign({}, data);
 
             // For Multiple series
             if (originalData.series.length > 1) {
@@ -6867,10 +6908,16 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var w = this.canvasWidth;
             var h = this.canvasHeight;
 
-            $('#' + renderContainerId + "_svg").remove();
-            $('#' + renderContainerId + "_select").remove();
+            var el = document.querySelector('#' + renderContainerId + "_svg");
+            if (el && el.parentElement) {
+                el.parentElement.removeChild(el);
+            }
+            el = document.querySelector('#' + renderContainerId + "_select");
+            if (el && el.parentElement) {
+                el.parentElement.removeChild(el);
+            }
 
-            var originalData = jQuery.extend(true, {}, data);
+            var originalData = Object.assign({}, data);
 
             var thisobj = this;
 
@@ -7623,7 +7670,7 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             this.renderContainerId = renderContainerId;
             this.canvasWidth = document.getElementById(this.renderContainerId).offsetWidth;
             this.canvasHeight = document.getElementById(this.renderContainerId).offsetHeight;
-            this.margin = jQuery.extend(true, {}, chartOptions.margin);
+            this.margin = Object.assign({}, chartOptions.margin);
             this.color = color;
             this.axisRedrawThreshold = chartOptions.axisRedrawThreshold;
             this.aec = chartOptions.aec;
@@ -7645,7 +7692,10 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var subCategoryScaleArray = this.subCategoryScale;
             var xWidthArray = this.xWidth;
             var chartOptions = this.chartOptions;
-            $('#' + this.renderContainerId + "_svg").remove();
+            // $('#' + this.renderContainerId + "_svg").remove();
+            var el = document.querySelector("#" + this.renderContainerId + "_svg");
+            if (el && el.parentElement)
+                el.parentElement.removeChild(el);
 
             margin.bottom = 90;
 
@@ -7939,7 +7989,7 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             this.renderContainerId = renderContainerId;
             this.canvasWidth = document.getElementById(this.renderContainerId).offsetWidth;
             this.canvasHeight = document.getElementById(this.renderContainerId).offsetHeight;
-            this.margin = jQuery.extend(true, {}, chartOptions.margin);
+            this.margin = Object.assign({}, chartOptions.margin);
             this.color = color;
             this.margin.left = 80;
 
@@ -7958,7 +8008,10 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var sBStartPoint = [];
             this.sBStartPoint = sBStartPoint;
             var chartOptions = this.chartOptions;
-            $('#' + this.renderContainerId + "_svg").remove();
+            // $('#' + this.renderContainerId + "_svg").remove();
+            var el = document.querySelector("#" + this.renderContainerId + "_svg");
+            if (el && el.parentElement)
+                el.parentElement.removeChild(el);
 
             var width = this.canvasWidth - margin.left - margin.right,
                 height = this.canvasHeight - margin.top - margin.bottom;
@@ -8683,7 +8736,7 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             this.renderContainerId = renderContainerId;
             this.canvasWidth = document.getElementById(this.renderContainerId).offsetWidth;
             this.canvasHeight = document.getElementById(this.renderContainerId).offsetHeight;
-            this.margin = jQuery.extend(true, {}, chartOptions.margin);
+            this.margin = Object.assign({}, chartOptions.margin);
             this.color = color;
             this.axisRedrawThreshold = chartOptions.axisRedrawThreshold;
             this.aec = chartOptions.aec;
@@ -8703,7 +8756,10 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             this.sCHeight = sCHeight;
             this.sCStartPoint = sCStartPoint;
             var chartOptions = this.chartOptions;
-            $('#' + this.renderContainerId + "_svg").remove();
+            // $('#' + this.renderContainerId + "_svg").remove();
+            var el = document.querySelector("#" + this.renderContainerId + "_svg");
+            if (el && el.parentElement)
+                el.parentElement.removeChild(el);
 
             var width = this.canvasWidth - margin.left - margin.right,
                 height = this.canvasHeight - margin.top - margin.bottom;
@@ -9352,7 +9408,7 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
             var chartOptions = this.chartOptions;
             var margin = this.margin;
             var renderContainerId = this.renderContainerId;
-            var configuration = jQuery.extend(true, {}, data.gaugeConfiguration);
+            var configuration = Object.assign({}, data.gaugeConfiguration);
             var trendValue;
             var trendData;
             if (data && data.trendValue && data.trendValue.data && !isNaN(data.trendValue.data)) {
@@ -9363,7 +9419,10 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
 
             var config = configuration;
 
-            $('#' + this.renderContainerId + "_svg").remove();
+            // $('#' + this.renderContainerId + "_svg").remove();
+            var el = document.querySelector("#" + this.renderContainerId + "_svg");
+            if (el && el.parentElement)
+                el.parentElement.removeChild(el);
 
             var w = this.canvasWidth - margin.left - margin.right,
                 h = this.canvasHeight - margin.top - margin.bottom;
@@ -9982,8 +10041,8 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
         // Prepare the data in a proper format to draw overlapped charts
         this.overlapDataPrep = function (Odata, data) {
 
-            var overlappedData = jQuery.extend(true, {}, Odata);
-            var originalData = jQuery.extend(true, {}, data);
+            var overlappedData = Object.assign({}, Odata);
+            var originalData = Object.assign({}, data);
 
             var tempCategories = [];
             for (var i = 0; i < originalData.categories.length; ++i) {
@@ -10039,100 +10098,100 @@ The EdgeVerve proprietary software program ("Program"), is protected by copyrigh
         //Using tipsy.js to add tooltip to chartItems
         //Default Behaviour -- No explicit options -- Feel free to add
         this.tooltip = function (svg, element, detailed, circular) {
-            if (!detailed && element == '.legend') {
-                $(element).tipsy({
-                    gravity: 's',
-                    html: true,
-                    title: function () {
-                        var d = this.__data__;
-                        var legendName;
-                        if (typeof d.longName != 'undefined')
-                            legendName = d.longName;
-                        else
-                            legendName = d.categoryLongName;
+            // if (!detailed && element == '.legend') {
+            //     $(element).tipsy({
+            //         gravity: 's',
+            //         html: true,
+            //         title: function() {
+            //             var d = this.__data__;
+            //             var legendName;
+            //             if (typeof d.longName != 'undefined')
+            //                 legendName = d.longName;
+            //             else
+            //                 legendName = d.categoryLongName;
 
-                        var borderColor = this.style.fill;
-                        return '<div style="padding: 5px; border-color: ' + borderColor + '; border-style: solid; border-width: 1px; display: inline-block; position: relative; box-shadow: 1px 1px 2px rgba(0,0,0,0.24);background: #FFF;color: #000;font-family: \'Roboto Light\' !important;font-size:11px;">' + legendName + '<br/><span style="position: absolute;left:calc(50% - 5px); bottom: -6px; background: #FFF; display: block; width: 10px; height: 10px; border-left: 1px solid ' + borderColor + '; border-bottom: 1px solid ' + borderColor + '; -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); box-shadow: -1px 2px 1px rgba(0,0,0,0.24); "></span></div>';
-                    }
-                });
-            } else if (!detailed && element == '.kpi') {
-                $(element).tipsy({
-                    gravity: 's',
-                    html: true,
-                    title: function () {
-                        var d = this.__data__;
-                        if (typeof d == 'object')
-                            d = d.data;
-                        var borderColor = this.style.fill;
-                        return '<div style="padding: 5px; border-color: ' + borderColor + '; border-style: solid; border-width: 1px; display: inline-block; position: relative; box-shadow: 1px 1px 2px rgba(0,0,0,0.24);background: #FFF;color: #000;font-family: \'Roboto Light\' !important;font-size:11px;">' + d + '%<br/><span style="position: absolute;left:calc(50% - 5px); bottom: -6px; background: #FFF; display: block; width: 10px; height: 10px; border-left: 1px solid ' + borderColor + '; border-bottom: 1px solid ' + borderColor + '; -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); box-shadow: -1px 2px 1px rgba(0,0,0,0.24); "></span></div>';
-                    }
-                });
-            } else if (detailed && element == '.paretoCircle') {
-                $(element).tipsy({
-                    gravity: 's',
-                    html: true,
-                    title: function () {
-                        var d = this.__data__;
-                        d = d.cumulativePercentage;
-                        var borderColor = this.style.stroke;
-                        return '<div style="padding: 5px; border-color: ' + borderColor + '; border-style: solid; border-width: 1px; display: inline-block; position: relative; box-shadow: 1px 1px 2px rgba(0,0,0,0.24);background: #FFF;color: #000;font-family: \'Roboto Light\' !important;font-size:11px;">' + d + '%<br/><span style="position: absolute;left:calc(50% - 5px); bottom: -6px; background: #FFF; display: block; width: 10px; height: 10px; border-left: 1px solid ' + borderColor + '; border-bottom: 1px solid ' + borderColor + '; -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); box-shadow: -1px 2px 1px rgba(0,0,0,0.24); "></span></div>';
-                    }
-                });
-            } else if (!detailed && element == '.triangle') {
-                $(element).tipsy({
-                    gravity: 's',
-                    html: true,
-                    title: function () {
-                        var d = this.__data__;
-                        var borderColor = this.style.fill;
-                        return '<div style="padding: 5px; border-color: ' + borderColor + '; border-style: solid; border-width: 1px; display: inline-block; position: relative; box-shadow: 1px 1px 2px rgba(0,0,0,0.24);background: #FFF;color: #000;font-family: \'Roboto Light\' !important;font-size:11px;">' + d + '<br/><span style="position: absolute;left:calc(50% - 5px); bottom: -6px; background: #FFF; display: block; width: 10px; height: 10px; border-left: 1px solid ' + borderColor + '; border-bottom: 1px solid ' + borderColor + '; -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); box-shadow: -1px 2px 1px rgba(0,0,0,0.24); "></span></div>';
-                    }
-                });
-            } else if (!detailed && element == '.tick') {
-                $(element).tipsy({
-                    gravity: 's',
-                    html: true,
-                    title: function () {
-                        var d = this.__data__;
-                        var borderColor = this.style.fill;
-                        return '<div style="padding: 5px; border-color: ' + borderColor + '; border-style: solid; border-width: 1px; display: inline-block; position: relative; box-shadow: 1px 1px 2px rgba(0,0,0,0.24);background: #FFF;color: #000;font-family: \'Roboto Light\' !important;font-size:11px;">' + d + '<span style="position: absolute;left:calc(50% - 5px); bottom: -6px; background: #FFF; display: block; width: 10px; height: 10px; border-left: 1px solid ' + borderColor + '; border-bottom: 1px solid ' + borderColor + '; -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); box-shadow: -1px 2px 1px rgba(0,0,0,0.24); "></span></div>';
-                    }
-                });
-            } else if (detailed && !circular) {
-                $(element).tipsy({
-                    gravity: 's',
-                    html: true,
-                    title: function () {
-                        var d = this.__data__;
-                        var borderColor = this.style.fill;
-                        if (element === '.areacircle')
-                            borderColor = this.style.stroke;
-                        return '<div style="padding: 5px; border-color: ' + borderColor + '; border-style: solid; border-width: 1px; display: inline-block; position: relative; box-shadow: 1px 1px 2px rgba(0,0,0,0.24);background: #FFF;color: #000;font-family: \'Roboto Light\' !important;font-size:11px;">' + d.fmtData + '<br/>' + d.seriesLongName + '<br/>' + d.categoryLongName + '<br/><span style="position: absolute;left:calc(50% - 5px); bottom: -6px; background: #FFF; display: block; width: 10px; height: 10px; border-left: 1px solid ' + borderColor + '; border-bottom: 1px solid ' + borderColor + '; -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); box-shadow: -1px 2px 1px rgba(0,0,0,0.24); "></span></div>';
-                    }
-                });
-            } else if (!detailed && !circular) {
-                $(element).tipsy({
-                    gravity: 's',
-                    html: true,
-                    title: function () {
-                        if (typeof this.__data__ != 'undefined') {
-                            var d = this.__data__;
-                            var borderColor = this.style.fill;
-                            return '<div style="padding: 5px; border-color: ' + borderColor + '; border-style: solid; border-width: 1px; display: inline-block; position: relative; box-shadow: 1px 1px 2px rgba(0,0,0,0.24);background: #FFF;color: #000;font-family: \'Roboto Light\' !important;font-size:11px;">' + d + ' <br/><span style="position: absolute;left:calc(50% - 5px); bottom: -6px; background: #FFF; display: block; width: 10px; height: 10px; border-left: 1px solid ' + borderColor + '; border-bottom: 1px solid ' + borderColor + '; -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); box-shadow: -1px 2px 1px rgba(0,0,0,0.24); "></span></div>';
-                        }
-                    }
-                });
-            } else if (detailed && circular) {
-                $(element).tipsy({
-                    gravity: 's',
-                    html: true,
-                    title: function () {
-                        var d = this.__data__;
-                        var borderColor = this.style.fill;
-                        return '<div style="padding: 5px; border-color: ' + borderColor + '; border-style: solid; border-width: 1px; display: inline-block; position: relative; box-shadow: 1px 1px 2px rgba(0,0,0,0.24);background: #FFF;color: #000;font-family: \'Roboto Light\' !important;font-size:11px;">' + d.percent + '%<br/>' + d.seriesLongName + '<br/>' + d.categoryLongName + '<br/><span style="position: absolute;left:calc(50% - 5px); bottom: -6px; background: #FFF; display: block; width: 10px; height: 10px; border-left: 1px solid ' + borderColor + '; border-bottom: 1px solid ' + borderColor + '; -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); box-shadow: -1px 2px 1px rgba(0,0,0,0.24); "></span></div>';
-                    }
-                });
-            }
+            //             var borderColor = this.style.fill;
+            //             return '<div style="padding: 5px; border-color: ' + borderColor + '; border-style: solid; border-width: 1px; display: inline-block; position: relative; box-shadow: 1px 1px 2px rgba(0,0,0,0.24);background: #FFF;color: #000;font-family: \'Roboto Light\' !important;font-size:11px;">' + legendName + '<br/><span style="position: absolute;left:calc(50% - 5px); bottom: -6px; background: #FFF; display: block; width: 10px; height: 10px; border-left: 1px solid ' + borderColor + '; border-bottom: 1px solid ' + borderColor + '; -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); box-shadow: -1px 2px 1px rgba(0,0,0,0.24); "></span></div>';
+            //         }
+            //     });
+            // } else if (!detailed && element == '.kpi') {
+            //     $(element).tipsy({
+            //         gravity: 's',
+            //         html: true,
+            //         title: function() {
+            //             var d = this.__data__;
+            //             if (typeof d == 'object')
+            //                 d = d.data;
+            //             var borderColor = this.style.fill;
+            //             return '<div style="padding: 5px; border-color: ' + borderColor + '; border-style: solid; border-width: 1px; display: inline-block; position: relative; box-shadow: 1px 1px 2px rgba(0,0,0,0.24);background: #FFF;color: #000;font-family: \'Roboto Light\' !important;font-size:11px;">' + d + '%<br/><span style="position: absolute;left:calc(50% - 5px); bottom: -6px; background: #FFF; display: block; width: 10px; height: 10px; border-left: 1px solid ' + borderColor + '; border-bottom: 1px solid ' + borderColor + '; -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); box-shadow: -1px 2px 1px rgba(0,0,0,0.24); "></span></div>';
+            //         }
+            //     });
+            // } else if (detailed && element == '.paretoCircle') {
+            //     $(element).tipsy({
+            //         gravity: 's',
+            //         html: true,
+            //         title: function() {
+            //             var d = this.__data__;
+            //             d = d.cumulativePercentage;
+            //             var borderColor = this.style.stroke;
+            //             return '<div style="padding: 5px; border-color: ' + borderColor + '; border-style: solid; border-width: 1px; display: inline-block; position: relative; box-shadow: 1px 1px 2px rgba(0,0,0,0.24);background: #FFF;color: #000;font-family: \'Roboto Light\' !important;font-size:11px;">' + d + '%<br/><span style="position: absolute;left:calc(50% - 5px); bottom: -6px; background: #FFF; display: block; width: 10px; height: 10px; border-left: 1px solid ' + borderColor + '; border-bottom: 1px solid ' + borderColor + '; -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); box-shadow: -1px 2px 1px rgba(0,0,0,0.24); "></span></div>';
+            //         }
+            //     });
+            // } else if (!detailed && element == '.triangle') {
+            //     $(element).tipsy({
+            //         gravity: 's',
+            //         html: true,
+            //         title: function() {
+            //             var d = this.__data__;
+            //             var borderColor = this.style.fill;
+            //             return '<div style="padding: 5px; border-color: ' + borderColor + '; border-style: solid; border-width: 1px; display: inline-block; position: relative; box-shadow: 1px 1px 2px rgba(0,0,0,0.24);background: #FFF;color: #000;font-family: \'Roboto Light\' !important;font-size:11px;">' + d + '<br/><span style="position: absolute;left:calc(50% - 5px); bottom: -6px; background: #FFF; display: block; width: 10px; height: 10px; border-left: 1px solid ' + borderColor + '; border-bottom: 1px solid ' + borderColor + '; -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); box-shadow: -1px 2px 1px rgba(0,0,0,0.24); "></span></div>';
+            //         }
+            //     });
+            // } else if (!detailed && element == '.tick') {
+            //     $(element).tipsy({
+            //         gravity: 's',
+            //         html: true,
+            //         title: function() {
+            //             var d = this.__data__;
+            //             var borderColor = this.style.fill;
+            //             return '<div style="padding: 5px; border-color: ' + borderColor + '; border-style: solid; border-width: 1px; display: inline-block; position: relative; box-shadow: 1px 1px 2px rgba(0,0,0,0.24);background: #FFF;color: #000;font-family: \'Roboto Light\' !important;font-size:11px;">' + d + '<span style="position: absolute;left:calc(50% - 5px); bottom: -6px; background: #FFF; display: block; width: 10px; height: 10px; border-left: 1px solid ' + borderColor + '; border-bottom: 1px solid ' + borderColor + '; -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); box-shadow: -1px 2px 1px rgba(0,0,0,0.24); "></span></div>';
+            //         }
+            //     });
+            // } else if (detailed && !circular) {
+            //     $(element).tipsy({
+            //         gravity: 's',
+            //         html: true,
+            //         title: function() {
+            //             var d = this.__data__;
+            //             var borderColor = this.style.fill;
+            //             if (element === '.areacircle')
+            //                 borderColor = this.style.stroke;
+            //             return '<div style="padding: 5px; border-color: ' + borderColor + '; border-style: solid; border-width: 1px; display: inline-block; position: relative; box-shadow: 1px 1px 2px rgba(0,0,0,0.24);background: #FFF;color: #000;font-family: \'Roboto Light\' !important;font-size:11px;">' + d.fmtData + '<br/>' + d.seriesLongName + '<br/>' + d.categoryLongName + '<br/><span style="position: absolute;left:calc(50% - 5px); bottom: -6px; background: #FFF; display: block; width: 10px; height: 10px; border-left: 1px solid ' + borderColor + '; border-bottom: 1px solid ' + borderColor + '; -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); box-shadow: -1px 2px 1px rgba(0,0,0,0.24); "></span></div>';
+            //         }
+            //     });
+            // } else if (!detailed && !circular) {
+            //     $(element).tipsy({
+            //         gravity: 's',
+            //         html: true,
+            //         title: function() {
+            //             if (typeof this.__data__ != 'undefined') {
+            //                 var d = this.__data__;
+            //                 var borderColor = this.style.fill;
+            //                 return '<div style="padding: 5px; border-color: ' + borderColor + '; border-style: solid; border-width: 1px; display: inline-block; position: relative; box-shadow: 1px 1px 2px rgba(0,0,0,0.24);background: #FFF;color: #000;font-family: \'Roboto Light\' !important;font-size:11px;">' + d + ' <br/><span style="position: absolute;left:calc(50% - 5px); bottom: -6px; background: #FFF; display: block; width: 10px; height: 10px; border-left: 1px solid ' + borderColor + '; border-bottom: 1px solid ' + borderColor + '; -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); box-shadow: -1px 2px 1px rgba(0,0,0,0.24); "></span></div>';
+            //             }
+            //         }
+            //     });
+            // } else if (detailed && circular) {
+            //     $(element).tipsy({
+            //         gravity: 's',
+            //         html: true,
+            //         title: function() {
+            //             var d = this.__data__;
+            //             var borderColor = this.style.fill;
+            //             return '<div style="padding: 5px; border-color: ' + borderColor + '; border-style: solid; border-width: 1px; display: inline-block; position: relative; box-shadow: 1px 1px 2px rgba(0,0,0,0.24);background: #FFF;color: #000;font-family: \'Roboto Light\' !important;font-size:11px;">' + d.percent + '%<br/>' + d.seriesLongName + '<br/>' + d.categoryLongName + '<br/><span style="position: absolute;left:calc(50% - 5px); bottom: -6px; background: #FFF; display: block; width: 10px; height: 10px; border-left: 1px solid ' + borderColor + '; border-bottom: 1px solid ' + borderColor + '; -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); box-shadow: -1px 2px 1px rgba(0,0,0,0.24); "></span></div>';
+            //         }
+            //     });
+            // }
 
         }
         //Wraps the text labels in the axis

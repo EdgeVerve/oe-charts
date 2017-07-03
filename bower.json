@@ -16,8 +16,7 @@
   ],
   "dependencies": {
     "d3": "3.5.5",
-    "lodash": "^4.17.4",
-    "jquery": "^3.2.1",
+    "lodash": "^4.3.0",
     "polymer": "Polymer/polymer#^1.1.0",
     "oe-ajax": "*"
   }

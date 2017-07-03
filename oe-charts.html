@@ -6,14 +6,12 @@
 
 <script type="text/javascript" src="../lodash/lodash.js"></script>
 <script type="text/javascript" src="../d3/d3.min.js"></script>
-<script type="text/javascript" src="../jquery/dist/jquery.min.js"></script>
-<script type="text/javascript" src="dist/jquery.tipsy.js"></script>
 <script type="text/javascript" src="dist/xCharts.min.js"></script>
 
 <dom-module id="oe-charts">
 	<template>
 		<style>
-			:host{
+			:host {
 				display: block;
 				position: relative;
 			}
@@ -28,40 +26,40 @@
 			properties: {
 				chartType: {
 					type: String,
-					value: function() {
+					value: function () {
 						// default chart type is grouped column
 						return "groupedColumn"
 					}
 				},
 				renderContainerId: {
 					type: String,
-					value: function() {
+					value: function () {
 						return "chartContainer";
 					}
 				},
 				data: {
 					type: Array,
-					value: function() {
+					value: function () {
 						return [];
 					}
 				},
 				/*  when category changes, a function from utility will get invoked. */
 				category: {
 					type: String,
-					value: function() {
+					value: function () {
 						return "";
 					}
 				},
 				series: {
 					type: Array,
-					value: function() {
+					value: function () {
 						return [];
 					}
 				},
 				/*  when data url changes, a function from utility will get invoked. */
 				dataUrl: {
 					type: String,
-					value: function() {
+					value: function () {
 						return "";
 					},
 					observer: 'dataUrlChanged'
@@ -74,28 +72,28 @@
 					type: Number,
 					value: 300
 				},
-				inheritParentDimension:{
-					type:Boolean,
-					value:false,
-					observer:'_handleInheritance'
+				inheritParentDimension: {
+					type: Boolean,
+					value: false,
+					observer: '_handleInheritance'
 				}
 			},
 			observers: ['parameterChanged(series.*,data.*,category,chartType,chartHeight,chartWidth)'],
-			attached: function() {
+			attached: function () {
 				this.init();
 				this.aggregateFunctions = {
-					'sum': function(data) {
-						return data.reduce(function(a, b) {
+					'sum': function (data) {
+						return data.reduce(function (a, b) {
 							return a + b;
 						});
 					},
-					'average': function(data) {
-						var sum = data.reduce(function(a, b) {
+					'average': function (data) {
+						var sum = data.reduce(function (a, b) {
 							return a + b;
 						});
 						return sum / data.length;
 					},
-					'count': function(data) {
+					'count': function (data) {
 						return data.length;
 					}
 				}
@@ -111,22 +109,22 @@
 				}
 				this.parameterChanged();
 			},
-			_handleInheritance:function(){
+			_handleInheritance: function () {
 				var parentElem = this.parentElement;
-				if(this.inheritParentDimension){
-					this._dimensionInteraval = setInterval(function(){
-						if(this.chartHeight !== parentElem.offsetHeight){
-							this.set('chartHeight',parentElem.offsetHeight);
+				if (this.inheritParentDimension) {
+					this._dimensionInteraval = setInterval(function () {
+						if (this.chartHeight !== parentElem.offsetHeight) {
+							this.set('chartHeight', parentElem.offsetHeight);
 						}
-						if(this.chartWidth !== parentElem.offsetWidth){
-							this.set('chartWidth',parentElem.offsetWidth);
+						if (this.chartWidth !== parentElem.offsetWidth) {
+							this.set('chartWidth', parentElem.offsetWidth);
 						}
-					}.bind(this),100);
-				}else{
+					}.bind(this), 100);
+				} else {
 					clearInterval(this._dimensionInteraval)
 				}
 			},
-			checkAndRender: function(data) {
+			checkAndRender: function (data) {
 				if (Array.isArray(data) && data.length === 0)
 					return;
 				if (!this.chartTypes || !this.aggregateFunctions) {
@@ -139,7 +137,7 @@
 				}
 
 			},
-			render: function(data) {
+			render: function (data) {
 				if (!this.ifStructuredData(data))
 					return;
 				var chart = new xChart.chart(this.renderContainerId);
@@ -153,31 +151,31 @@
 				});
 				chart.render(data);
 			},
-			dataUrlChanged: function() {
+			dataUrlChanged: function () {
 				if (!this.dataUrl)
 					return;
 				console.log('fetching data from  - ' + this.dataUrl);
-				this.makeAjaxCall(this.dataUrl, 'get', null, null, null, function(err, resp) {
+				this.makeAjaxCall(this.dataUrl, 'get', null, null, null, function (err, resp) {
 					if (resp) {
 						this.set('data', resp);
 					}
 				}.bind(this));
 			},
-			parameterChanged: function() {
+			parameterChanged: function () {
 				this.checkAndRender(this.data, this.category, this.series);
 			},
-			restructureData: function(data, category, series) {
+			restructureData: function (data, category, series) {
 				if (!data || !category || !series || series.length === 0)
 					return;
 				var groups = _.groupBy(data, category);
-				var categoryData = Object.keys(groups).map(function(d) {
+				var categoryData = Object.keys(groups).map(function (d) {
 					return {
 						"longName": d,
 						"name": d,
 						"value": d
 					};
 				});
-				var seriesData = series.map(function(d) {
+				var seriesData = series.map(function (d) {
 					d.aggregation = d.aggregation || 'sum';
 					var aggFunc = this.aggregateFunctions[d.aggregation];
 					return {
@@ -198,35 +196,35 @@
 				};
 				return formattedData;
 			},
-			getSeriesData: function(data, series, aggregation) {
-				return _.map(data, function(d) {
-					return d.map(function(e) {
+			getSeriesData: function (data, series, aggregation) {
+				return _.map(data, function (d) {
+					return d.map(function (e) {
 						return parseFloat(e[series]);
 					});
-				}).map(function(k) {
+				}).map(function (k) {
 					return aggregation(k);
 				});
 			},
-			ifStructuredData: function(data) {
+			ifStructuredData: function (data) {
 				if (typeof data === 'object') {
 					if (data.categories && data.series && Array.isArray(data.categories) && Array.isArray(data.series))
 						return true;
 				}
 				return false;
 			},
-			getGUID: function() {
+			getGUID: function () {
 				var randoms = (window.crypto || window.msCrypto).getRandomValues(new Uint32Array(2)); // eslint-disable-line no-undef
 				return randoms[0].toString(36).substring(2, 15) +
 					randoms[1].toString(36).substring(2, 15);
 			},
-			init: function() {
+			init: function () {
 				//setting random id to the chart container
 				var container = this.querySelector('#chartContainer');
 				var chartName = 'chart-' + this.getGUID();
 				container.setAttribute('id', chartName);
 				this.set('renderContainerId', chartName);
 			},
-			makeAjaxCall: function(url, method, body, filters, header, cb) {
+			makeAjaxCall: function (url, method, body, filters, header, cb) {
 				var ajax = document.createElement('oe-ajax');
 				ajax.url = url;
 				ajax.method = method;
@@ -234,11 +232,11 @@
 					ajax.body = JSON.stringify(body);
 				}
 				ajax.contentType = "application/json";
-				ajax.addEventListener('response', function(resp, err) {
+				ajax.addEventListener('response', function (resp, err) {
 					this.fire('end-spinner');
 					cb(null, resp.detail.response);
 				}.bind(this));
-				ajax.addEventListener('error', function(err) {
+				ajax.addEventListener('error', function (err) {
 					this.fire('end-spinner');
 					cb(err, null);
 				}.bind(this));
@@ -248,6 +246,5 @@
 				ajax.generateRequest();
 			}
 		});
-
 	</script>
 </dom-module>

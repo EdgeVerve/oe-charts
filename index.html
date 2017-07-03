@@ -29,20 +29,22 @@
             height: 300px;
         }
 
-		.header{
-			display: flex;
-			    align-items: baseline;
-		}
-		.header h3{
-			padding: 0px 16px;
-		}
-		.chart-container{
-			height: 300px;
-			width: 300px;
-			border:1px solid blue;
-			overflow: auto;
-			resize: both;
-		}
+        .header {
+            display: flex;
+            align-items: baseline;
+        }
+
+        .header h3 {
+            padding: 0px 16px;
+        }
+
+        .chart-container {
+            height: 300px;
+            width: 300px;
+            border: 1px solid blue;
+            overflow: auto;
+            resize: both;
+        }
     </style>
     <link rel="import" href="oe-charts.html">
 
@@ -50,128 +52,127 @@
 
 <body>
     <div id="container">
-			<div class="header">
-				<h3>Chart Type</h3>
-				<select onchange="demoControl.typeFn(event)">
+        <div class="header">
+            <h3>Chart Type</h3>
+            <select onchange="demoControl.typeFn(event)">
 				  <option value="groupedchart">Grouped Chart</option>
 				  <option value="pie">Pie </option>
 				  <option value="groupedbar">Grouped Bar</option>
 				  <option value="donut">Donut</option>
 				</select>
-				<h3>Chart Width</h3>
-				<input onchange="demoControl.widthFn(event)" value="300"/>
-				<h3>Chart Height</h3>
-				<input onchange="demoControl.heightFn(event)" value="300"/>
-				<h3>Inherit Parent</h3>
-				<input type="checkbox" onchange="demoControl.inheritFn(event)"/>
-			</div>
-			<div class="chart-container">
-				<oe-charts id="chart-ele" chart-type="groupedchart"></oe-charts>
-			</div>
+            <h3>Chart Width</h3>
+            <input onchange="demoControl.widthFn(event)" value="300" />
+            <h3>Chart Height</h3>
+            <input onchange="demoControl.heightFn(event)" value="300" />
+            <h3>Inherit Parent</h3>
+            <input type="checkbox" onchange="demoControl.inheritFn(event)" />
         </div>
+        <div class="chart-container">
+            <oe-charts id="chart-ele" chart-type="groupedcolumn"></oe-charts>
+        </div>
+    </div>
     <script>
+        var demoControl = (function () {
+            var chart = document.getElementById("chart-ele");
+            function getRandomData(num) {
+                return Math.random() * num;
+            }
+            function chartTypeChanged(e) {
+                chart.setAttribute('chart-type', e.currentTarget.value);
+            }
+            function changeInheritance(e) {
+                if (e.currentTarget.checked) {
+                    chart.setAttribute('inherit-parent-dimension', '');
+                } else {
+                    chart.removeAttribute('inherit-parent-dimension');
+                }
+            }
+            function chartWidthChanged(e) {
+                chart.setAttribute('chart-width', e.target.value);
+            }
+            function chartHeightChanged(e) {
+                chart.setAttribute('chart-height', e.target.value);
+            }
+            var sampledata = [
+                {
+                    country: "USA",
+                    state: 'california',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: "USA",
+                    state: 'florida',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: "USA",
+                    state: 'alaska',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: "USA",
+                    state: 'texas',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'india',
+                    state: 'mumbai',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'india',
+                    state: 'delhi',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'india',
+                    state: 'karnatka',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'india',
+                    state: 'punjab',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'China',
+                    state: 'hainan',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'China',
+                    state: 'yunnan',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'China',
+                    state: 'fujian',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'China',
+                    state: 'shandong',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'China',
+                    state: 'jilin',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }];
 
-		var demoControl = (function(){
-			var chart = document.getElementById("chart-ele");
-			function getRandomData(num) {
-            return Math.random() * num;
-        }
-			function chartTypeChanged(e){
-		chart.setAttribute('chart-type',e.currentTarget.value);
-}
-			function changeInheritance(e){
-				if(e.currentTarget.checked){
-					chart.setAttribute('inherit-parent-dimension','');
-				}else{
-					chart.removeAttribute('inherit-parent-dimension');
-				}
-			}
-			function chartWidthChanged(e){
-				chart.setAttribute('chart-width',e.target.value);
-			}
-			function chartHeightChanged(e){
-				chart.setAttribute('chart-height',e.target.value);
-			}
-			var sampledata = [
-			{
-            country: "USA",
-            state: 'california',
-            population: getRandomData(1000000),
-            area: getRandomData(1000000)
-        }, {
-            country: "USA",
-            state: 'florida',
-            population: getRandomData(1000000),
-            area: getRandomData(1000000)
-        }, {
-            country: "USA",
-            state: 'alaska',
-            population: getRandomData(1000000),
-            area: getRandomData(1000000)
-        }, {
-            country: "USA",
-            state: 'texas',
-            population: getRandomData(1000000),
-            area: getRandomData(1000000)
-        }, {
-            country: 'india',
-            state: 'mumbai',
-            population: getRandomData(1000000),
-            area: getRandomData(1000000)
-        }, {
-            country: 'india',
-            state: 'delhi',
-            population: getRandomData(1000000),
-            area: getRandomData(1000000)
-        }, {
-            country: 'india',
-            state: 'karnatka',
-            population: getRandomData(1000000),
-            area: getRandomData(1000000)
-        }, {
-            country: 'india',
-            state: 'punjab',
-            population: getRandomData(1000000),
-            area: getRandomData(1000000)
-        }, {
-            country: 'China',
-            state: 'hainan',
-            population: getRandomData(1000000),
-            area: getRandomData(1000000)
-        }, {
-            country: 'China',
-            state: 'yunnan',
-            population: getRandomData(1000000),
-            area: getRandomData(1000000)
-        }, {
-            country: 'China',
-            state: 'fujian',
-            population: getRandomData(1000000),
-            area: getRandomData(1000000)
-        }, {
-            country: 'China',
-            state: 'shandong',
-            population: getRandomData(1000000),
-            area: getRandomData(1000000)
-        }, {
-            country: 'China',
-            state: 'jilin',
-            population: getRandomData(1000000),
-            area: getRandomData(1000000)
-        }];
-
-			function loadRender(){
-			 chart.setAttribute('category', 'country');
-			 chart.setAttribute('series', JSON.stringify([{
-				 "property": "population",
-				 "aggregation": "sum",
-				 "color": "red"
-			 }, {
-				 "property": "area",
-				 "aggregation": "sum",
-				 "color": "green"
-			 }]));
-			 chart.setAttribute('data', JSON.stringify(sampledata));
+            function loadRender() {
+                chart.setAttribute('category', 'country');
+                chart.setAttribute('series', JSON.stringify([{
+                    "property": "population",
+                    "aggregation": "sum",
+                    "color": "red"
+                }, {
+                    "property": "area",
+                    "aggregation": "sum",
+                    "color": "green"
+                }]));
+                chart.setAttribute('data', JSON.stringify(sampledata));
 
                 /*chart.setAttribute('category', 'name');
                 chart.setAttribute('series', JSON.stringify([{
@@ -179,20 +180,20 @@
                     "color": "rgb(94, 101, 233)"
                 }]));
                 chart.setAttribute('data-url', "http://localhost:3000/api/Students");*/
-		}
+            }
 
-			return {
-				loanFn:loadRender,
-				typeFn:chartTypeChanged,
-				widthFn:chartWidthChanged,
-				heightFn:chartHeightChanged,
-				inheritFn:changeInheritance
-			}
-		})()
+            return {
+                loanFn: loadRender,
+                typeFn: chartTypeChanged,
+                widthFn: chartWidthChanged,
+                heightFn: chartHeightChanged,
+                inheritFn: changeInheritance
+            }
+        })()
 
 
 
-		document.body.onload = demoControl.loanFn;
+        document.body.onload = demoControl.loanFn;
     </script>
 </body>
 
