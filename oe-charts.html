@@ -116,9 +116,9 @@
               this.debounce('update-chart-dimensions', function () {
                 this.set('chartHeight', parentElem.offsetHeight);
                 this.set('chartWidth', parentElem.offsetWidth);
-              }, 299);
+              }, 499);
             }
-          }.bind(this), 300);
+          }.bind(this), 500);
         } else {
           clearInterval(this._dimensionInteraval)
         }
@@ -142,7 +142,7 @@
         var chart = new this.xChart.chart(this.renderContainerId);
         var container = this.querySelector('#' + this.renderContainerId);
         if (container.offsetHeight < 200 || container.offsetWidth < 200) {
-            return;
+          return;
         }
         chart.setOptions({
           chartClientId: 'chart_' + this.getGUID(),
