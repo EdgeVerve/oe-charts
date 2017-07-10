@@ -19,5 +19,8 @@
     "lodash": "^4.3.0",
     "polymer": "Polymer/polymer#^1.1.0",
     "oe-ajax": "*"
+  },
+  "resolutions": {
+    "polymer": "^1.1.4"
   }
 }

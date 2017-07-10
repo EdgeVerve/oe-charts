@@ -475,34 +475,34 @@
                         svg.on('click', function() {
                             if (typeof bars[0] != 'undefined')
                                 bars[0].forEach(function(d) {
-                                    if (d3.select(d3.event.target).attr('class').indexOf('bar') === -1 && d3.select(d3.event.target).attr('class').indexOf("legend") === -1) {
+                                    if (d3.event.target.nodeName !== 'rect') {
                                         d3.select(d).attr('filter', '');
                                         d3.select(d).style('opacity', '1');
                                     }
                                 });
 
-                            slices[0].forEach(function(d) {
-                                if (typeof slices[0] != 'undefined')
-                                    if (d3.select(d3.event.target).attr('class').indexOf('pie') === -1 && d3.select(d3.event.target).attr('class').indexOf("legend") === -1) {
-                                        d3.select(d).attr('filter', '');
-                                        d3.select(d).style('opacity', '1');
-                                    }
-                            });
+                            if (typeof slices[0] != 'undefined')
+                                slices[0].forEach(function(d) {
+                                        if (d3.event.target.nodeName !== 'path') {
+                                            d3.select(d).attr('filter', '');
+                                            d3.select(d).style('opacity', '1');
+                                        }
+                                });
 
-                            bubbles[0].forEach(function(d) {
-                                if (typeof bubbles[0] != 'undefined')
-                                    if (d3.select(d3.event.target).attr('class').indexOf('bubble') === -1 && d3.select(d3.event.target).attr('class').indexOf("legend") === -1) {
-                                        d3.select(d).attr('filter', '');
-                                        d3.select(d).style('opacity', '1');
-                                    }
-                            });
-                            mapCircles[0].forEach(function(d) {
-                                if (typeof mapCircles[0] != 'undefined')
-                                    if (d3.select(d3.event.target).attr('class').indexOf('mapCircle') === -1 && d3.select(d3.event.target).attr('class').indexOf("legend") === -1) {
-                                        //d3.select(d).attr('filter', '');
-                                        d3.select(d).style('opacity', '1');
-                                    }
-                            });
+                            if (typeof bubbles[0] != 'undefined')
+                                bubbles[0].forEach(function(d) {
+                                        if (d3.event.target.nodeName !== 'circle') {
+                                            d3.select(d).attr('filter', '');
+                                            d3.select(d).style('opacity', '1');
+                                        }
+                                });
+                            if (typeof mapCircles[0] != 'undefined')
+                                mapCircles[0].forEach(function(d) {
+                                        if (d3.event.target.nodeName !== 'circle') {
+                                            //d3.select(d).attr('filter', '');
+                                            d3.select(d).style('opacity', '1');
+                                        }
+                                });
                         });
                     }
                     //Each event handler attached to the respective objects
