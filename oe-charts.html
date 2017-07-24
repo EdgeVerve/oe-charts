@@ -62,6 +62,13 @@
           },
           observer: 'dataUrlChanged'
         },
+        changeStreamUrl: {
+          type: String,
+          value: function () {
+            return "";
+          },
+          observer: 'registerChangeStream'
+        },
         chartWidth: {
           type: Number,
           value: 300
@@ -74,6 +81,12 @@
           type: Boolean,
           value: false,
           observer: '_handleInheritance'
+        },
+        drawNew: {
+          type: Boolean,
+          value: function () {
+            return true;
+          }
         }
       },
       behaviors: [OEchartBehavior],
@@ -104,20 +117,34 @@
           'groupedcolumn': 'groupedColumn',
           'groupedbar': 'groupedBar',
           'stackedcolumn': 'stackedColumn',
-          'stackedbar': 'stackedBar'
+          'stackedbar': 'stackedBar',
+          'bubble': 'bubble'
         }
         this.parameterChanged();
+      },
+      registerChangeStream: function () {
+        if (!this.changeStreamUrl)
+          return;
+        var src = new EventSource(this.changeStreamUrl);
+        src.addEventListener('data', function (msg) {
+          var data = JSON.parse(msg.data);
+          data = data.data;
+          if (data)
+            this.push('data', data);
+        }.bind(this));
       },
       _handleInheritance: function () {
         var parentElem = this.parentElement;
         if (this.inheritParentDimension) {
           this._dimensionInteraval = setInterval(function () {
-            if (this.chartHeight !== parentElem.offsetHeight || this.chartWidth !== parentElem.offsetWidth) {
-              this.debounce('update-chart-dimensions', function () {
+            this.debounce('update-chart-dimensions', function () {
+              if (this.chartHeight !== parentElem.offsetHeight || this.chartWidth !== parentElem.offsetWidth) {
+                this.set('drawNew', true);
                 this.set('chartHeight', parentElem.offsetHeight);
+                this.set('drawNew', true);
                 this.set('chartWidth', parentElem.offsetWidth);
-              }, 499);
-            }
+              }
+            }, 499);
           }.bind(this), 500);
         } else {
           clearInterval(this._dimensionInteraval)
@@ -139,17 +166,21 @@
       render: function (data) {
         if (!this.ifStructuredData(data))
           return;
-        var chart = new this.xChart.chart(this.renderContainerId);
+        if (this.drawNew) {
+          this.chart = new this.xChart.chart(this.renderContainerId);
+          this.chartId = this.getGUID();
+          this.drawNew = false;
+        }
         var container = this.querySelector('#' + this.renderContainerId);
         if (container.offsetHeight < 200 || container.offsetWidth < 200) {
           return;
         }
-        chart.setOptions({
-          chartClientId: 'chart_' + this.getGUID(),
+        this.chart.setOptions({
+          chartClientId: 'chart_' + this.chartId,
           chartType: this.chartTypes[this.chartType.toLowerCase()],
           overlap: false
         });
-        chart.render(data);
+        this.chart.render(data);
       },
       dataUrlChanged: function () {
         if (!this.dataUrl)
