@@ -4,7 +4,7 @@ oe-charts is a charting library which provides polymer based charting components
 
 property |type | required | default| description
 -|-|-|-|-
-chartType | string| no | groupedColumn| Following are the supported chartTypes  - `area`, `line`, `pie`, `donut`, `groupedcolumn`, `groupedbar`, `stackedcolumn`, `stackedbar`. 
+chartType | string| no | groupedColumn| Following are the supported chartTypes  - `area`, `line`, `pie`, `donut`, `groupedcolumn`, `groupedbar`, `stackedcolumn`, `stackedbar`,`bubble`. 
 dataUrl |  string|no (if `data` property is provided) | |`dataUrl` should be passed incase the data for the chart is linked with any end point url. Like `/api/ChartData`.  This url is supposed to provide data in a format of array.
 category |  string|yes ||`category` property is used to define the x-axis in chart. It accepts a property name from the individual element of from data.
 series | array |yes || series accepts an array where each element is an object. Proeperties of each element can be  any among `property` ,   `aggregation`, `color`. A sample series element can be as - ```{"property":"age","aggregation":"sum","color":"#f5f5f5"}```. Aggregation value can be `sum`, `count`  or `average`. Charts can be of multiple series. So multiple values can be provided via array.
