@@ -1,5 +1,6 @@
 <script type="text/javascript" src="../d3/d3.min.js"></script>
 <script type="text/javascript" src="../lodash/lodash.js"></script>
+<script type="text/javascript" src="countries/topojson.js"></script>
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../oe-ajax/oe-ajax.html">
 <link rel="import" href="oe-chart-behavior.html">
@@ -14,7 +15,7 @@
         position: relative;
       }
     </style>
-    <div id="chartContainer" style$="height:[[chartHeight]]px;width:[[chartWidth]]px">
+    <div id="[[renderContainerId]]" style$="height:[[chartHeight]]px;width:[[chartWidth]]px">
 
     </div>
   </template>
@@ -27,12 +28,13 @@
           value: function () {
             // default chart type is grouped column
             return "groupedColumn"
-          }
+          },
+          observer: 'chartTypeChanged'
         },
         renderContainerId: {
           type: String,
           value: function () {
-            return "chartContainer";
+            return 'chart-' + this.getGUID();
           }
         },
         data: {
@@ -90,7 +92,7 @@
         }
       },
       behaviors: [OEchartBehavior],
-      observers: ['parameterChanged(series.*,data.*,category,chartType,chartHeight,chartWidth)'],
+      observers: ['parameterChanged(series.*,data.*,category,chartHeight,chartWidth)'],
       attached: function () {
         this.init();
         this.aggregateFunctions = {
@@ -111,15 +113,22 @@
         }
         this.chartTypes = {
           'area': 'area',
+          'bubble': 'bubble',
+          'groupedbar': 'groupedBar',
+          'groupedcolumn': 'groupedColumn',
           'line': 'line',
+          'normalizedstackedcolumn': 'normalizedStackedColumn',
+          'pareto': 'pareto',
           'pie': 'pie',
           'donut': 'donut',
-          'groupedcolumn': 'groupedColumn',
-          'groupedbar': 'groupedBar',
-          'stackedcolumn': 'stackedColumn',
           'stackedbar': 'stackedBar',
-          'bubble': 'bubble'
+          'stackedcolumn': 'stackedColumn',
+          'mapview': 'mapview',
         }
+        this.parameterChanged();
+      },
+      chartTypeChanged: function () {
+        this.set('drawNew', true);
         this.parameterChanged();
       },
       registerChangeStream: function () {
@@ -176,7 +185,7 @@
           return;
         }
         this.chart.setOptions({
-          chartClientId: 'chart_' + this.chartId,
+          chartClientId: this.renderContainerId,
           chartType: this.chartTypes[this.chartType.toLowerCase()],
           overlap: false
         });
@@ -203,18 +212,23 @@
           return {
             "longName": d,
             "name": d,
-            "value": d
+            "value": d,
+            'dimName': d
           };
         });
         var seriesData = series.map(function (d) {
           d.aggregation = d.aggregation || 'sum';
           var aggFunc = this.aggregateFunctions[d.aggregation];
+          var data = this.getSeriesData(groups, d.property, aggFunc);
+          var fmtData = data.map(function (d) {
+            return d.toString();
+          });
           return {
             "longName": d.longName || d.property,
             "name": d.name || d.property,
-            "value": d.property,
-            "data": this.getSeriesData(groups, d.property, aggFunc),
-            "fmtData": [],
+            "value": [d.property],
+            "data": data,
+            "fmtData": fmtData,
             "minValue": {},
             "maxValue": {},
             "axis": null,
@@ -250,10 +264,10 @@
       },
       init: function () {
         //setting random id to the chart container
-        var container = this.querySelector('#chartContainer');
-        var chartName = 'chart-' + this.getGUID();
-        container.setAttribute('id', chartName);
-        this.set('renderContainerId', chartName);
+        // var container = this.querySelector('#chartContainer');
+        // var chartName = 'chart-' + this.getGUID();
+        // container.setAttribute('id', chartName);
+        // this.set('renderContainerId', chartName);
       },
       makeAjaxCall: function (url, method, body, filters, header, cb) {
         var ajax = document.createElement('oe-ajax');

@@ -52,13 +52,20 @@
     <div id="container">
         <div class="header">
             <h3>Chart Type</h3>
-            <select onchange="demoControl.typeFn(event)">
-				  <option value="groupedchart">Grouped Chart</option>
-				  <option value="pie">Pie </option>
-				  <option value="groupedbar">Grouped Bar</option>
-                  <option value="donut">Donut</option>
-                  <option value="bubble">Bubble</option>
-				</select>
+            <select selected="groupedColumn" onchange="demoControl.typeFn(event)">
+                <option value="area">Area</option>
+                <option value="bubble">Bubble</option>
+                <option value="groupedbar">Grouped Bar</option>
+                <option value="groupedcolumn" selected>Grouped Column</option>
+                <option value="line">Line</option>
+                <option value="normalizedstackedcolumn">Normalized Stacked Column</option>
+                <option value="pareto">Pareto</option>
+                <option value="pie">Pie </option>
+                <option value="donut">Donut</option>
+                <option value="stackedbar">Stacked Bar</option>
+                <option value="stackedcolumn">Stacked Column</option>
+                <option value="mapview">Map View</option>
+			</select>
             <h3>Chart Width</h3>
             <input onchange="demoControl.widthFn(event)" value="300" />
             <h3>Chart Height</h3>
@@ -70,6 +77,7 @@
             <oe-charts id="chart-ele" chart-type="groupedcolumn"></oe-charts>
         </div>
     </div>
+    <script type="text/javascript" src="locationdata.js"></script>
     <script>
         var demoControl = (function () {
             var chart = document.getElementById("chart-ele");
@@ -92,44 +100,45 @@
             function chartHeightChanged(e) {
                 chart.setAttribute('chart-height', e.target.value);
             }
+
             var sampledata = [
                 {
-                    country: "USA",
+                    country: "United States",
                     state: 'california',
                     population: getRandomData(1000000),
                     area: getRandomData(1000000)
                 }, {
-                    country: "USA",
+                    country: "United States",
                     state: 'florida',
                     population: getRandomData(1000000),
                     area: getRandomData(1000000)
                 }, {
-                    country: "USA",
+                    country: "United States",
                     state: 'alaska',
                     population: getRandomData(1000000),
                     area: getRandomData(1000000)
                 }, {
-                    country: "USA",
+                    country: "United States",
                     state: 'texas',
                     population: getRandomData(1000000),
                     area: getRandomData(1000000)
                 }, {
-                    country: 'india',
+                    country: 'India',
                     state: 'mumbai',
                     population: getRandomData(1000000),
                     area: getRandomData(1000000)
                 }, {
-                    country: 'india',
+                    country: 'India',
                     state: 'delhi',
                     population: getRandomData(1000000),
                     area: getRandomData(1000000)
                 }, {
-                    country: 'india',
+                    country: 'India',
                     state: 'karnatka',
                     population: getRandomData(1000000),
                     area: getRandomData(1000000)
                 }, {
-                    country: 'india',
+                    country: 'India',
                     state: 'punjab',
                     population: getRandomData(1000000),
                     area: getRandomData(1000000)
@@ -182,7 +191,7 @@
             }
 
             return {
-                loanFn: loadRender,
+                loadFn: loadRender,
                 typeFn: chartTypeChanged,
                 widthFn: chartWidthChanged,
                 heightFn: chartHeightChanged,
@@ -192,7 +201,7 @@
 
 
 
-        document.body.onload = demoControl.loanFn;
+        document.body.onload = demoControl.loadFn;
     </script>
 </body>
 
