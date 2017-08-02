@@ -1239,7 +1239,7 @@
                                         categoryLongName: e.longName,
                                         index: j,
                                         seriesIndex: i,
-                                        category: e.name,
+                                        category: e.longName,
                                         categoryDimName: e.dimName,
                                         categoryName: e.name,
                                         categoryValue: e.value,
@@ -1424,7 +1424,7 @@
                                         categoryLongName: e.longName,
                                         index: j,
                                         seriesIndex: i,
-                                        category: e.name,
+                                        category: e.longName,
                                         categoryDimName: e.dimName,
                                         categoryName: e.name,
                                         y: d.data[j] / sum
@@ -1697,7 +1697,7 @@
                             .data(bubbleData)
                             .enter().insert("circle")
                             .attr("cx", function (d, i) {
-                                return categoryScale(d[0].categoryName) + (categoryScale.rangeBand() / 2);
+                                return categoryScale(d[0].categoryLongName) + (categoryScale.rangeBand() / 2);
                             })
                             .attr("cy", function (d) {
                                 return seriesScale(d[0].data);
@@ -1871,7 +1871,7 @@
                         bubbles
                             .enter().insert("circle")
                             .attr("cx", function (d, i) {
-                                return categoryScale(d[0].categoryName) + (categoryScale.rangeBand() / 2);
+                                return categoryScale(d[0].categoryLongName) + (categoryScale.rangeBand() / 2);
                             })
                             .attr("cy", function (d) {
                                 return seriesScale(d[0].data);
@@ -7806,7 +7806,7 @@
                                 .attr("dy", ".35em")
                                 .attr("class", 'mapText')
                                 .text(function (d) {
-                                    return d.categoryLongName;
+                                    return d.name;
                                 }).style("text-anchor", "middle")
                                 .style("font-size", fontsize);
 
@@ -7820,7 +7820,7 @@
                             var ary = [];
                             for (var j = 0; j < data.categories.length; ++j) {
                                 var c = {};
-                                c.categoryLongName = data.categories[j].name;
+                                c.categoryLongName = data.categories[j].longName;
                                 c.data = data.series[index].data[j];
                                 c.fmtData = data.series[index].fmtData[j];
                                 c.seriesLongName = data.series[index].longName;
@@ -7843,7 +7843,8 @@
                             var ary = [];
                             for (var j = 0; j < data.categories.length; ++j) {
                                 var c = {};
-                                c.categoryLongName = data.categories[j].name;
+                                c.categoryLongName = data.categories[j].longName;
+                                c.name = data.categories[j].name;
                                 c.data = data.series[0].data[j];
                                 var retVal = PopulateLonLat(c, c.categoryLongName, zoomLevel);
                                 if (retVal != false) {
