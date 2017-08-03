@@ -19,10 +19,9 @@ inheritParentDimension |  string| no | false | It can be set to true in case of 
 oe-charts has an index.html file which renders all type of charts.
 
 To run this project, follow the steps - 
-1. `git clone git@10.73.97.24:oecloud.io/oe-charts.git`
-2. `cd oe-charts`
-3. run `bower install`
-4. if you have `polymer-cli` node module installed globally then run `polymer serve -p 8000` else run `npm install -g polymer-cli` first.
+1. Clone the repository and cd into the directory
+2. run `bower install`
+3. if you have `polymer-cli` node module installed globally then run `polymer serve -p 8000` else run `npm install -g polymer-cli` first.
 
 # Following are some sample demos  - 
 
