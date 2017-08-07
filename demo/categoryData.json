@@ -1,0 +1,80 @@
+[
+    {
+        "country": "United States",
+        "state": "california",
+        "population": 719987,
+        "area": 922163.6678138411
+    },
+    {
+        "country": "United States",
+        "state": "florida",
+        "population": 222420,
+        "area": 561166.6741403097
+    },
+    {
+        "country": "United States",
+        "state": "alaska",
+        "population": 39399,
+        "area": 342559.59129778855
+    },
+    {
+        "country": "United States",
+        "state": "texas",
+        "population": 306969,
+        "area": 201627.46365652606
+    },
+    {
+        "country": "India",
+        "state": "mumbai",
+        "population": 868040,
+        "area": 544942.8420051585
+    },
+    {
+        "country": "India",
+        "state": "delhi",
+        "population": 217804,
+        "area": 552147.3728793189
+    },
+    {
+        "country": "India",
+        "state": "karnatka",
+        "population": 994601,
+        "area": 23052.503194195495
+    },
+    {
+        "country": "India",
+        "state": "punjab",
+        "population": 685384,
+        "area": 245343.5696654507
+    },
+    {
+        "country": "China",
+        "state": "hainan",
+        "population": 742895,
+        "area": 87090.78242227464
+    },
+    {
+        "country": "China",
+        "state": "yunnan",
+        "population": 975321,
+        "area": 846560.355744121
+    },
+    {
+        "country": "China",
+        "state": "fujian",
+        "population": 329403,
+        "area": 762397.9632416704
+    },
+    {
+        "country": "China",
+        "state": "shandong",
+        "population": 652514,
+        "area": 465222.60915220383
+    },
+    {
+        "country": "China",
+        "state": "jilin",
+        "population": 743201,
+        "area": 181544.97209910958
+    }
+]

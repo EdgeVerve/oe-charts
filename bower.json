@@ -20,6 +20,12 @@
     "polymer": "Polymer/polymer#^1.1.0",
     "oe-ajax": "*"
   },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "test-fixture": "PolymerElements/test-fixture#^1.0.0",
+    "fakerest": "~1.1.4",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0"
+  },
   "resolutions": {
     "polymer": "^1.1.4"
   }

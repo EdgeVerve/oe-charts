@@ -1,0 +1,256 @@
+<!-- ©2015-2016 EdgeVerve Systems Limited (a fully owned Infosys subsidiary), Bangalore, India. All Rights Reserved.
+The EdgeVerve proprietary software program ("Program"), is protected by copyrights laws, international treaties and other pending or existing intellectual property rights in India, the United States and other countries.
+The Program may contain/reference third party or open source components, the rights to which continue to 
+remain with the applicable third party licensors or the open source community as the case may be and nothing 
+here transfers the rights to the third party and open source components, except as expressly permitted. 
+Any unauthorized reproduction, storage, transmission in any form or by any means (including without limitation to electronic, mechanical, printing, photocopying, recording or  otherwise), or any distribution of this Program,or any portion of it, may result in severe civil and criminal penalties, and will be prosecuted to the maximum extent possible under the law. -->
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <link rel="import" href="../oe-charts.html">
+    <!-- importing element to be tested -->
+</head>
+
+<body>
+    <!-- You can use the document as a place to set up your fixtures. -->
+    <test-fixture id="oe-chart-fixture">
+        <template>
+            <oe-charts>
+            </oe-charts>
+        </template>
+    </test-fixture>
+    <script>
+        suite('<oe-charts>', function () {
+            var testElement;
+            var server;
+            var sampledata = [
+                {
+                    country: "United States",
+                    state: 'california',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: "United States",
+                    state: 'florida',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: "United States",
+                    state: 'alaska',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: "United States",
+                    state: 'texas',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'India',
+                    state: 'mumbai',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'India',
+                    state: 'delhi',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'India',
+                    state: 'karnatka',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'India',
+                    state: 'punjab',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'China',
+                    state: 'hainan',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'China',
+                    state: 'yunnan',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'China',
+                    state: 'fujian',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'China',
+                    state: 'shandong',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }, {
+                    country: 'China',
+                    state: 'jilin',
+                    population: getRandomData(1000000),
+                    area: getRandomData(1000000)
+                }
+            ];
+
+            function getRandomData(num) {
+                return Math.random() * num;
+            }
+
+            function loadRender(chart, chartType, aggregationFn) {
+                chart.setAttribute('inherit-parent-dimension', true)
+                chart.setAttribute('chart-type', chartType);
+                chart.setAttribute('category', 'country');
+                chart.setAttribute('series', JSON.stringify([{
+                    "property": "population",
+                    "aggregation": aggregationFn,
+                    "color": "red"
+                }, {
+                    "property": "area",
+                    "aggregation": aggregationFn,
+                    "color": "green"
+                }]));
+                chart.setAttribute('data', JSON.stringify(sampledata));
+            }
+
+            setup(function () {
+                server = sinon.fakeServer.create();
+                server.autoRespond = true;
+                server.respondImmediately = true;
+                server.respondWith('GET', /api\/UIComponents/, function (req) {
+                    if (req.url.match('api\/UIComponents\/component')) {
+                        req.respond(200, {
+                            'Content-Type': 'text/html'
+                        }, uiComponentContent);
+                    } else {
+                        req.respond(200, {
+                            'Content-Type': 'application/json'
+                        }, JSON.stringify(uiComponents));
+                    }
+                });
+                testElement = fixture('oe-chart-fixture');
+            });
+            test('Initial state', function (done) {
+                flush(function () {
+                    assert.equal(testElement.chartType, "groupedColumn");
+                    assert.equal(testElement.chartTypes.normalizedstackedcolumn, "normalizedStackedColumn");
+                    done();
+                });
+            });
+
+            test('Create an area chart', function (done) {
+                flush(function () {
+                    loadRender(testElement, "area", 'sum');
+                    flush(function () {
+                        done();
+                    });
+                });
+            });
+
+            test('Create an bubble chart', function (done) {
+                flush(function () {
+                    loadRender(testElement, "bubble", 'count');
+                    flush(function () {
+                        done();
+                    });
+                });
+            });
+
+            test('Create an groupedBar chart', function (done) {
+                flush(function () {
+                    loadRender(testElement, "groupedBar", 'average');
+                    flush(function () {
+                        done();
+                    });
+                });
+            });
+
+            test('Create an groupedcolumn chart', function (done) {
+                flush(function () {
+                    loadRender(testElement, "groupedColumn");
+                    flush(function () {
+                        done();
+                    });
+                });
+            });
+
+            test('Create an line chart', function (done) {
+                flush(function () {
+                    loadRender(testElement, "line");
+                    flush(function () {
+                        done();
+                    });
+                });
+            });
+
+            test('Create an normalizedStackedColumn chart', function (done) {
+                flush(function () {
+                    loadRender(testElement, "normalizedStackedColumn");
+                    flush(function () {
+                        done();
+                    });
+                });
+            });
+
+            test('Create an pareto chart', function (done) {
+                flush(function () {
+                    loadRender(testElement, "pareto");
+                    flush(function () {
+                        done();
+                    });
+                });
+            });
+
+            test('Create an pie chart', function (done) {
+                flush(function () {
+                    loadRender(testElement, "pie");
+                    flush(function () {
+                        done();
+                    });
+                });
+            });
+
+            test('Create an donut chart', function (done) {
+                flush(function () {
+                    loadRender(testElement, "donut");
+                    flush(function () {
+                        done();
+                    });
+                });
+            });
+
+            test('Create an stackedBar chart', function (done) {
+                flush(function () {
+                    loadRender(testElement, "stackedBar");
+                    flush(function () {
+                        done();
+                    });
+                });
+            });
+
+            test('Create an stackedColumn chart', function (done) {
+                flush(function () {
+                    loadRender(testElement, "stackedColumn");
+                    flush(function () {
+                        done();
+                    });
+                });
+            });
+
+            // test('Create an mapview chart', function (done) {
+            //     flush(function () {
+            //         loadRender(testElement, "mapview");
+            //         flush(function () {
+            //             done();
+            //         });
+            //     });
+            // });
+        });
+    </script>
+</body>
+
+</html>

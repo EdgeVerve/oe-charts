@@ -1,0 +1,74 @@
+[
+    {
+        "continent": "Asia",
+        "country": "India",
+        "population": 719987,
+        "area": 922163.6678138411
+    },
+    {
+        "continent": "Asia",
+        "country": "China",
+        "population": 222420,
+        "area": 561166.6741403097
+    },
+    {
+        "continent": "Asia",
+        "country": "Japan",
+        "population": 39399,
+        "area": 342559.59129778855
+    },
+    {
+        "continent": "Asia",
+        "country": "Singapore",
+        "population": 306969,
+        "area": 201627.46365652606
+    },
+    {
+        "continent": "Europe",
+        "country": "Germany",
+        "population": 868040,
+        "area": 544942.8420051585
+    },
+    {
+        "continent": "Europe",
+        "country": "Italy",
+        "population": 217804,
+        "area": 552147.3728793189
+    },
+    {
+        "continent": "Europe",
+        "country": "France",
+        "population": 994601,
+        "area": 23052.503194195495
+    },
+    {
+        "continent": "Europe",
+        "country": "Poland",
+        "population": 685384,
+        "area": 245343.5696654507
+    },
+    {
+        "continent": "Americas",
+        "country": "United States",
+        "population": 742895,
+        "area": 87090.78242227464
+    },
+    {
+        "continent": "Americas",
+        "country": "Mexico",
+        "population": 975321,
+        "area": 846560.355744121
+    },
+    {
+        "continent": "Americas",
+        "country": "Canada",
+        "population": 329403,
+        "area": 762397.9632416704
+    },
+    {
+        "continent": "Americas",
+        "country": "Brazil",
+        "population": 652514,
+        "area": 465222.60915220383
+    }
+]

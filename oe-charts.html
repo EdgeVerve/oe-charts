@@ -6,7 +6,9 @@
 <link rel="import" href="oe-chart-behavior.html">
 
 <link rel="stylesheet" type="text/css" href="xCharts.css">
-
+<!--
+  @demo demo/demo-oe-data-table.html
+-->
 <dom-module id="oe-charts">
   <template>
     <style>
@@ -28,8 +30,7 @@
           value: function () {
             // default chart type is grouped column
             return "groupedColumn"
-          },
-          observer: 'chartTypeChanged'
+          }
         },
         renderContainerId: {
           type: String,
@@ -104,9 +105,8 @@
         }
       },
       behaviors: [OEchartBehavior],
-      observers: ['parameterChanged(series.*,data.*,category,chartHeight,categoryAggregator,chartWidth)'],
+      observers: ['parameterChanged(series.*,category,chartHeight,categoryAggregator,chartWidth,chartType)', 'dataChanged(data.*)'],
       attached: function () {
-        this.init();
         this.aggregateFunctions = {
           'sum': function (data) {
             return data.reduce(function (a, b) {
@@ -137,11 +137,7 @@
           'stackedcolumn': 'stackedColumn',
           'mapview': 'mapview',
         }
-        this.parameterChanged();
-      },
-      chartTypeChanged: function () {
-        this.set('drawNew', true);
-        this.parameterChanged();
+        this.init();
       },
       registerChangeStream: function () {
         if (!this.changeStreamUrl)
@@ -207,15 +203,18 @@
       dataUrlChanged: function () {
         if (!this.dataUrl)
           return;
-        console.log('fetching data from  - ' + this.dataUrl);
         this.makeAjaxCall(this.dataUrl, 'get', null, null, null, function (err, resp) {
           if (resp) {
             this.set('data', resp);
           }
         }.bind(this));
       },
+      dataChanged: function () {
+        this.checkAndRender(this.data);
+      },
       parameterChanged: function () {
-        this.checkAndRender(this.data, this.category, this.series);
+        this.set('drawNew', true);
+        this.checkAndRender(this.data);
       },
       restructureData: function (data, category, series) {
         if (!data || !category || !series || series.length === 0)
@@ -321,6 +320,7 @@
         // var chartName = 'chart-' + this.getGUID();
         // container.setAttribute('id', chartName);
         // this.set('renderContainerId', chartName);
+        this.parameterChanged();
       },
       makeAjaxCall: function (url, method, body, filters, header, cb) {
         var ajax = document.createElement('oe-ajax');
