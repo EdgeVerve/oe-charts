@@ -10,22 +10,8 @@
   ### oe-charts
 
   `<oe-charts>` is a charting library which provides polymer based charting components.
-  
-  ### Chart properties
-  property | type | required | default | description
-  ---------|------|----------|---------|---------------------
-  `chartType` | string | no | `groupedColumn` | Following are the supported chartTypes  - area, bubble, groupedbar, groupedcolumn, line, normalizedstackedcolumn, pareto, pie, donut, stackedbar, stackedcolumn, mapview.
-  `dataUrl` | string | no (if data property is provided) |  | `dataUrl` should be passed incase the data for the chart is linked with any end point url. Like `/api/ChartData` This url is supposed to provide data in a format of array.
-  `category` | string | yes |  | `category` property is used to define the x-axis in chart. It accepts a property name from the individual element of from data.
-  `series` | array | yes |  | `series` accepts an array where each element is an object. Properties of each element can be  any among `property`, `aggregation`, `color`. A sample series element can be as - `{"property":"age","aggregation":"sum","color":"#f5f5f5"}`. Aggregation value can be `sum`, `count`  or `average`. Charts can be of multiple series. So multiple values can be provided via array.
-  `data` | array | no( if `dataUrl` property is set ) |  | `data` property is required to render the data. It should be an array of objects. If `dataUrl` property is set then data is not required.
-  `chartWidth` | number | no | 300px | `chartWidth` can be provided to set the width of the container of the chart.
-  `chartHeight` | number | no | 300px | `chartHeight` can be provided to set the height of the container of the chart.
-  `inheritParentDimension` | string | no | false | It can be set to true in case of chart container is suppsed to get the dimension on its parent container. If this property is given and if the parent is resized, in that case the chart will get redrawn occupying the new dimension.
-  `categoryAggregator` | string | no |   | Please provide a description
-  `categorylabelFormat` | string | no |   | Please provide a description
 
-  @demo demo/demo-oe-data-table.html
+  @demo demo/demo-oe-charts.html
 -->
 <dom-module id="oe-charts">
   <template>
@@ -35,7 +21,7 @@
         position: relative;
       }
     </style>
-    <div id="[[renderContainerId]]" style$="height:[[chartHeight]]px;width:[[chartWidth]]px">
+    <div id="[[_renderContainerId]]" style$="height:[[chartHeight]]px;width:[[chartWidth]]px">
 
     </div>
   </template>
@@ -43,79 +29,134 @@
     Polymer({
       is: "oe-charts",
       properties: {
+        /*
+        Rendered chart's type.
+        Supported chart types :
+        area, bubble, groupedbar,
+        line, pareto, pie, donut,
+        normalizedstackedcolumn,
+        stackedbar, stackedcolumn,
+        groupedcolumn, and mapview
+        */
         chartType: {
           type: String,
           value: function () {
-            // default chart type is grouped column
             return "groupedColumn"
           }
         },
-        renderContainerId: {
+        _renderContainerId: {
           type: String,
           value: function () {
-            return 'chart-' + this.getGUID();
+            return 'chart-' + this._getGUID();
           }
         },
+        /*
+        It is required to populate the chart.
+        This should be an array of objects.
+        If `dataUrl` property is set then
+        `data` is not required.
+        */
         data: {
           type: Array,
           value: function () {
             return [];
           }
         },
-        //when category changes, a function from utility will get invoked.
+        /*
+        Used to define the x-axis in chart.
+        It accepts a property name from
+        individual elements of provided data.
+        */
         category: {
           type: String,
           value: function () {
             return "";
           }
         },
+        /*
+        It is more useful in the scenarios
+        like `date` as `category`. Date has
+        year, month and day. So the x-axis
+        can be either one of them or a
+        different one altogether. This can
+        be specified here.
+        */
         categoryAggregator: {
           type: String,
           value: function () {
             return null;
           }
         },
+        /*
+        prefix for the label of x-axis
+        */
         categorylabelFormat: {
           type: String,
           value: function () {
             return "";
           }
         },
+        /*
+        It accepts an array where each
+        element is an object. Properties
+        of each element can be  any among
+        `property`, `aggregation`, `color`.
+        */
         series: {
           type: Array,
           value: function () {
             return [];
           }
         },
-        //when data url changes, a function from utility will get invoked.
+        /*
+        It is required incase the data to
+        build a chart is linked with any
+        end point url. This url is supposed
+        to provide data in a format of array.
+        */
         dataUrl: {
           type: String,
           value: function () {
             return "";
           },
-          observer: 'dataUrlChanged'
+          observer: '_dataUrlChanged'
         },
-        changeStreamUrl: {
+        _changeStreamUrl: {
           type: String,
           value: function () {
             return "";
           },
-          observer: 'registerChangeStream'
+          observer: '_registerChangeStream'
         },
+        /*
+        width of the container of the chart
+        */
         chartWidth: {
           type: Number,
           value: 300
         },
+        /*
+        height of the container of the chart
+        */
         chartHeight: {
           type: Number,
           value: 300
         },
+        /*
+        It can be set to true in case of
+        chart container is suppsed to get
+        the dimension on its parent
+        container. If this property is
+        given and if the parent is resized,
+        in that case the chart will get
+        redrawn occupying the new dimension.
+        */
         inheritParentDimension: {
           type: Boolean,
           value: false,
           observer: '_handleInheritance'
         },
-        drawNew: {
+        _drawNew: {
           type: Boolean,
           value: function () {
             return true;
@@ -123,7 +164,7 @@
         }
       },
       behaviors: [OEchartBehavior],
-      observers: ['parameterChanged(series.*,category,chartHeight,categoryAggregator,chartWidth,chartType)', 'dataChanged(data.*)'],
+      observers: ['_parameterChanged(series.*,category,chartHeight,categoryAggregator,chartWidth,chartType)', '_dataChanged(data.*)'],
       attached: function () {
         this.aggregateFunctions = {
           'sum': function (data) {
@@ -155,12 +196,12 @@
           'stackedcolumn': 'stackedColumn',
           'mapview': 'mapview',
         }
-        this.init();
+        this._init();
       },
-      registerChangeStream: function () {
-        if (!this.changeStreamUrl)
+      _registerChangeStream: function () {
+        if (!this._changeStreamUrl)
           return;
-        var src = new EventSource(this.changeStreamUrl);
+        var src = new EventSource(this._changeStreamUrl);
         src.addEventListener('data', function (msg) {
           var data = JSON.parse(msg.data);
           data = data.data;
@@ -174,9 +215,9 @@
           this._dimensionInteraval = setInterval(function () {
             this.debounce('update-chart-dimensions', function () {
               if (this.chartHeight !== parentElem.offsetHeight || this.chartWidth !== parentElem.offsetWidth) {
-                this.set('drawNew', true);
+                this.set('_drawNew', true);
                 this.set('chartHeight', parentElem.offsetHeight);
-                this.set('drawNew', true);
+                this.set('_drawNew', true);
                 this.set('chartWidth', parentElem.offsetWidth);
               }
             }, 499);
@@ -185,60 +226,60 @@
           clearInterval(this._dimensionInteraval)
         }
       },
-      checkAndRender: function (data) {
+      _checkAndRender: function (data) {
         if (Array.isArray(data) && data.length === 0)
           return;
         if (!this.chartTypes || !this.aggregateFunctions) {
           return;
         }
-        if (this.ifStructuredData(data))
-          this.render(data);
+        if (this._ifStructuredData(data))
+          this._render(data);
         else {
-          this.render(this.restructureData(data, this.category, this.series));
+          this._render(this._restructureData(data, this.category, this.series));
         }
 
       },
-      render: function (data) {
-        if (!this.ifStructuredData(data))
+      _render: function (data) {
+        if (!this._ifStructuredData(data))
           return;
-        if (this.drawNew) {
-          this.chart = new this.xChart.chart(this.renderContainerId);
-          this.chartId = this.getGUID();
-          this.drawNew = false;
+        if (this._drawNew) {
+          this.chart = new this.xChart.chart(this._renderContainerId);
+          this.chartId = this._getGUID();
+          this._drawNew = false;
         }
         Polymer.dom.flush();
-        var container = this.querySelector('#' + this.renderContainerId);
+        var container = this.querySelector('#' + this._renderContainerId);
         if (container.offsetHeight < 200 || container.offsetWidth < 200) {
           return;
         }
         this.chart.setOptions({
-          chartClientId: this.renderContainerId,
+          chartClientId: this._renderContainerId,
           chartType: this.chartTypes[this.chartType.toLowerCase()],
           overlap: false
         });
         this.chart.render(data);
       },
-      dataUrlChanged: function () {
+      _dataUrlChanged: function () {
         if (!this.dataUrl)
           return;
-        this.makeAjaxCall(this.dataUrl, 'get', null, null, null, function (err, resp) {
+        this._makeAjaxCall(this.dataUrl, 'get', null, null, null, function (err, resp) {
           if (resp) {
             this.set('data', resp);
           }
         }.bind(this));
       },
-      dataChanged: function () {
-        this.checkAndRender(this.data);
+      _dataChanged: function () {
+        this._checkAndRender(this.data);
       },
-      parameterChanged: function () {
-        this.set('drawNew', true);
-        this.checkAndRender(this.data);
+      _parameterChanged: function () {
+        this.set('_drawNew', true);
+        this._checkAndRender(this.data);
       },
-      restructureData: function (data, category, series) {
+      _restructureData: function (data, category, series) {
         if (!data || !category || !series || series.length === 0)
           return;
         var categorylabelFormat = this.categorylabelFormat;
-        var groups = this.getGroups(data, category, this.categoryAggregator);
+        var groups = this._getGroups(data, category, this.categoryAggregator);
         var categoryData = Object.keys(groups).map(function (d) {
           return {
             "longName": d,
@@ -259,7 +300,7 @@
               });
             });
           }
-          var data = this.getSeriesData(newgroup, d.property, aggFunc);
+          var data = this._getSeriesData(newgroup, d.property, aggFunc);
           var fmtData = data.map(function (d) {
             return d.toString();
           });
@@ -281,7 +322,7 @@
         };
         return formattedData;
       },
-      getGroups: function (data, category, categoryAggregator) {
+      _getGroups: function (data, category, categoryAggregator) {
         if (categoryAggregator) {
           var categoryFunction;
           switch (categoryAggregator.toLowerCase()) {
@@ -311,7 +352,7 @@
           return _.groupBy(data, category);
         }
       },
-      getSeriesData: function (data, series, aggregation) {
+      _getSeriesData: function (data, series, aggregation) {
         return _.map(data, function (d) {
           return d.map(function (e) {
             return parseFloat(e[series]);
@@ -320,27 +361,22 @@
           return aggregation(k);
         });
       },
-      ifStructuredData: function (data) {
+      _ifStructuredData: function (data) {
         if (typeof data === 'object') {
           if (data.categories && data.series && Array.isArray(data.categories) && Array.isArray(data.series))
             return true;
         }
         return false;
       },
-      getGUID: function () {
+      _getGUID: function () {
         var randoms = (window.crypto || window.msCrypto).getRandomValues(new Uint32Array(2)); // eslint-disable-line no-undef
         return randoms[0].toString(36).substring(2, 15) +
           randoms[1].toString(36).substring(2, 15);
       },
-      init: function () {
-        //setting random id to the chart container
-        // var container = this.querySelector('#chartContainer');
-        // var chartName = 'chart-' + this.getGUID();
-        // container.setAttribute('id', chartName);
-        // this.set('renderContainerId', chartName);
-        this.parameterChanged();
+      _init: function () {
+        this._parameterChanged();
       },
-      makeAjaxCall: function (url, method, body, filters, header, cb) {
+      _makeAjaxCall: function (url, method, body, filters, header, cb) {
         var ajax = document.createElement('oe-ajax');
         ajax.url = url;
         ajax.method = method;
