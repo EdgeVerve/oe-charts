@@ -8002,7 +8002,7 @@
                                 .attr('class', 'innerGroupMap');
 
                             var g1;
-                            d3.json("/countries/countries.json", function (error, countries) {
+                            d3.json("countries/countries.json", function (error, countries) {
                                 g1 = g.append("g")
                                     .attr("id", "countries")
                                     .attr("class", "countiresGroup")
@@ -8158,7 +8158,7 @@
                         var g = d3.select('#' + this.renderContainerId + '_svg_g');
                         var self = this;
                         if (zoomLevel >= 1 && zoomLevel < 2) {
-                            d3.csv("/countries/Region.csv", function (error, regions) {
+                            d3.csv("countries/Region.csv", function (error, regions) {
                                 self.regionData = regions;
                                 self.regionarray = [];
                                 for (var i = 0; i < data.series.length; i++) {
@@ -8171,7 +8171,7 @@
                                 self.DrawLabels(svg, g, zoomLevel, self.regionLabels);
                             });
                         } else if (zoomLevel >= 2 && zoomLevel <= 4) {
-                            d3.csv("/countries/Countries.csv", function (error, countries) {
+                            d3.csv("countries/Countries.csv", function (error, countries) {
                                 self.countryData = countries;
                                 self.countryarray = [];
                                 for (var i = 0; i < data.series.length; i++) {
