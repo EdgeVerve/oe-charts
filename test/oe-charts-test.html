@@ -146,7 +146,13 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
                 flush(function () {
                     loadRender(testElement, "area", 'sum');
                     flush(function () {
-                        done();
+                        setTimeout(function(){
+                            assert.equal(testElement.chartType, "area");
+                            var svg =testElement.querySelector('svg');
+                            assert.equal(svg.classList.contains("area"),true);
+                            assert.equal(svg.querySelectorAll('.layerg').length,2)
+                            done();
+                        },2100);
                     });
                 });
             });
@@ -155,7 +161,13 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
                 flush(function () {
                     loadRender(testElement, "bubble", 'count');
                     flush(function () {
-                        done();
+                        setTimeout(function(){
+                            assert.equal(testElement.chartType, "bubble");
+                            var svg =testElement.querySelector('svg');
+                            assert.equal(svg.classList.contains("bubbleChart"),true);
+                            assert.equal(svg.querySelectorAll('circle').length,3);
+                            done();
+                        },2100);
                     });
                 });
             });
@@ -164,7 +176,13 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
                 flush(function () {
                     loadRender(testElement, "groupedBar", 'average');
                     flush(function () {
-                        done();
+                        setTimeout(function(){
+                            assert.equal(testElement.chartType, "groupedBar");
+                             var svg =testElement.querySelector('svg');
+                            assert.equal(svg.classList.contains("groupedBar"),true);
+                            assert.equal(svg.querySelectorAll('rect.bar').length,6);
+                            done();
+                        },2100);
                     });
                 });
             });
@@ -173,7 +191,13 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
                 flush(function () {
                     loadRender(testElement, "groupedColumn");
                     flush(function () {
-                        done();
+                        setTimeout(function(){
+                            assert.equal(testElement.chartType, "groupedColumn");
+                             var svg =testElement.querySelector('svg');
+                            assert.equal(svg.classList.contains("groupedColumn"),true);
+                            assert.equal(svg.querySelectorAll('rect.bar').length,6);
+                            done();
+                        },2100);
                     });
                 });
             });
@@ -182,7 +206,13 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
                 flush(function () {
                     loadRender(testElement, "line");
                     flush(function () {
-                        done();
+                       setTimeout(function(){
+                            assert.equal(testElement.chartType, "line");
+                            var svg =testElement.querySelector('svg');
+                            assert.equal(svg.classList.contains("line"),true);
+                            assert.equal(svg.querySelectorAll('path.line').length,2);
+                            done();
+                       },2100);
                     });
                 });
             });
@@ -191,7 +221,13 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
                 flush(function () {
                     loadRender(testElement, "normalizedStackedColumn");
                     flush(function () {
-                        done();
+                        setTimeout(function(){
+                            assert.equal(testElement.chartType, "normalizedStackedColumn");
+                             var svg =testElement.querySelector('svg');
+                            assert.equal(svg.classList.contains("normalizedStackedColumn"),true);
+                            assert.equal(svg.querySelectorAll('rect.bar').length,6);
+                            done();
+                        },2100);
                     });
                 });
             });
@@ -200,7 +236,13 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
                 flush(function () {
                     loadRender(testElement, "pareto");
                     flush(function () {
-                        done();
+                        setTimeout(function(){
+                            assert.equal(testElement.chartType, "pareto");
+                             var svg =testElement.querySelector('svg');
+                            assert.equal(svg.classList.contains("pareto"),true);
+                            assert.equal(svg.querySelectorAll('rect.bar').length,3);
+                            done();
+                        },2100);
                     });
                 });
             });
@@ -209,7 +251,13 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
                 flush(function () {
                     loadRender(testElement, "pie");
                     flush(function () {
-                        done();
+                        setTimeout(function(){
+                            assert.equal(testElement.chartType, "pie");
+                            var svg =testElement.querySelector('svg');
+                            assert.equal(svg.classList.contains("pie-svg"),true);
+                            assert.equal(svg.querySelectorAll('g.arc').length,3);
+                            done();
+                        },2100);
                     });
                 });
             });
@@ -218,7 +266,13 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
                 flush(function () {
                     loadRender(testElement, "donut");
                     flush(function () {
-                        done();
+                        setTimeout(function(){
+                            assert.equal(testElement.chartType, "donut");
+                            var svg =testElement.querySelector('svg');
+                            assert.equal(svg.classList.contains("donut-svg"),true);
+                            assert.equal(svg.querySelectorAll('g.arc').length,3);
+                            done();
+                        },2100);
                     });
                 });
             });
@@ -227,7 +281,13 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
                 flush(function () {
                     loadRender(testElement, "stackedBar");
                     flush(function () {
-                        done();
+                        setTimeout(function(){
+                            assert.equal(testElement.chartType, "stackedBar");
+                            var svg =testElement.querySelector('svg');
+                            assert.equal(svg.classList.contains("stackedBar"),true);
+                            assert.equal(svg.querySelectorAll('rect.bar').length,6);
+                            done();
+                        },2100);
                     });
                 });
             });
@@ -236,7 +296,13 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
                 flush(function () {
                     loadRender(testElement, "stackedColumn");
                     flush(function () {
-                        done();
+                        setTimeout(function(){
+                            assert.equal(testElement.chartType, "stackedColumn");
+                            var svg =testElement.querySelector('svg');
+                            assert.equal(svg.classList.contains("stackedColumn"),true);
+                            assert.equal(svg.querySelectorAll('rect.bar').length,6);
+                            done();
+                        },2100);
                     });
                 });
             });

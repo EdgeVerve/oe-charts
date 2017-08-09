@@ -5038,7 +5038,7 @@
                         var svg = d3.select("#" + renderContainerId)
                             .append("svg")
                             .attr('id', renderContainerId + '_svg')
-                            .attr('class', 'donutsvg')
+                            .attr('class', (innerRadius!==0)?'donut-svg':'pie-svg')
                             .attr("width", w)
                             .attr('height', h);
 
@@ -5562,7 +5562,7 @@
                         var svg = d3.select("#" + renderContainerId)
                             .append("svg")
                             .attr('id', renderContainerId + '_svg')
-                            .attr('class', 'donutsvg')
+                            .attr('class', (innerRadius!==0)?'donut-svg':'pie-svg')
                             .attr("width", w)
                             .attr('height', h);
 
