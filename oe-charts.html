@@ -164,7 +164,7 @@
         }
       },
       behaviors: [OEchartBehavior],
-      observers: ['_parameterChanged(series.*,category,chartHeight,categoryAggregator,chartWidth,chartType)', '_dataChanged(data.*)'],
+      observers: ['_seriesChanged(series.*)','_parameterChanged(category,chartHeight,categoryAggregator,chartWidth,chartType)', '_dataChanged(data.*)'],
       attached: function () {
         this.aggregateFunctions = {
           'sum': function (data) {
@@ -271,6 +271,39 @@
       _dataChanged: function () {
         this._checkAndRender(this.data);
       },
+      _seriesChanged:function(){
+        if(this.series && this.series.length !== 0){
+            var multiUrl = this.series.every(function(s){
+                 return s.dataUrl
+            });
+            var self = this;
+            if(multiUrl){
+              var tasks = this.series.map(function(s){
+                    var fetchData =  function(cb) {
+                      self._makeAjaxCall(s.dataUrl, 'get', null, null, null, function (err, resp) {
+                          if (resp) {
+                            s._dataGroup = self._getGroups(resp,s.categoryId || self.category,self.categoryAggregator);
+                            cb(null,resp)
+                          }else{
+                            cb(err)
+                          }
+                      });
+                    }
+                    return fetchData
+              });
+              async.parallel(tasks,function callback(err,result){
+                if(!err){
+                    self.set('_drawNew', true);
+                    self._render(self._restructureData(result[0], self.category, self.series));
+                }else{
+                    self.fire('oe-show-error',OEUtils.extractErrorMessage(err));
+                }
+              });
+            }else{
+                self._parameterChanged();
+            }
+        }
+      },
       _parameterChanged: function () {
         this.set('_drawNew', true);
         this._checkAndRender(this.data);
@@ -291,7 +324,7 @@
         var seriesData = series.map(function (d) {
           d.aggregation = d.aggregation || 'sum';
           var aggFunc = this.aggregateFunctions[d.aggregation];
-          var newgroup = Object.assign({}, groups);
+          var newgroup = Object.assign({}, d._dataGroup || groups);
           //newgroup=groups;
           if (d.filter && d.filter !== null) {
             _.forEach(newgroup, function (value, key) {

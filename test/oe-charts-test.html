@@ -99,9 +99,14 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
 
             
             var sampledata2 = sampledata.map(function(c){
-                c.noOfLiterates = getRandomData(100000);
-                return c;
+                var d = Object.assign({},c,{noOfLiterates:getRandomData(100000)});
+                delete d.area;
+                delete d.population;
+                return d;
             })
+
+
+
 
             function getRandomData(num) {
                 return Math.random() * num;
@@ -127,63 +132,232 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
                 server = sinon.fakeServer.create();
                 server.autoRespond = true;
                 server.respondImmediately = true;
-                server.respondWith('GET', /dataurl1/, function (req) {
+                server.respondWith('GET', /api\/dataurl1/, function (req) {
                      req.respond(200, {
                             'Content-Type': 'application/json'
                     }, JSON.stringify(sampledata));
                 });
-                server.respondWith('GET', /dataurl2/, function (req) {
+                server.respondWith('GET', /api\/dataurl2/, function (req) {
                      req.respond(200, {
                             'Content-Type': 'application/json'
                     }, JSON.stringify(sampledata2));
                 });
                 testElement = fixture('oe-chart-fixture');
             });
-            test('Initial state', function (done) {
-                flush(function () {
-                    assert.equal(testElement.chartType, "groupedColumn");
-                    assert.equal(testElement.chartTypes.normalizedstackedcolumn, "normalizedStackedColumn");
-                    done();
-                });
-            });
 
-            test('Create an area chart', function (done) {
-                flush(function () {
-                    loadRender(testElement, "area", 'sum');
+         
+                test('Initial state', function (done) {
                     flush(function () {
-                        setTimeout(function(){
-                            assert.equal(testElement.chartType, "area");
-                            var svg =testElement.querySelector('svg');
-                            assert.equal(svg.classList.contains("area"),true);
-                            assert.equal(svg.querySelectorAll('.layerg').length,2)
-                            done();
-                        },2100);
+                        assert.equal(testElement.chartType, "groupedColumn");
+                        assert.equal(testElement.chartTypes.normalizedstackedcolumn, "normalizedStackedColumn");
+                        done();
                     });
                 });
-            });
 
-            test('Create an bubble chart', function (done) {
-                flush(function () {
-                    loadRender(testElement, "bubble", 'count');
+                test('Create an area chart', function (done) {
                     flush(function () {
-                        setTimeout(function(){
-                            assert.equal(testElement.chartType, "bubble");
-                            var svg =testElement.querySelector('svg');
-                            assert.equal(svg.classList.contains("bubbleChart"),true);
-                            assert.equal(svg.querySelectorAll('circle').length,3);
-                            done();
-                        },2100);
+                        loadRender(testElement, "area", 'sum');
+                        flush(function () {
+                            setTimeout(function(){
+                                assert.equal(testElement.chartType, "area");
+                                var svg =testElement.querySelector('svg');
+                                assert.equal(svg.classList.contains("area"),true);
+                                assert.equal(svg.querySelectorAll('.layerg').length,2)
+                                done();
+                            },2100);
+                        });
                     });
                 });
-            });
 
-            test('Create an groupedBar chart', function (done) {
-                flush(function () {
-                    loadRender(testElement, "groupedBar", 'average');
+                test('Create an bubble chart', function (done) {
                     flush(function () {
+                        loadRender(testElement, "bubble", 'count');
+                        flush(function () {
+                            setTimeout(function(){
+                                assert.equal(testElement.chartType, "bubble");
+                                var svg =testElement.querySelector('svg');
+                                assert.equal(svg.classList.contains("bubbleChart"),true);
+                                assert.equal(svg.querySelectorAll('circle').length,3);
+                                done();
+                            },2100);
+                        });
+                    });
+                });
+
+                test('Create an groupedBar chart', function (done) {
+                    flush(function () {
+                        loadRender(testElement, "groupedBar", 'average');
+                        flush(function () {
+                            setTimeout(function(){
+                                assert.equal(testElement.chartType, "groupedBar");
+                                var svg =testElement.querySelector('svg');
+                                assert.equal(svg.classList.contains("groupedBar"),true);
+                                assert.equal(svg.querySelectorAll('rect.bar').length,6);
+                                done();
+                            },2100);
+                        });
+                    });
+                });
+
+                test('Create an groupedcolumn chart', function (done) {
+                    flush(function () {
+                        loadRender(testElement, "groupedColumn");
+                        flush(function () {
+                            setTimeout(function(){
+                                assert.equal(testElement.chartType, "groupedColumn");
+                                var svg =testElement.querySelector('svg');
+                                assert.equal(svg.classList.contains("groupedColumn"),true);
+                                assert.equal(svg.querySelectorAll('rect.bar').length,6);
+                                done();
+                            },2100);
+                        });
+                    });
+                });
+
+                test('Create an line chart', function (done) {
+                    flush(function () {
+                        loadRender(testElement, "line");
+                        flush(function () {
+                        setTimeout(function(){
+                                assert.equal(testElement.chartType, "line");
+                                var svg =testElement.querySelector('svg');
+                                assert.equal(svg.classList.contains("line"),true);
+                                assert.equal(svg.querySelectorAll('path.line').length,2);
+                                done();
+                        },2100);
+                        });
+                    });
+                });
+
+                test('Create an normalizedStackedColumn chart', function (done) {
+                    flush(function () {
+                        loadRender(testElement, "normalizedStackedColumn");
+                        flush(function () {
+                            setTimeout(function(){
+                                assert.equal(testElement.chartType, "normalizedStackedColumn");
+                                var svg =testElement.querySelector('svg');
+                                assert.equal(svg.classList.contains("normalizedStackedColumn"),true);
+                                assert.equal(svg.querySelectorAll('rect.bar').length,6);
+                                done();
+                            },2100);
+                        });
+                    });
+                });
+
+                test('Create an pareto chart', function (done) {
+                    flush(function () {
+                        loadRender(testElement, "pareto");
+                        flush(function () {
+                            setTimeout(function(){
+                                assert.equal(testElement.chartType, "pareto");
+                                var svg =testElement.querySelector('svg');
+                                assert.equal(svg.classList.contains("pareto"),true);
+                                assert.equal(svg.querySelectorAll('rect.bar').length,3);
+                                done();
+                            },2100);
+                        });
+                    });
+                });
+
+                test('Create an pie chart', function (done) {
+                    flush(function () {
+                        loadRender(testElement, "pie");
+                        flush(function () {
+                            setTimeout(function(){
+                                assert.equal(testElement.chartType, "pie");
+                                var svg =testElement.querySelector('svg');
+                                assert.equal(svg.classList.contains("pie-svg"),true);
+                                assert.equal(svg.querySelectorAll('g.arc').length,3);
+                                done();
+                            },2100);
+                        });
+                    });
+                });
+
+                test('Create an donut chart', function (done) {
+                    flush(function () {
+                        loadRender(testElement, "donut");
+                        flush(function () {
+                            setTimeout(function(){
+                                assert.equal(testElement.chartType, "donut");
+                                var svg =testElement.querySelector('svg');
+                                assert.equal(svg.classList.contains("donut-svg"),true);
+                                assert.equal(svg.querySelectorAll('g.arc').length,3);
+                                done();
+                            },2100);
+                        });
+                    });
+                });
+
+                test('Create an stackedBar chart', function (done) {
+                    flush(function () {
+                        loadRender(testElement, "stackedBar");
+                        flush(function () {
+                            setTimeout(function(){
+                                assert.equal(testElement.chartType, "stackedBar");
+                                var svg =testElement.querySelector('svg');
+                                assert.equal(svg.classList.contains("stackedBar"),true);
+                                assert.equal(svg.querySelectorAll('rect.bar').length,6);
+                                done();
+                            },2100);
+                        });
+                    });
+                });
+
+                test('Create an stackedColumn chart', function (done) {
+                    flush(function () {
+                        loadRender(testElement, "stackedColumn");
+                        flush(function () {
+                            setTimeout(function(){
+                                assert.equal(testElement.chartType, "stackedColumn");
+                                var svg =testElement.querySelector('svg');
+                                assert.equal(svg.classList.contains("stackedColumn"),true);
+                                assert.equal(svg.querySelectorAll('rect.bar').length,6);
+                                done();
+                            },2100);
+                        });
+                    });
+                });
+
+                test('Create chart from data-url',function(done){
+                    flush(function(){
+                        loadRender(testElement, "line");
+                        flush(function(){
+                            testElement.setAttribute('data-url','api/dataurl2');
+                            testElement.setAttribute('series', JSON.stringify([{
+                                "property": "noOfLiterates",
+                                "aggregation": "sum",
+                                "color": "red"
+                            }]));
+                            flush(function(){
+                                setTimeout(function(){
+                                    var svg =testElement.querySelector('svg');
+                                    assert.equal(svg.querySelectorAll('path.line').length,1);
+                                    done();
+                                },2100);
+                            })
+                        });
+                    })
+                });
+        
+
+            test('Seperate data-url for each series',function(done){
+                flush(function(){
+                    testElement.set('chartType','groupedBar');
+                    testElement.set('category','country');
+                    testElement.set('series',[{
+                        "property": "population",
+                        "color":"red",
+                        "dataUrl":"api/dataurl1"
+                    },{
+                        "property":"noOfLiterates",
+                        "color":"green",
+                        "dataUrl":"api/dataurl2"
+                    }]);
+                    flush(function(){
                         setTimeout(function(){
                             assert.equal(testElement.chartType, "groupedBar");
-                             var svg =testElement.querySelector('svg');
+                            var svg =testElement.querySelector('svg');
                             assert.equal(svg.classList.contains("groupedBar"),true);
                             assert.equal(svg.querySelectorAll('rect.bar').length,6);
                             done();
@@ -191,155 +365,6 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
                     });
                 });
             });
-
-            test('Create an groupedcolumn chart', function (done) {
-                flush(function () {
-                    loadRender(testElement, "groupedColumn");
-                    flush(function () {
-                        setTimeout(function(){
-                            assert.equal(testElement.chartType, "groupedColumn");
-                             var svg =testElement.querySelector('svg');
-                            assert.equal(svg.classList.contains("groupedColumn"),true);
-                            assert.equal(svg.querySelectorAll('rect.bar').length,6);
-                            done();
-                        },2100);
-                    });
-                });
-            });
-
-            test('Create an line chart', function (done) {
-                flush(function () {
-                    loadRender(testElement, "line");
-                    flush(function () {
-                       setTimeout(function(){
-                            assert.equal(testElement.chartType, "line");
-                            var svg =testElement.querySelector('svg');
-                            assert.equal(svg.classList.contains("line"),true);
-                            assert.equal(svg.querySelectorAll('path.line').length,2);
-                            done();
-                       },2100);
-                    });
-                });
-            });
-
-            test('Create an normalizedStackedColumn chart', function (done) {
-                flush(function () {
-                    loadRender(testElement, "normalizedStackedColumn");
-                    flush(function () {
-                        setTimeout(function(){
-                            assert.equal(testElement.chartType, "normalizedStackedColumn");
-                             var svg =testElement.querySelector('svg');
-                            assert.equal(svg.classList.contains("normalizedStackedColumn"),true);
-                            assert.equal(svg.querySelectorAll('rect.bar').length,6);
-                            done();
-                        },2100);
-                    });
-                });
-            });
-
-            test('Create an pareto chart', function (done) {
-                flush(function () {
-                    loadRender(testElement, "pareto");
-                    flush(function () {
-                        setTimeout(function(){
-                            assert.equal(testElement.chartType, "pareto");
-                             var svg =testElement.querySelector('svg');
-                            assert.equal(svg.classList.contains("pareto"),true);
-                            assert.equal(svg.querySelectorAll('rect.bar').length,3);
-                            done();
-                        },2100);
-                    });
-                });
-            });
-
-            test('Create an pie chart', function (done) {
-                flush(function () {
-                    loadRender(testElement, "pie");
-                    flush(function () {
-                        setTimeout(function(){
-                            assert.equal(testElement.chartType, "pie");
-                            var svg =testElement.querySelector('svg');
-                            assert.equal(svg.classList.contains("pie-svg"),true);
-                            assert.equal(svg.querySelectorAll('g.arc').length,3);
-                            done();
-                        },2100);
-                    });
-                });
-            });
-
-            test('Create an donut chart', function (done) {
-                flush(function () {
-                    loadRender(testElement, "donut");
-                    flush(function () {
-                        setTimeout(function(){
-                            assert.equal(testElement.chartType, "donut");
-                            var svg =testElement.querySelector('svg');
-                            assert.equal(svg.classList.contains("donut-svg"),true);
-                            assert.equal(svg.querySelectorAll('g.arc').length,3);
-                            done();
-                        },2100);
-                    });
-                });
-            });
-
-            test('Create an stackedBar chart', function (done) {
-                flush(function () {
-                    loadRender(testElement, "stackedBar");
-                    flush(function () {
-                        setTimeout(function(){
-                            assert.equal(testElement.chartType, "stackedBar");
-                            var svg =testElement.querySelector('svg');
-                            assert.equal(svg.classList.contains("stackedBar"),true);
-                            assert.equal(svg.querySelectorAll('rect.bar').length,6);
-                            done();
-                        },2100);
-                    });
-                });
-            });
-
-            test('Create an stackedColumn chart', function (done) {
-                flush(function () {
-                    loadRender(testElement, "stackedColumn");
-                    flush(function () {
-                        setTimeout(function(){
-                            assert.equal(testElement.chartType, "stackedColumn");
-                            var svg =testElement.querySelector('svg');
-                            assert.equal(svg.classList.contains("stackedColumn"),true);
-                            assert.equal(svg.querySelectorAll('rect.bar').length,6);
-                            done();
-                        },2100);
-                    });
-                });
-            });
-
-            test('Create chart from data-url',function(done){
-                flush(function(){
-                    loadRender(testElement, "line");
-                    flush(function(){
-                        testElement.setAttribute('data-url','dataurl2');
-                        testElement.setAttribute('series', JSON.stringify([{
-                            "property": "noOfLiterates",
-                            "aggregation": "sum",
-                            "color": "red"
-                        }]));
-                        flush(function(){
-                            setTimeout(function(){
-                                var svg =testElement.querySelector('svg');
-                                assert.equal(svg.querySelectorAll('path.line').length,1);
-                                done();
-                            },2100);
-                        })
-                    });
-                })
-            });
-            // test('Create an mapview chart', function (done) {
-            //     flush(function () {
-            //         loadRender(testElement, "mapview");
-            //         flush(function () {
-            //             done();
-            //         });
-            //     });
-            // });
         });
     </script>
 </body>
