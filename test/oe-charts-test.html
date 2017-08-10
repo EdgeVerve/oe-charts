@@ -97,6 +97,12 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
                 }
             ];
 
+            
+            var sampledata2 = sampledata.map(function(c){
+                c.noOfLiterates = getRandomData(100000);
+                return c;
+            })
+
             function getRandomData(num) {
                 return Math.random() * num;
             }
@@ -121,16 +127,15 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
                 server = sinon.fakeServer.create();
                 server.autoRespond = true;
                 server.respondImmediately = true;
-                server.respondWith('GET', /api\/UIComponents/, function (req) {
-                    if (req.url.match('api\/UIComponents\/component')) {
-                        req.respond(200, {
-                            'Content-Type': 'text/html'
-                        }, uiComponentContent);
-                    } else {
-                        req.respond(200, {
+                server.respondWith('GET', /dataurl1/, function (req) {
+                     req.respond(200, {
                             'Content-Type': 'application/json'
-                        }, JSON.stringify(uiComponents));
-                    }
+                    }, JSON.stringify(sampledata));
+                });
+                server.respondWith('GET', /dataurl2/, function (req) {
+                     req.respond(200, {
+                            'Content-Type': 'application/json'
+                    }, JSON.stringify(sampledata2));
                 });
                 testElement = fixture('oe-chart-fixture');
             });
@@ -307,6 +312,26 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
                 });
             });
 
+            test('Create chart from data-url',function(done){
+                flush(function(){
+                    loadRender(testElement, "line");
+                    flush(function(){
+                        testElement.setAttribute('data-url','dataurl2');
+                        testElement.setAttribute('series', JSON.stringify([{
+                            "property": "noOfLiterates",
+                            "aggregation": "sum",
+                            "color": "red"
+                        }]));
+                        flush(function(){
+                            setTimeout(function(){
+                                var svg =testElement.querySelector('svg');
+                                assert.equal(svg.querySelectorAll('path.line').length,1);
+                                done();
+                            },2100);
+                        })
+                    });
+                })
+            });
             // test('Create an mapview chart', function (done) {
             //     flush(function () {
             //         loadRender(testElement, "mapview");
