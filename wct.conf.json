@@ -23,7 +23,8 @@
                 "/node_modules/**/*.js",
                 "/test/**/*.html",
                 "/test/**/*.js",
-                "/scripts/*.js"
+                "/scripts/*.js",
+                "/countries/*.js"
             ]
     }
 
