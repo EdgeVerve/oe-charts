@@ -3,6 +3,8 @@
 <script type="text/javascript" src="countries/topojson.js"></script>
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../oe-ajax/oe-ajax.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="oe-chart-behavior.html">
 
 <link rel="stylesheet" type="text/css" href="xCharts.css">
@@ -21,19 +23,59 @@
         position: relative;
       }
       .chartContainer.emptyState:before {
-                content: attr(message);
-                position: absolute;
-                top: 43%;
-                left: 0;
-                text-align: center;
-                width: 100%;
-                font-size: 18px;
-                color: var(--nodata-message-color, --secondary-text-color);
+        content: attr(message);
+        position: absolute;
+        top: 43%;
+        left: 0;
+        text-align: center;
+        width: 100%;
+        font-size: 18px;
+        color: var(--nodata-message-color, --secondary-text-color);
+      }
+      #errorIcon{
+        color: red;
+        --iron-icon-width: 20px;
+        --iron-icon-height: 20px;
+      }
+      .error-info{
+        position: absolute;
+        top:16px;
+        left:16px;
+      }
+      .error-info .error-container{
+        display: none;
+        position: absolute;
+        font-size: 12px;
+        top: 0px;
+        left: 20px;
+        color: #FFF;
+        background: rgba(0, 0, 0, 0.48);
+        padding: 8px;
+        white-space: nowrap;
+        border-radius: 2px;
+        flex-direction: column;
+      }
+      .error-info:hover .error-container{
+        display: flex;
+      }
+
+      .error-container .error-msg{
+        margin: 2px 0px;
+        letter-spacing: 0.5px;
       }
 
     </style>
     <div id="[[_renderContainerId]]" style$="height:[[chartHeight]]px;width:[[chartWidth]]px" class$="chartContainer [[_calcClass(data,series,category)]]">
-
+      <template is="dom-if" if="[[_showErrors(_errors.*)]]">
+        <div class="error-info">
+          <iron-icon icon="error" id="errorIcon"></iron-icon>
+          <div class="error-container">
+              <template is="dom-repeat" items="[[_errors]]">
+                <label class="error-msg">[[item]]</label>
+              </template>
+          </div>
+        </div>
+      </template>
     </div>
   </template>
   <script>
@@ -218,6 +260,9 @@
         }
         this._init();
       },
+      _showErrors:function(){
+          return (this._errors && this._errors.length !== 0);
+      },
       _registerChangeStream: function () {
         if (!this._changeStreamUrl)
           return;
@@ -264,7 +309,6 @@
           return;
         if (this._drawNew) {
           this.chart = new this.xChart.chart(this._renderContainerId);
-          this.chartId = this._getGUID();
           this._drawNew = false;
         }
         Polymer.dom.flush();
@@ -285,6 +329,9 @@
         this._makeAjaxCall(this.dataUrl, 'get', null, null, null, function (err, resp) {
           if (resp) {
             this.set('data', resp);
+          }else{
+            var err = OEUtils.extractErrorMessage(err);
+            this.set('_errors',[err.message]);
           }
         }.bind(this));
       },
@@ -298,25 +345,31 @@
             });
             var self = this;
             if(multiUrl){
+              var validSeries = [];
+              this.set('_errors',[]);
               var tasks = this.series.map(function(s){
                     var fetchData =  function(cb) {
                       self._makeAjaxCall(s.dataUrl, 'get', null, null, null, function (err, resp) {
                           if (resp) {
                             s._dataGroup = self._getGroups(resp,s.categoryId || self.category,self.categoryAggregator);
-                            cb(null,resp)
+                            validSeries.push(s);
+                            cb(null,{data:resp})
                           }else{
-                            cb(err)
+                            var errorMsg = s.property + ' : '+ OEUtils.extractErrorMessage(err).message;
+                            self.push('_errors',errorMsg);
+                            cb(null,{err:errorMsg});
                           }
                       });
                     }
                     return fetchData
               });
               async.parallel(tasks,function callback(err,result){
-                if(!err){
+                if(validSeries.length !== 0){
+                    var validResult = result.find(function(d){
+                      return d.data
+                    });
                     self.set('_drawNew', true);
-                    self._render(self._restructureData(result[0], self.category, self.series));
-                }else{
-                    self.fire('oe-show-error',OEUtils.extractErrorMessage(err));
+                    self._render(self._restructureData(validResult.data, self.category, validSeries));
                 }
               });
             }else{
@@ -428,6 +481,7 @@
       },
       _init: function () {
         this._parameterChanged();
+        this._errors = [];
       },
       _makeAjaxCall: function (url, method, body, filters, header, cb) {
         var ajax = document.createElement('oe-ajax');
