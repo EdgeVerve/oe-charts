@@ -11,7 +11,8 @@ series | array |yes || series accepts an array where each element is an object. 
 data |  array| no ( if `dataUrl` property is set ) | | `data` property is required to render the data. it should be an array of objects.  If `dataUrl` property is set then `data` is not required. 
 chartWidth | number| no | 300px|`chartWidth` can be provided to set the width of the container of the chart.
 chartHeight | number|no | 300px| `chartHeight` can be provided to set the height of the container of the chart.
-inheritParentDimension |  string| no | false | It can be set to true in case of chart container is suppsed to get the dimension on its parent container. If this property is given and if the parent is resized, in that case the chart will get redrawn occupying the new dimension. 
+inheritParentDimension |  string| no | false | It can be set to true in case of chart container is suppsed to get the dimension on its parent container. If this property is given and if the parent is resized, in that case the chart will get redrawn occupying the new dimension.
+noDataMessage | string| no | No Data Found |`noDataMessage` for the chart is an empty state message, when there is no data. The message is displayed as Category/Series Not Found, incase there is data but Category or series data  does not exist 
   
 
 # How to run oe-charts as an app - 

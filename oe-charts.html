@@ -20,8 +20,19 @@
         display: block;
         position: relative;
       }
+      .chartContainer.emptyState:before {
+                content: attr(message);
+                position: absolute;
+                top: 43%;
+                left: 0;
+                text-align: center;
+                width: 100%;
+                font-size: 18px;
+                color: var(--nodata-message-color, --secondary-text-color);
+      }
+
     </style>
-    <div id="[[_renderContainerId]]" style$="height:[[chartHeight]]px;width:[[chartWidth]]px">
+    <div id="[[_renderContainerId]]" style$="height:[[chartHeight]]px;width:[[chartWidth]]px" class$="chartContainer [[_calcClass(data,series,category)]]">
 
     </div>
   </template>
@@ -134,6 +145,15 @@
         chartWidth: {
           type: Number,
           value: 300
+        },
+        /*
+        Chart Empty State Message.
+        */ 
+        noDataMessage: {
+          type: String,
+          value: function () {
+              return "No Data Found";
+          }
         },
         /*
         height of the container of the chart
@@ -429,6 +449,15 @@
           url: ajax.url
         });
         ajax.generateRequest();
+      },
+      _calcClass: function (data, series, category) {
+        if (data && data.length === 0) {
+            return "emptyState";
+        } else if (!category || !series) {
+            this.noDataMessage = "Category/Series not found";
+            return "emptyState";
+        }
+        return "";
       }
     });
   </script>
