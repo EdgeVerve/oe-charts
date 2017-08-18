@@ -1,4 +1,5 @@
 <script type="text/javascript" src="../d3/d3.min.js"></script>
+<script type="text/javascript" src="../async/lib/async.js"></script>
 <script type="text/javascript" src="../lodash/lodash.js"></script>
 <script type="text/javascript" src="countries/topojson.js"></script>
 <link rel="import" href="../polymer/polymer.html">
@@ -228,7 +229,10 @@
       behaviors: [OEchartBehavior],
       observers: ['_seriesChanged(series.*)','_parameterChanged(category,chartHeight,categoryAggregator,chartWidth,chartType)', '_dataChanged(data.*)'],
       attached: function () {
-        this.aggregateFunctions = {
+        this._init();
+      },
+      get aggregateFunctions(){
+        return {
           'sum': function (data) {
             return data.reduce(function (a, b) {
               return a + b;
@@ -244,7 +248,9 @@
             return data.length;
           }
         }
-        this.chartTypes = {
+      },
+      get chartTypes(){
+        return {
           'area': 'area',
           'bubble': 'bubble',
           'groupedbar': 'groupedBar',
@@ -258,7 +264,6 @@
           'stackedcolumn': 'stackedColumn',
           'mapview': 'mapview',
         }
-        this._init();
       },
       _showErrors:function(){
           return (this._errors && this._errors.length !== 0);
@@ -292,8 +297,9 @@
         }
       },
       _checkAndRender: function (data) {
-        if (Array.isArray(data) && data.length === 0)
+        if (Array.isArray(data) && data.length === 0){
           return;
+        }
         if (!this.chartTypes || !this.aggregateFunctions) {
           return;
         }
@@ -305,8 +311,9 @@
 
       },
       _render: function (data) {
-        if (!this._ifStructuredData(data))
+        if (!this._ifStructuredData(data)){
           return;
+        }
         if (this._drawNew) {
           this.chart = new this.xChart.chart(this._renderContainerId);
           this._drawNew = false;
@@ -369,7 +376,9 @@
                       return d.data
                     });
                     self.set('_drawNew', true);
-                    self._render(self._restructureData(validResult.data, self.category, validSeries));
+                    setTimeout(function(){
+                      self._render(self._restructureData(validResult.data, self.category, validSeries));
+                    },100);
                 }
               });
             }else{
