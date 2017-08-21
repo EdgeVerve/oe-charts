@@ -50,11 +50,10 @@ To run this project, follow the steps -
 
 ### 5. oe-charts with multiple dataUrl per series
 
-Series level dataUrl are needed when the data to render the chart is provided by multiple URLs.
-Example : In case of generating a chart based on yearly expense of different sectors of a company each provided by their own api.
-
+There can be scenarios where the data has to fetched from different sources(different api's) for each series of the graph. This can be achieved by adding dataUrl property of oe-charts to each series item.
+Below is an example of an oe-chart where the travel expenses and stationary expenses for a company are fetched from different api's.
 ``` html
-<oe-charts id="chart" chart-type="groupedBar" category="billDate" category-aggregator="year" series='[{"property":"travelExpense","aggregation":"sum","color":"red","dataUrl":"/api/transportInvoices"},{"property":"stationaryExpense","aggregation":"sum","color":"green","dataUrl":"/api/stationaryInvoices"}]'></oe-charts>
-```
+<oe-charts id="chart" chart-type="groupedBar" category="billDate" category-aggregator="year" series='[{"property":"travelExpense","aggregation":"sum","color":"red","dataUrl":"/api/travelInvoices"},{"property":"stationaryExpense","aggregation":"sum","color":"green","dataUrl":"/api/stationaryInvoices"}]'></oe-charts>
+``` 
 
 
