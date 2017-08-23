@@ -22,6 +22,7 @@
        :host {
         display: block;
         position: relative;
+        padding: 8px;
       }
       .chartContainer.emptyState:before {
         content: attr(message);
@@ -286,9 +287,9 @@
             this.debounce('update-chart-dimensions', function () {
               if (this.chartHeight !== parentElem.offsetHeight || this.chartWidth !== parentElem.offsetWidth) {
                 this.set('_drawNew', true);
-                this.set('chartHeight', parentElem.offsetHeight);
+                this.set('chartHeight', parentElem.offsetHeight-16);
                 this.set('_drawNew', true);
-                this.set('chartWidth', parentElem.offsetWidth);
+                this.set('chartWidth', parentElem.offsetWidth-16);
               }
             }, 499);
           }.bind(this), 500);
@@ -297,10 +298,7 @@
         }
       },
       _checkAndRender: function (data) {
-        if (Array.isArray(data) && data.length === 0){
-          return;
-        }
-        if (!this.chartTypes || !this.aggregateFunctions) {
+        if (Array.isArray(data) && data.length === 0 && !this.hasDataFromSeries){
           return;
         }
         if (this._ifStructuredData(data))
@@ -375,6 +373,7 @@
                     var validResult = result.find(function(d){
                       return d.data
                     });
+                    self.set('hasDataFromSeries',true);
                     self.set('_drawNew', true);
                     setTimeout(function(){
                       self._render(self._restructureData(validResult.data, self.category, validSeries));
