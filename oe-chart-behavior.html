@@ -1122,8 +1122,10 @@
 
                         var svg = d3.select("#" + this.renderContainerId).append("svg")
                             .attr("id", this.renderContainerId + "_svg")
-                            .attr("width", width + this.margin.left + this.margin.right)
-                            .attr("height", height + this.margin.top + this.margin.bottom)
+                            .attr("preserveAspectRatio", "xMidYMid meet")
+                            .attr("viewBox", "0 0 " + this.canvasWidth + " " + this.canvasHeight)
+                            .attr("width", "100%")
+                            .attr("height", "100%")
                             .attr('class', 'area');
 
                         var mainGroup = svg.append("g")
@@ -1148,8 +1150,8 @@
 
                         height = this.canvasHeight - this.margin.top - this.margin.bottom;
 
-                        svg.attr("width", width + this.margin.left + this.margin.right)
-                            .attr("height", height + this.margin.top + this.margin.bottom);
+                        // svg.attr("width", width + this.margin.left + this.margin.right)
+                        //     .attr("height", height + this.margin.top + this.margin.bottom);
 
                         mainGroup.attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
@@ -1542,8 +1544,10 @@
 
                         var svg = d3.select("#" + this.renderContainerId).append("svg")
                             .attr("id", this.renderContainerId + "_svg")
-                            .attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom)
+                            .attr("preserveAspectRatio", "xMidYMid meet")
+                            .attr("viewBox", "0 0 " + this.canvasWidth + " " + this.canvasHeight)
+                            .attr("width", "100%")
+                            .attr("height", "100%")
                             .attr('class', 'bubbleChart');
 
                         var mainGroup = svg.append("g")
@@ -1625,8 +1629,8 @@
 
                         this.rScale = rScale;
 
-                        svg.attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom);
+                        // svg.attr("width", width + margin.left + margin.right)
+                        //     .attr("height", height + margin.top + margin.bottom);
 
                         mainGroup.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -1822,8 +1826,8 @@
                             .domain([d3.min(data.series[1].data), d3.max(data.series[1].data)]);
 
 
-                        svg.attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom);
+                        svg.attr("width", "100%")
+                            .attr("height", "100%");
 
                         mainGroup.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -1961,8 +1965,10 @@
 
                         var svg = d3.select("#" + this.renderContainerId).append("svg")
                             .attr("id", this.renderContainerId + "_svg")
-                            .attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom)
+                            .attr("preserveAspectRatio", "xMidYMid meet")
+                            .attr("viewBox", "0 0 " + this.canvasWidth + " " + this.canvasHeight)
+                            .attr("width", "100%")
+                            .attr("height", "100%")
                             .attr('class', 'groupedBar');
 
                         var mainGroup = svg.append("g")
@@ -1981,8 +1987,8 @@
 
                         height = this.canvasHeight - margin.top - margin.bottom;
 
-                        svg.attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom);
+                        // svg.attr("width", width + margin.left + margin.right)
+                        //     .attr("height", height + margin.top + margin.bottom);
 
                         mainGroup.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -2142,8 +2148,8 @@
 
                         height = this.canvasHeight - margin.top - margin.bottom;
 
-                        svg.attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom);
+                        svg.attr("width", "100%")
+                            .attr("height", "100%");
 
                         mainGroup.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -2597,8 +2603,10 @@
 
                         var svg = d3.select("#" + this.renderContainerId).append("svg")
                             .attr("id", this.renderContainerId + "_svg")
-                            .attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom)
+                            .attr("preserveAspectRatio", "xMidYMid meet")
+                            .attr("viewBox", "0 0 " + this.canvasWidth + " " + this.canvasHeight)
+                            .attr("width", "100%")
+                            .attr("height", "100%")
                             .attr('class', 'groupedColumn');
 
                         var mainGroup = svg.append("g")
@@ -2623,8 +2631,8 @@
 
                         height = this.canvasHeight - margin.top - margin.bottom;
 
-                        svg.attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom);
+                        // svg.attr("width", width + margin.left + margin.right)
+                        //     .attr("height", height + margin.top + margin.bottom);
 
                         mainGroup.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -2962,8 +2970,8 @@
 
                         height = this.canvasHeight - margin.top - margin.bottom;
 
-                        svg.attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom);
+                        svg.attr("width", "100%")
+                            .attr("height", "100%");
 
                         mainGroup.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -3539,8 +3547,10 @@
 
                         var svg = d3.select("#" + this.renderContainerId).append("svg")
                             .attr("id", this.renderContainerId + "_svg")
-                            .attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom)
+                            .attr("preserveAspectRatio", "xMidYMid meet")
+                            .attr("viewBox", "0 0 " + this.canvasWidth + " " + this.canvasHeight)
+                            .attr("width", "100%")
+                            .attr("height", "100%")
                             .attr('class', 'line');
 
                         var mainGroup = svg.append("g")
@@ -3565,8 +3575,8 @@
 
                         height = this.canvasHeight - margin.top - margin.bottom;
 
-                        svg.attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom);
+                        // svg.attr("width", width + margin.left + margin.right)
+                        //     .attr("height", height + margin.top + margin.bottom);
 
                         mainGroup.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -3728,8 +3738,10 @@
 
                         var svg = d3.select("#" + this.renderContainerId).append("svg")
                             .attr("id", this.renderContainerId + "_svg")
-                            .attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom)
+                            .attr("preserveAspectRatio", "xMidYMid meet")
+                            .attr("viewBox", "0 0 " + this.canvasWidth + " " + this.canvasHeight)
+                            .attr("width", "100%")
+                            .attr("height", "100%")
                             .attr('class', 'line');
 
                         var mainGroup = svg.append("g")
@@ -3753,8 +3765,8 @@
 
                         height = this.canvasHeight - margin.top - margin.bottom;
 
-                        svg.attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom);
+                        // svg.attr("width", width + margin.left + margin.right)
+                        //     .attr("height", height + margin.top + margin.bottom);
 
                         mainGroup.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -3945,8 +3957,10 @@
 
                         var svg = d3.select("#" + this.renderContainerId).append("svg")
                             .attr("id", this.renderContainerId + "_svg")
-                            .attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom)
+                            .attr("preserveAspectRatio", "xMidYMid meet")
+                            .attr("viewBox", "0 0 " + this.canvasWidth + " " + this.canvasHeight)
+                            .attr("width", "100%")
+                            .attr("height", "100%")
                             .attr('class', 'normalizedStackedColumn');
 
                         var mainGroup = svg.append("g")
@@ -3971,8 +3985,8 @@
 
                         height = this.canvasHeight - margin.top - margin.bottom;
 
-                        svg.attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom);
+                        // svg.attr("width", width + margin.left + margin.right)
+                        //     .attr("height", height + margin.top + margin.bottom);
 
                         mainGroup.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -4170,8 +4184,8 @@
 
                         height = this.canvasHeight - margin.top - margin.bottom;
 
-                        svg.attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom);
+                        svg.attr("width", "100%")
+                            .attr("height", "100%");
 
                         mainGroup.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -4605,8 +4619,10 @@
 
                         var svg = d3.select("#" + this.renderContainerId).append("svg")
                             .attr("id", this.renderContainerId + "_svg")
-                            .attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom)
+                            .attr("preserveAspectRatio", "xMidYMid meet")
+                            .attr("viewBox", "0 0 " + this.canvasWidth + " " + this.canvasHeight)
+                            .attr("width", "100%")
+                            .attr("height", "100%")
                             .attr('class', 'pareto');
 
                         var mainGroup = svg.append("g")
@@ -5039,8 +5055,10 @@
                             .append("svg")
                             .attr('id', renderContainerId + '_svg')
                             .attr('class', (innerRadius!==0)?'donut-svg':'pie-svg')
-                            .attr("width", w)
-                            .attr('height', h);
+                            .attr("preserveAspectRatio", "xMidYMid meet")
+                            .attr("viewBox", "0 0 " + this.canvasWidth + " " + this.canvasHeight)
+                            .attr("width", "100%")
+                            .attr('height', "100%");
 
                         //Utility function call to add filter def to svg
                         this.utility.addRadialFilter(svg, renderContainerId);
@@ -5563,8 +5581,10 @@
                             .append("svg")
                             .attr('id', renderContainerId + '_svg')
                             .attr('class', (innerRadius!==0)?'donut-svg':'pie-svg')
-                            .attr("width", w)
-                            .attr('height', h);
+                            .attr("preserveAspectRatio", "xMidYMid meet")
+                            .attr("viewBox", "0 0 " + this.canvasWidth + " " + this.canvasHeight)
+                            .attr("width", "100%")
+                            .attr('height', "100%");
 
                         //Utility function call to add filter def to svg
                         this.utility.addRadialFilter(svg, renderContainerId);
@@ -6280,8 +6300,10 @@
 
                         var svg = d3.select("#" + this.renderContainerId).append("svg")
                             .attr("id", this.renderContainerId + "_svg")
-                            .attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom)
+                            .attr("preserveAspectRatio", "xMidYMid meet")
+                            .attr("viewBox", "0 0 " + this.canvasWidth + " " + this.canvasHeight)
+                            .attr("width", "100%")
+                            .attr("height", "100%")
                             .attr('class', 'stackedBar');
 
                         var mainGroup = svg.append("g")
@@ -6300,8 +6322,8 @@
 
                         height = this.canvasHeight - margin.top - margin.bottom;
 
-                        svg.attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom);
+                        // svg.attr("width", width + margin.left + margin.right)
+                        //     .attr("height", height + margin.top + margin.bottom);
 
                         mainGroup.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -6538,8 +6560,8 @@
 
                         height = this.canvasHeight - margin.top - margin.bottom;
 
-                        svg.attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom);
+                        svg.attr("width", "100%")
+                            .attr("height", "100%");
 
                         mainGroup.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -7027,8 +7049,10 @@
 
                         var svg = d3.select("#" + this.renderContainerId).append("svg")
                             .attr("id", this.renderContainerId + "_svg")
-                            .attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom)
+                            .attr("preserveAspectRatio", "xMidYMid meet")
+                            .attr("viewBox", "0 0 " + this.canvasWidth + " " + this.canvasHeight)
+                            .attr("width", "100%")
+                            .attr("height", "100%")
                             .attr('class', 'stackedColumn');
 
                         var mainGroup = svg.append("g")
@@ -7053,8 +7077,8 @@
 
                         height = this.canvasHeight - margin.top - margin.bottom;
 
-                        svg.attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom);
+                        // svg.attr("width", width + margin.left + margin.right)
+                        //     .attr("height", height + margin.top + margin.bottom);
 
                         mainGroup.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -7261,8 +7285,8 @@
 
                         height = this.canvasHeight - margin.top - margin.bottom;
 
-                        svg.attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom);
+                        svg.attr("width", "100%")
+                            .attr("height", "100%");
 
                         mainGroup.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -7977,10 +8001,12 @@
                                 .projection(projection);
 
                             var svg = d3.select("#" + renderContainerId).append("svg")
-                                .attr("width", width)
+                                .attr("width", "100%")
                                 .attr("id", renderContainerId + "_svg")
                                 .attr('class', 'map')
-                                .attr("height", height)
+                                .attr("height", "100%")
+                                .attr("preserveAspectRatio", "xMidYMid meet")
+                                .attr("viewBox", "0 0 " + this.canvasWidth + " " + this.canvasHeight)
                                 .append("g")
                                 .attr("id", renderContainerId + "_svg_outerGroup")
                                 .attr('class', 'outerGroupMap')

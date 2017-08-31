@@ -22,8 +22,8 @@
        :host {
         display: block;
         position: relative;
-        padding: 8px;
       }
+
       .chartContainer.emptyState:before {
         content: attr(message);
         position: absolute;
@@ -34,17 +34,20 @@
         font-size: 18px;
         color: var(--nodata-message-color, --secondary-text-color);
       }
-      #errorIcon{
+
+      #errorIcon {
         color: red;
         --iron-icon-width: 20px;
         --iron-icon-height: 20px;
       }
-      .error-info{
+
+      .error-info {
         position: absolute;
-        top:16px;
-        left:16px;
+        top: 16px;
+        left: 16px;
       }
-      .error-info .error-container{
+
+      .error-info .error-container {
         display: none;
         position: absolute;
         font-size: 12px;
@@ -57,24 +60,33 @@
         border-radius: 2px;
         flex-direction: column;
       }
-      .error-info:hover .error-container{
+
+      .error-info:hover .error-container {
         display: flex;
       }
 
-      .error-container .error-msg{
+      .error-container .error-msg {
         margin: 2px 0px;
         letter-spacing: 0.5px;
       }
 
+      .chartContainer {
+        display: inline-block;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        vertical-align: top;
+        overflow: hidden;
+      }
     </style>
-    <div id="[[_renderContainerId]]" message$="[[noDataMessage]]" style$="height:[[chartHeight]]px;width:[[chartWidth]]px" class$="chartContainer [[_calcClass(data,series,category)]]">
+    <div id="[[_renderContainerId]]" message$="[[noDataMessage]]" class$="chartContainer [[_calcClass(data,series,category)]]">
       <template is="dom-if" if="[[_showErrors(_errors.*)]]">
         <div class="error-info">
           <iron-icon icon="error" id="errorIcon"></iron-icon>
           <div class="error-container">
-              <template is="dom-repeat" items="[[_errors]]">
-                <label class="error-msg">[[item]]</label>
-              </template>
+            <template is="dom-repeat" items="[[_errors]]">
+              <label class="error-msg">[[item]]</label>
+            </template>
           </div>
         </div>
       </template>
@@ -184,41 +196,13 @@
           observer: '_registerChangeStream'
         },
         /*
-        width of the container of the chart
-        */
-        chartWidth: {
-          type: Number,
-          value: 300
-        },
-        /*
         Chart Empty State Message.
-        */ 
+        */
         noDataMessage: {
           type: String,
           value: function () {
-              return "No Data Found";
+            return "No Data Found";
           }
-        },
-        /*
-        height of the container of the chart
-        */
-        chartHeight: {
-          type: Number,
-          value: 300
-        },
-        /*
-        It can be set to true in case of
-        chart container is suppsed to get
-        the dimension on its parent
-        container. If this property is
-        given and if the parent is resized,
-        in that case the chart will get
-        redrawn occupying the new dimension.
-        */
-        inheritParentDimension: {
-          type: Boolean,
-          value: false,
-          observer: '_handleInheritance'
         },
         _drawNew: {
           type: Boolean,
@@ -228,11 +212,11 @@
         }
       },
       behaviors: [OEchartBehavior],
-      observers: ['_seriesChanged(series.*)','_parameterChanged(category,chartHeight,categoryAggregator,chartWidth,chartType)', '_dataChanged(data.*)'],
+      observers: ['_seriesChanged(series.*)', '_parameterChanged(category,categoryAggregator,chartType)', '_dataChanged(data.*)'],
       attached: function () {
         this._init();
       },
-      get aggregateFunctions(){
+      get aggregateFunctions() {
         return {
           'sum': function (data) {
             return data.reduce(function (a, b) {
@@ -250,7 +234,7 @@
           }
         }
       },
-      get chartTypes(){
+      get chartTypes() {
         return {
           'area': 'area',
           'bubble': 'bubble',
@@ -266,8 +250,8 @@
           'mapview': 'mapview',
         }
       },
-      _showErrors:function(){
-          return (this._errors && this._errors.length !== 0);
+      _showErrors: function () {
+        return (this._errors && this._errors.length !== 0);
       },
       _registerChangeStream: function () {
         if (!this._changeStreamUrl)
@@ -280,25 +264,8 @@
             this.push('data', data);
         }.bind(this));
       },
-      _handleInheritance: function () {
-        var parentElem = this.parentElement;
-        if (this.inheritParentDimension) {
-          this._dimensionInteraval = setInterval(function () {
-            this.debounce('update-chart-dimensions', function () {
-              if (this.chartHeight !== parentElem.offsetHeight || this.chartWidth !== parentElem.offsetWidth) {
-                this.set('_drawNew', true);
-                this.set('chartHeight', parentElem.offsetHeight-16);
-                this.set('_drawNew', true);
-                this.set('chartWidth', parentElem.offsetWidth-16);
-              }
-            }, 499);
-          }.bind(this), 500);
-        } else {
-          clearInterval(this._dimensionInteraval)
-        }
-      },
       _checkAndRender: function (data) {
-        if (Array.isArray(data) && data.length === 0 && !this.hasDataFromSeries){
+        if (Array.isArray(data) && data.length === 0 && !this.hasDataFromSeries) {
           return;
         }
         if (this._ifStructuredData(data))
@@ -309,7 +276,7 @@
 
       },
       _render: function (data) {
-        if (!this._ifStructuredData(data)){
+        if (!this._ifStructuredData(data)) {
           return;
         }
         if (this._drawNew) {
@@ -318,9 +285,6 @@
         }
         Polymer.dom.flush();
         var container = this.querySelector('#' + this._renderContainerId);
-        if (container.offsetHeight < 200 || container.offsetWidth < 200) {
-          return;
-        }
         this.chart.setOptions({
           chartClientId: this._renderContainerId,
           chartType: this.chartTypes[this.chartType.toLowerCase()],
@@ -334,55 +298,55 @@
         this._makeAjaxCall(this.dataUrl, 'get', null, null, null, function (err, resp) {
           if (resp) {
             this.set('data', resp);
-          }else{
+          } else {
             var err = OEUtils.extractErrorMessage(err);
-            this.set('_errors',[err.message]);
+            this.set('_errors', [err.message]);
           }
         }.bind(this));
       },
       _dataChanged: function () {
         this._checkAndRender(this.data);
       },
-      _seriesChanged:function(){
-        if(this.series && this.series.length !== 0){
-            var multiUrl = this.series.every(function(s){
-                 return s.dataUrl
+      _seriesChanged: function () {
+        if (this.series && this.series.length !== 0) {
+          var multiUrl = this.series.every(function (s) {
+            return s.dataUrl
+          });
+          var self = this;
+          if (multiUrl) {
+            var validSeries = [];
+            this.set('_errors', []);
+            var tasks = this.series.map(function (s) {
+              var fetchData = function (cb) {
+                self._makeAjaxCall(s.dataUrl, 'get', null, null, null, function (err, resp) {
+                  if (resp) {
+                    s._dataGroup = self._getGroups(resp, s.categoryId || self.category, self.categoryAggregator);
+                    validSeries.push(s);
+                    cb(null, { data: resp })
+                  } else {
+                    var errorMsg = s.property + ' : ' + OEUtils.extractErrorMessage(err).message;
+                    self.push('_errors', errorMsg);
+                    cb(null, { err: errorMsg });
+                  }
+                });
+              }
+              return fetchData
             });
-            var self = this;
-            if(multiUrl){
-              var validSeries = [];
-              this.set('_errors',[]);
-              var tasks = this.series.map(function(s){
-                    var fetchData =  function(cb) {
-                      self._makeAjaxCall(s.dataUrl, 'get', null, null, null, function (err, resp) {
-                          if (resp) {
-                            s._dataGroup = self._getGroups(resp,s.categoryId || self.category,self.categoryAggregator);
-                            validSeries.push(s);
-                            cb(null,{data:resp})
-                          }else{
-                            var errorMsg = s.property + ' : '+ OEUtils.extractErrorMessage(err).message;
-                            self.push('_errors',errorMsg);
-                            cb(null,{err:errorMsg});
-                          }
-                      });
-                    }
-                    return fetchData
-              });
-              async.parallel(tasks,function callback(err,result){
-                if(validSeries.length !== 0){
-                    var validResult = result.find(function(d){
-                      return d.data
-                    });
-                    self.set('hasDataFromSeries',true);
-                    self.set('_drawNew', true);
-                    setTimeout(function(){
-                      self._render(self._restructureData(validResult.data, self.category, validSeries));
-                    },100);
-                }
-              });
-            }else{
-                self._parameterChanged();
-            }
+            async.parallel(tasks, function callback(err, result) {
+              if (validSeries.length !== 0) {
+                var validResult = result.find(function (d) {
+                  return d.data
+                });
+                self.set('hasDataFromSeries', true);
+                self.set('_drawNew', true);
+                setTimeout(function () {
+                  self._render(self._restructureData(validResult.data, self.category, validSeries));
+                }, 100);
+              }
+            });
+          } else {
+            self._parameterChanged();
+          }
         }
       },
       _parameterChanged: function () {
@@ -514,10 +478,10 @@
       },
       _calcClass: function (data, series, category) {
         if (data && data.length === 0) {
-            return "emptyState";
+          return "emptyState";
         } else if (!category || !series) {
-            this.noDataMessage = "Category/Series not found";
-            return "emptyState";
+          this.noDataMessage = "Category/Series not found";
+          return "emptyState";
         }
         return "";
       }
