@@ -27,13 +27,34 @@
             height: 300px;
         }
 
-        .header {
+        #container {
             display: flex;
-            align-items: baseline;
+            height: calc(100vh - 16px);
+        }
+
+        .header {
+            flex: 2;
+            overflow: auto;
+        }
+
+        .demo-area {
+            flex: 4;
+            border: 1px solid #aaa;
+            padding: 8px;
+            box-sizing: border-box;
+            overflow: auto;
         }
 
         .header h3 {
-            padding: 0px 16px;
+            padding-right: 16px;
+        }
+
+        .attribute-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 16px 16px 0px;
+            align-items: center;
+            border-bottom: 1px solid #aaa;
         }
 
         .chart-container {
@@ -43,6 +64,9 @@
             overflow: auto;
             resize: both;
         }
+        .flex-fill{
+            flex:auto;
+        }
     </style>
     <link rel="import" href="oe-charts.html">
 
@@ -50,128 +74,165 @@
 
 <body>
     <div id="container">
+
         <div class="header">
-            <h3>Chart Type</h3>
-            <select selected="groupedColumn" onchange="demoControl.typeFn(event)">
-                <option value="area">Area</option>
-                <option value="bubble">Bubble</option>
-                <option value="groupedbar">Grouped Bar</option>
-                <option value="groupedcolumn" selected>Grouped Column</option>
-                <option value="line">Line</option>
-                <option value="normalizedstackedcolumn">Normalized Stacked Column</option>
-                <option value="pareto">Pareto</option>
-                <option value="pie">Pie </option>
-                <option value="donut">Donut</option>
-                <option value="stackedbar">Stacked Bar</option>
-                <option value="stackedcolumn">Stacked Column</option>
-                <option value="mapview">Map View</option>
-			</select>
-            <h3>Chart Width</h3>
-            <input onchange="demoControl.widthFn(event)" value="300" />
-            <h3>Chart Height</h3>
-            <input onchange="demoControl.heightFn(event)" value="300" />
-            <h3>Inherit Parent</h3>
-            <input type="checkbox" onchange="demoControl.inheritFn(event)" />
+            <div class="attribute-item">
+                <h3>Chart Type</h3>
+                <select selected="groupedColumn" onchange="demoControl.typeFn(event)">
+                    <option value="area">Area</option>
+                    <option value="bubble">Bubble</option>
+                    <option value="groupedbar">Grouped Bar</option>
+                    <option value="groupedcolumn" selected>Grouped Column</option>
+                    <option value="line">Line</option>
+                    <option value="normalizedstackedcolumn">Normalized Stacked Column</option>
+                    <option value="pareto">Pareto</option>
+                    <option value="pie">Pie </option>
+                    <option value="donut">Donut</option>
+                    <option value="stackedbar">Stacked Bar</option>
+                    <option value="stackedcolumn">Stacked Column</option>
+                    <option value="mapview">Map View</option>
+                </select>
+            </div>
+            <div class="attribute-item">
+                <h3>Data</h3>
+                <textarea class="flex-fill" id="dataInput" rows="10" cols="" onchange="demoControl.dataFn(event)"></textarea>
+            </div>
+            <div class="attribute-item">
+                <h3>Category</h3>
+                <input onchange="demoControl.categoryFn(event)" value="country" />
+            </div>
+            <div class="attribute-item">
+                <h3>Series</h3>
+                <textarea class="flex-fill" id="seriesInput" rows="10" cols="" onchange="demoControl.seriesFn(event)"></textarea>
+            </div>
         </div>
-        <div class="chart-container">
-            <oe-charts id="chart-ele" chart-type="groupedcolumn"></oe-charts>
+        <div class="demo-area">
+            <div class="chart-container">
+                <oe-charts id="chart-ele" chart-type="groupedcolumn"></oe-charts>
+            </div>
         </div>
     </div>
     <script type="text/javascript" src="locationdata.js"></script>
     <script>
         var demoControl = (function () {
             var chart = document.getElementById("chart-ele");
+            var dataInput = document.getElementById('dataInput');
+            var seriesInput = document.getElementById('seriesInput');
             function getRandomData(num) {
-                return Math.random() * num;
+                return Math.round(Math.random() * num);
             }
+
             function chartTypeChanged(e) {
                 chart.setAttribute('chart-type', e.currentTarget.value);
             }
-            function changeInheritance(e) {
-                if (e.currentTarget.checked) {
-                    chart.setAttribute('inherit-parent-dimension', '');
-                } else {
-                    chart.removeAttribute('inherit-parent-dimension');
+
+            
+            function isValidJSON(str){
+                try{
+                    return JSON.parse(str);
+                }catch(e){
+                    return null;
                 }
             }
-            function chartWidthChanged(e) {
-                chart.setAttribute('chart-width', e.target.value);
-            }
-            function chartHeightChanged(e) {
-                chart.setAttribute('chart-height', e.target.value);
+
+            function chartDataChanged(e){
+                var val =  e.target.value;
+                var validJSON = isValidJSON(val);
+                if(validJSON){
+                    chart.setAttribute('data', JSON.stringify(validJSON));
+                }else{
+                    chart.removeAttribute('data');
+                }
             }
 
-            var sampledata = [
-                {
-                    country: "United States",
-                    state: 'california',
-                    population: getRandomData(1000000),
-                    area: getRandomData(1000000)
-                }, {
-                    country: "United States",
-                    state: 'florida',
-                    population: getRandomData(1000000),
-                    area: getRandomData(1000000)
-                }, {
-                    country: "United States",
-                    state: 'alaska',
-                    population: getRandomData(1000000),
-                    area: getRandomData(1000000)
-                }, {
-                    country: "United States",
-                    state: 'texas',
-                    population: getRandomData(1000000),
-                    area: getRandomData(1000000)
-                }, {
-                    country: 'India',
-                    state: 'mumbai',
-                    population: getRandomData(1000000),
-                    area: getRandomData(1000000)
-                }, {
-                    country: 'India',
-                    state: 'delhi',
-                    population: getRandomData(1000000),
-                    area: getRandomData(1000000)
-                }, {
-                    country: 'India',
-                    state: 'karnatka',
-                    population: getRandomData(1000000),
-                    area: getRandomData(1000000)
-                }, {
-                    country: 'India',
-                    state: 'punjab',
-                    population: getRandomData(1000000),
-                    area: getRandomData(1000000)
-                }, {
-                    country: 'China',
-                    state: 'hainan',
-                    population: getRandomData(1000000),
-                    area: getRandomData(1000000)
-                }, {
-                    country: 'China',
-                    state: 'yunnan',
-                    population: getRandomData(1000000),
-                    area: getRandomData(1000000)
-                }, {
-                    country: 'China',
-                    state: 'fujian',
-                    population: getRandomData(1000000),
-                    area: getRandomData(1000000)
-                }, {
-                    country: 'China',
-                    state: 'shandong',
-                    population: getRandomData(1000000),
-                    area: getRandomData(1000000)
-                }, {
-                    country: 'China',
-                    state: 'jilin',
-                    population: getRandomData(1000000),
-                    area: getRandomData(1000000)
-                }];
+            function chartCategoryChanged(e){
+                chart.setAttribute('category', e.target.value);
+            }
+            function chartSeriesChanged(e){
+                var val =  e.target.value;
+                var validJSON = isValidJSON(val);
+                if(validJSON){
+                    chart.setAttribute('series', JSON.stringify(validJSON));
+                }else{
+                    chart.removeAttribute('series');
+                }
+            }
 
-            function loadRender() {
-                chart.setAttribute('category', 'country');
-                chart.setAttribute('series', JSON.stringify([{
+
+
+
+
+
+
+
+            var sampledata = [{
+                country: "USA",
+                state: 'california',
+                population: getRandomData(1000000),
+                area: getRandomData(1000000)
+            }, {
+                country: "USA",
+                state: 'florida',
+                population: getRandomData(1000000),
+                area: getRandomData(1000000)
+            }, {
+                country: "USA",
+                state: 'alaska',
+                population: getRandomData(1000000),
+                area: getRandomData(1000000)
+            }, {
+                country: "USA",
+                state: 'texas',
+                population: getRandomData(1000000),
+                area: getRandomData(1000000)
+            }, {
+                country: 'India',
+                state: 'mumbai',
+                population: getRandomData(1000000),
+                area: getRandomData(1000000)
+            }, {
+                country: 'India',
+                state: 'delhi',
+                population: getRandomData(1000000),
+                area: getRandomData(1000000)
+            }, {
+                country: 'India',
+                state: 'karnatka',
+                population: getRandomData(1000000),
+                area: getRandomData(1000000)
+            }, {
+                country: 'India',
+                state: 'punjab',
+                population: getRandomData(1000000),
+                area: getRandomData(1000000)
+            }, {
+                country: 'China',
+                state: 'hainan',
+                population: getRandomData(1000000),
+                area: getRandomData(1000000)
+            }, {
+                country: 'China',
+                state: 'yunnan',
+                population: getRandomData(1000000),
+                area: getRandomData(1000000)
+            }, {
+                country: 'China',
+                state: 'fujian',
+                population: getRandomData(1000000),
+                area: getRandomData(1000000)
+            }, {
+                country: 'China',
+                state: 'shandong',
+                population: getRandomData(1000000),
+                area: getRandomData(1000000)
+            }, {
+                country: 'China',
+                state: 'jilin',
+                population: getRandomData(1000000),
+                area: getRandomData(1000000)
+            }];
+
+            var seriesData = [{
                     "property": "population",
                     "aggregation": "sum",
                     "color": "red"
@@ -179,7 +240,10 @@
                     "property": "area",
                     "aggregation": "sum",
                     "color": "green"
-                }]));
+                }]
+            function loadRender() {
+                chart.setAttribute('category', 'country');
+                chart.setAttribute('series', JSON.stringify(seriesData));
                 chart.setAttribute('data', JSON.stringify(sampledata));
 
                 /*chart.setAttribute('category', 'name');
@@ -190,12 +254,15 @@
                 chart.setAttribute('data-url', "http://localhost:3000/api/Students");*/
             }
 
+            dataInput.value = JSON.stringify(sampledata,null,2);
+            seriesInput.value = JSON.stringify(seriesData,null,2);
+
             return {
                 loadFn: loadRender,
                 typeFn: chartTypeChanged,
-                widthFn: chartWidthChanged,
-                heightFn: chartHeightChanged,
-                inheritFn: changeInheritance
+                dataFn: chartDataChanged,
+                seriesFn: chartSeriesChanged,
+                categoryFn: chartCategoryChanged,
             }
         })()
 

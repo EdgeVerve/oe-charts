@@ -40,15 +40,6 @@
         <custom-attrib-container attrib="{{elementConfig.noDataMessage}}">
             <oe-input value="{{elementConfig.noDataMessage.value}}" no-label-float class="attr-input" attr-id="noDataMessage" on-change="_updateAttribValue"></oe-input>
         </custom-attrib-container>
-        <custom-attrib-container attrib="{{elementConfig.chartHeight}}">
-            <oe-decimal min="200" value="{{elementConfig.chartHeight.value}}" no-label-float class="attr-input" attr-id="chartHeight" on-change="_updateAttribValue"></oe-decimal>
-        </custom-attrib-container>
-        <custom-attrib-container attrib="{{elementConfig.chartWidth}}">
-            <oe-decimal min="200" value="{{elementConfig.chartWidth.value}}" no-label-float class="attr-input" attr-id="chartWidth" on-change="_updateAttribValue"></oe-decimal>
-        </custom-attrib-container>
-        <custom-attrib-container attrib="{{elementConfig.inheritParentDimension}}">
-            <oe-checkbox value="{{elementConfig.inheritParentDimension.value}}" class="attr-input" attr-id="inheritParentDimension" on-change="_updateAttribValue"></oe-checkbox>
-        </custom-attrib-container>
     </div>
 </template>
 <script>
