@@ -4967,6 +4967,7 @@
                     //xChart.pieOrDonut's prototype properties
                     pieOrDonut.prototype.dispatch = d3.dispatch('RenderComplete');
                     pieOrDonut.prototype.draw = function (data) {
+                        var margin = this.margin;
                         this.data = data;
                         var color = this.color;
                         var renderContainerId = this.renderContainerId;
