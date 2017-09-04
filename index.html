@@ -22,11 +22,6 @@
             display: none !important;
         }
 
-        oe-chart {
-            width: 300px;
-            height: 300px;
-        }
-
         #container {
             display: flex;
             height: calc(100vh - 16px);
@@ -58,14 +53,15 @@
         }
 
         .chart-container {
-            height: 300px;
-            width: 300px;
+            height: 50vh;
+            width: 400px;
             border: 1px solid blue;
             overflow: auto;
             resize: both;
         }
-        .flex-fill{
-            flex:auto;
+
+        .flex-fill {
+            flex: auto;
         }
     </style>
     <link rel="import" href="oe-charts.html">
@@ -126,34 +122,34 @@
                 chart.setAttribute('chart-type', e.currentTarget.value);
             }
 
-            
-            function isValidJSON(str){
-                try{
+
+            function isValidJSON(str) {
+                try {
                     return JSON.parse(str);
-                }catch(e){
+                } catch (e) {
                     return null;
                 }
             }
 
-            function chartDataChanged(e){
-                var val =  e.target.value;
+            function chartDataChanged(e) {
+                var val = e.target.value;
                 var validJSON = isValidJSON(val);
-                if(validJSON){
+                if (validJSON) {
                     chart.setAttribute('data', JSON.stringify(validJSON));
-                }else{
+                } else {
                     chart.removeAttribute('data');
                 }
             }
 
-            function chartCategoryChanged(e){
+            function chartCategoryChanged(e) {
                 chart.setAttribute('category', e.target.value);
             }
-            function chartSeriesChanged(e){
-                var val =  e.target.value;
+            function chartSeriesChanged(e) {
+                var val = e.target.value;
                 var validJSON = isValidJSON(val);
-                if(validJSON){
+                if (validJSON) {
                     chart.setAttribute('series', JSON.stringify(validJSON));
-                }else{
+                } else {
                     chart.removeAttribute('series');
                 }
             }
@@ -233,14 +229,14 @@
             }];
 
             var seriesData = [{
-                    "property": "population",
-                    "aggregation": "sum",
-                    "color": "red"
-                }, {
-                    "property": "area",
-                    "aggregation": "sum",
-                    "color": "green"
-                }]
+                "property": "population",
+                "aggregation": "sum",
+                "color": "red"
+            }, {
+                "property": "area",
+                "aggregation": "sum",
+                "color": "green"
+            }]
             function loadRender() {
                 chart.setAttribute('category', 'country');
                 chart.setAttribute('series', JSON.stringify(seriesData));
@@ -254,8 +250,8 @@
                 chart.setAttribute('data-url', "http://localhost:3000/api/Students");*/
             }
 
-            dataInput.value = JSON.stringify(sampledata,null,2);
-            seriesInput.value = JSON.stringify(seriesData,null,2);
+            dataInput.value = JSON.stringify(sampledata, null, 2);
+            seriesInput.value = JSON.stringify(seriesData, null, 2);
 
             return {
                 loadFn: loadRender,
