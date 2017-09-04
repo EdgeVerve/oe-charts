@@ -277,7 +277,7 @@
 
       },
       _render: function (data) {
-        if (!this._ifStructuredData(data)) {
+        if (!this._ifStructuredData(data) || !this.xChart) {
           return;
         }
         if (this._drawNew) {
