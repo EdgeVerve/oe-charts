@@ -80,7 +80,7 @@
         overflow: hidden;
       }
     </style>
-    <div id="[[_renderContainerId]]" message$="[[noDataMessage]]" class$="chartContainer [[_calcClass(data,series,category)]]">
+    <div id="[[_renderContainerId]]" message$="[[noDataMessage]]" class$="chartContainer [[_calcClass(data,series,category,hasDataFromSeries)]]">
       <template is="dom-if" if="[[_showErrors(_errors.*)]]">
         <div class="error-info">
           <iron-icon icon="error" id="errorIcon"></iron-icon>
@@ -216,6 +216,7 @@
       observers: ['_seriesChanged(series.*)', '_parameterChanged(category,categoryAggregator,chartType)', '_dataChanged(data.*)'],
       attached: function () {
         this._init();
+        this.hasDataFromSeries = false;
       },
       get aggregateFunctions() {
         return {
@@ -291,7 +292,9 @@
           chartType: this.chartTypes[this.chartType.toLowerCase()],
           overlap: false
         });
-        this.chart.render(data);
+        if(container.offsetHeight !== 0 && container.offsetWidth !== 0){
+          this.chart.render(data);
+        }
       },
       _dataUrlChanged: function () {
         if (!this.dataUrl)
@@ -340,9 +343,11 @@
                 });
                 self.set('hasDataFromSeries', true);
                 self.set('_drawNew', true);
+                self.set('validSeriesData',validResult.data);
                 setTimeout(function () {
-                  self._render(self._restructureData(validResult.data, self.category, validSeries));
-                }, 100);
+                  var data = self._restructureData(validResult.data, self.category, validSeries);
+                  self._render(data);
+                }, 300);
               }
             });
           } else {
@@ -352,7 +357,11 @@
       },
       _parameterChanged: function () {
         this.set('_drawNew', true);
-        this._checkAndRender(this.data);
+        if(this.hasDataFromSeries){
+            this._checkAndRender(this.validSeriesData);
+        }else{
+            this._checkAndRender(this.data);
+        }
       },
       _restructureData: function (data, category, series) {
         if (!data || !category || !series || series.length === 0)
@@ -477,8 +486,8 @@
         });
         ajax.generateRequest();
       },
-      _calcClass: function (data, series, category) {
-        if (data && data.length === 0) {
+      _calcClass: function (data, series, category,hasDataFromSeries) {
+        if (data && data.length === 0 && !hasDataFromSeries) {
           return "emptyState";
         } else if (!category || !series) {
           this.noDataMessage = "Category/Series not found";
