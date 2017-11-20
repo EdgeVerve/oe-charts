@@ -28,6 +28,8 @@
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0"
   },
   "resolutions": {
-    "polymer": "^1.1.4"
+    "polymer": "^1.1.4",
+    "lodash": "^4.3.0",
+    "test-fixture": "^3.0.0"
   }
 }

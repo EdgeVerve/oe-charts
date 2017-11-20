@@ -1,0 +1,38 @@
+variables:
+  GIT_STRATEGY: "clone"
+
+.run_template: &run_script
+  stage: test
+  script:
+    #- if exist wct.conf.js del wct.conf.js
+    #- if exist wct.conf.json del wct.conf.json
+    #- copy /Y \multi-runner\builds\wct.conf.js .
+    - call bower install
+    - call wct --skip-selenium-install
+  tags:
+    - WCT_RUNNER
+
+install-deps:
+  stage: build
+  script:
+    - set GIT_CURL_VERBOSE=1
+    - set GIT_TRACE_PACKET=2
+    - call bower install
+  artifacts:
+    untracked: true
+    expire_in: 2h
+    paths:
+      - bower_components/
+  tags:
+    - WCT_RUNNER
+
+test-chrome:
+  variables:
+    BROWSER: "chrome"
+  coverage: '/Statements.*?(\d+(?:\.\d+)?)%/'
+  <<: *run_script
+
+test-firefox:
+  variables:
+    BROWSER: "firefox"
+  <<: *run_script
