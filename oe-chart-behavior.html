@@ -1662,7 +1662,7 @@
                             .attr('dy', '20');
 
                         svg.selectAll('#' + this.renderContainerId + '_bubbleDescText tspan')[0].forEach(function (d) {
-                            maxTextWidth = d.getBBox().width;
+                            maxTextWidth = d.getBoundingClientRect().width;
                         });
 
                         text_node.attr("transform", "translate(" + (width - maxTextWidth) + ',-' + (margin.top - 10) + ")");
