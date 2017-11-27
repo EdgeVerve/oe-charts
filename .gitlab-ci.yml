@@ -32,7 +32,7 @@ test-chrome:
   coverage: '/Statements.*?(\d+(?:\.\d+)?)%/'
   <<: *run_script
 
-.test-firefox:
+test-firefox:
   variables:
     BROWSER: "firefox"
   <<: *run_script
