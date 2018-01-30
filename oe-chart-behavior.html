@@ -99,10 +99,11 @@
 
                         if (eventTarget === 'dataitems') {
                             //For each dataitems in this.dataitems
-                            for (var k in this.dataitems) {
-                                var target = this.dataitems[k];
+                            var self = this;
+                            Object.keys(this.dataitems).forEach(function(k) {
+                                var target = self.dataitems[k];
 
-                                var existingEvent = this._eventHandlers.filter(function (d) {
+                                var existingEvent = self._eventHandlers.filter(function (d) {
                                     return d._event === _event && d.eventTarget === target;
                                 });
 
@@ -117,10 +118,9 @@
                                     eventObject.eventTarget = target;
                                     eventObject.eventHandler = eventHandler;
                                     eventObject.preventDefault = preventDefault;
-                                    this._eventHandlers.push(eventObject);
+                                    self._eventHandlers.push(eventObject);
                                 }
-
-                            }
+                            });
 
                         } else {
                             var existingEvent = this._eventHandlers.filter(function (d) {
@@ -144,7 +144,7 @@
 
                     };
 
-                    //Special Events -- Used to attach events after chart has been drawn 
+                    //Special Events -- Used to attach events after chart has been drawn
                     //Event Target is Unique Id
                     this.registerEvent = function (_event, eventTarget, eventHandler, preventDefault) {
                         this.events.registerSingleEvent(_event, eventTarget, eventHandler, preventDefault);
@@ -3332,12 +3332,12 @@
                         this.overlapDraw = true;
                         var overSeries = OverlappedData.overlappedSeries;
                         var chartOptions = this.chartOptions;
-                        // setting default axis          
+                        // setting default axis
                         for (var i = 0; i < originalData.series.length; i++)
                             if (isNaN(originalData.series[i].axis))
                                 originalData.series[i].axis = 1;
 
-                        // converting array of arrays to a single array            
+                        // converting array of arrays to a single array
                         for (var i = 0; i < overSeries.length; i++) {
                             overSeries[i].data = d3.merge(overSeries[i].data);
                             overSeries[i].fmtData = d3.merge(overSeries[i].fmtData)
@@ -3361,7 +3361,7 @@
                         var seriesScales = this.seriesScales;
                         var svg = d3.select('#' + this.renderContainerId + "_mainGroup");
                         var subCategoryScale = this.subCategoryScale;
-                        //remove line 
+                        //remove line
                         svg.selectAll('path.line').remove();
                         svg.selectAll('circle').remove();
 
@@ -3457,7 +3457,7 @@
                         var margin = this.margin,
                             height = this.canvasHeight - margin.top - margin.bottom;
                         var svg = d3.select('#' + this.renderContainerId + "_mainGroup");
-                        //remove line 
+                        //remove line
                         svg.selectAll('path.line').remove();
                         svg.selectAll('circle').remove();
 
@@ -6479,7 +6479,7 @@
                                 .text(this.chartOptions.seriesLabel);
                         }
 
-                        //Stacked Bar Rendering        
+                        //Stacked Bar Rendering
                         var groups = svg.selectAll('.group')
                             .data(dataset)
                             .enter()
@@ -6703,7 +6703,7 @@
                             this.seriesAxis.scale = seriesScale;
                         }
 
-                        //Stacked Bar Rendering    
+                        //Stacked Bar Rendering
                         var groups = svg.selectAll('.group')
                             .data(dataset);
 
@@ -7732,7 +7732,7 @@
                             var min = Math.min.apply(null, Vals);
                             y.domain([0, max]);
 
-                            //code to draw circle           
+                            //code to draw circle
                             var circles = g.selectAll("circle")
                                 .data(data)
                                 .enter()
