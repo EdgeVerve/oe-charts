@@ -100,7 +100,7 @@
                         if (eventTarget === 'dataitems') {
                             //For each dataitems in this.dataitems
                             var self = this;
-                            Object.keys(this.dataitems).forEach(function(k) {
+                            this.dataitems && Object.keys(this.dataitems).forEach(function(k) {
                                 var target = self.dataitems[k];
 
                                 var existingEvent = self._eventHandlers.filter(function (d) {
