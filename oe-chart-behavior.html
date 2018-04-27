@@ -4061,6 +4061,9 @@
                             return {
                                 values: data.categories.map(function (e, j) {
                                     sum = findSum(j);
+                                    if(sum === 0){
+                                        sum = 1;
+                                    }
                                     return {
                                         seriesIndex: i,
                                         categoryIndex: j,
@@ -4241,6 +4244,9 @@
                             return {
                                 values: data.categories.map(function (e, j) {
                                     sum = findSum(j);
+                                    if(sum === 0){
+                                        sum = 1;
+                                    }
                                     return {
                                         seriesIndex: i,
                                         categoryIndex: j,
@@ -4437,6 +4443,9 @@
                             return {
                                 values: overlappedData.categories.map(function (e, j) {
                                     sum = findSum(j);
+                                    if(sum === 0){
+                                        sum = 1;
+                                    }
                                     return {
                                         seriesIndex: i,
                                         categoryIndex: j,
@@ -4674,6 +4683,10 @@
                         chartData.forEach(function (d) {
                             return ySum += d.data;
                         })
+
+                        if(ySum === 0){
+                            ySum = 1;
+                        }
 
                         chartData.forEach(function (d, i) {
                             if (i === 0)
@@ -7714,7 +7727,7 @@
                                 .scale(scale);
                             //var minSize = [scale / 0, scale / 16, scale / 16, scale / 28, scale / 28, scale / 48, scale / 48];
                             var minSize = [2, 2, 2, 1, 1]
-                            var maxSize = [scale / 0, scale / 4, scale / 4, scale / 8, scale / 8, scale / 12, scale / 12];
+                            var maxSize = [scale / 1, scale / 4, scale / 4, scale / 8, scale / 8, scale / 12, scale / 12];
                             var index = Math.ceil(zoomLevel);
                             var y = d3.scale.linear().range([minSize[index], Math.round(maxSize[index])]);
                             var Vals;
@@ -7808,7 +7821,7 @@
 
                             //var minSize = [scale / 0, scale / 16, scale / 16, scale / 28, scale / 28, scale / 48, scale / 48];
                             var minSize = [2, 2, 2, 1, 1]
-                            var maxSize = [scale / 0, scale / 4, scale / 4, scale / 8, scale / 8, scale / 12, scale / 12];
+                            var maxSize = [scale / 1, scale / 4, scale / 4, scale / 8, scale / 8, scale / 12, scale / 12];
                             var index = Math.ceil(zoomLevel);
                             var y = d3.scale.linear().range([minSize[index], Math.round(maxSize[index])]);
                             var Vals = data.map(function (obj) {
