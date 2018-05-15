@@ -74,12 +74,14 @@
 
     function flush(fragmentByEnd, fragmentByStart) {
       for (var k in fragmentByEnd) {
-        var f = fragmentByEnd[k];
-        delete fragmentByStart[f.start];
-        delete f.start;
-        delete f.end;
-        f.forEach(function(i) { stitchedArcs[i < 0 ? ~i : i] = 1; });
-        fragments.push(f);
+        if (fragmentByEnd.hasOwnProperty(k)) {
+          var f = fragmentByEnd[k];
+          delete fragmentByStart[f.start];
+          delete f.start;
+          delete f.end;
+          f.forEach(function(i) { stitchedArcs[i < 0 ? ~i : i] = 1; });
+          fragments.push(f);
+        }
       }
     }
 
@@ -340,11 +342,13 @@
     objects.forEach(geometry);
 
     for (var i in indexesByArc) {
-      for (var indexes = indexesByArc[i], m = indexes.length, j = 0; j < m; ++j) {
-        for (var k = j + 1; k < m; ++k) {
-          var ij = indexes[j], ik = indexes[k], n;
-          if ((n = neighbors[ij])[i = bisect(n, ik)] !== ik) n.splice(i, 0, ik);
-          if ((n = neighbors[ik])[i = bisect(n, ij)] !== ij) n.splice(i, 0, ij);
+      if (indexesByArc.hasOwnProperty(i)) {
+        for (var indexes = indexesByArc[i], m = indexes.length, j = 0; j < m; ++j) {
+          for (var k = j + 1; k < m; ++k) {
+            var ij = indexes[j], ik = indexes[k], n;
+            if ((n = neighbors[ij])[i = bisect(n, ik)] !== ik) n.splice(i, 0, ik);
+            if ((n = neighbors[ik])[i = bisect(n, ij)] !== ij) n.splice(i, 0, ij);
+          }
         }
       }
     }
