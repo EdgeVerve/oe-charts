@@ -1,0 +1,42 @@
+{
+	"extends": "eslint:recommended",
+	"parserOptions": {
+		"ecmaVersion": 5,
+		"sourceType": "module"
+	},
+	"rules": {
+		"no-console": "off",
+		"semi": "error",
+		"no-unused-vars": ["error", {
+			"vars": "local",
+			"args": "none"
+		}],
+		"strict": "error",
+		"valid-jsdoc": ["warn", {
+			"requireReturn": false,
+			"prefer": {
+				"arg": "param",
+				"argument": "param",
+				"returns": "return"
+			},
+			"preferType": {
+				"Boolean": "boolean",
+				"Number": "number",
+				"String": "string",
+				"object": "Object"
+			}
+		}]
+	},
+	"env": {
+		"browser": true,
+		"es6": true
+	},
+	"globals": {
+		"customElements": true,
+		"HTMLImports": true,
+		"Polymer": true,
+		"ShadyDOM": true,
+		"ShadyCSS": true,
+		"JSCompiler_renameProperty": true
+	}
+}
