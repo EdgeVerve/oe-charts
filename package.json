@@ -12,8 +12,8 @@
     "@polymer/polymer": "3.1.0",
     "async": "1.5.2",
     "d3": "5.9.1",
-    "oe-ajax": "git+http://evgit/oecloud.io/oe-ajax.git#master",
-    "oe-mixins": "git+http://evgit/oecloud.io/oe-mixins.git#master"
+    "oe-ajax": "git+http://evgit/oecloud.io/oe-ajax.git#2.0.0",
+    "oe-mixins": "git+http://evgit/oecloud.io/oe-mixins.git#2.0.0"
   },
   "devDependencies": {
     "@polymer/iron-component-page": "4.0.1",
@@ -21,7 +21,7 @@
     "@polymer/iron-test-helpers": "3.0.1",
     "@types/d3": "5.7.1",
     "@webcomponents/webcomponentsjs": "2.2.7",
-    "oe-radio-group": "git+http://evgit/oecloud.io/oe-radio-group.git#master",
+    "oe-radio-group": "git+http://evgit/oecloud.io/oe-radio-group.git#2.0.0",
     "@polymer/test-fixture": "4.0.2",
     "axe-core": "3.1.2",
     "chai": "4.2.0",
