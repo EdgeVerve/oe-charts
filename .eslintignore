@@ -1,0 +1,6 @@
+node_modules/*
+bower_components/*
+test/*
+demo/*
+wct.conf.js
+coverage/

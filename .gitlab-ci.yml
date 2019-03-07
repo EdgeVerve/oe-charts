@@ -4,11 +4,11 @@ variables:
 .run_template: &run_script
   stage: test
   script:
-    #- if exist wct.conf.js del wct.conf.js
-    #- if exist wct.conf.json del wct.conf.json
-    #- copy /Y \multi-runner\builds\wct.conf.js .
-    - call bower install
-    - call wct --skip-selenium-install
+    - if exist wct.conf.js del wct.conf.js
+    - if exist wct.conf.json del wct.conf.json
+    - copy /Y \multi-runner\builds\wct.conf.js .
+    - call npm install
+    - call polymer test --module-resolution node --skip-selenium-install
   tags:
     - WCT_RUNNER
 
@@ -17,12 +17,16 @@ install-deps:
   script:
     - set GIT_CURL_VERBOSE=1
     - set GIT_TRACE_PACKET=2
-    - call bower install
+    - call npm install
+    - echo "Node Modules Installed"
+    - call npm audit --json > vulnerabilities.json | echo "Audit logged"
+    - call npm audit
+
   artifacts:
     untracked: true
     expire_in: 2h
     paths:
-      - bower_components/
+      - node_modules/
   tags:
     - WCT_RUNNER
 
