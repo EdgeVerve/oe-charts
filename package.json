@@ -28,5 +28,10 @@
     "mocha": "5.2.0",
     "sinon": "7.2.3",
     "wct-mocha": "1.0.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EdgeVerve/oe-charts.git"
   }
 }
