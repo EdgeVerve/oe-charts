@@ -10,7 +10,7 @@ variables:
     - call npm install
     - call polymer test --module-resolution node --skip-selenium-install
   tags:
-    - WCT_RUNNER
+    - POLYMER3_RUNNER
 
 install-deps:
   stage: build
@@ -20,7 +20,6 @@ install-deps:
     - call npm install
     - echo "Node Modules Installed"
     - call npm audit --json > vulnerabilities.json | echo "Audit logged"
-    - call npm audit
 
   artifacts:
     untracked: true
@@ -28,7 +27,7 @@ install-deps:
     paths:
       - node_modules/
   tags:
-    - WCT_RUNNER
+    - POLYMER3_RUNNER
 
 test-chrome:
   variables:
