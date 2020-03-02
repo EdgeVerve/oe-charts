@@ -240,6 +240,7 @@ class OeChart extends OECommonMixin(PolymerElement) {
     super.connectedCallback();
     this._init();
     this.hasDataFromSeries = false;
+    this._attachedSVGListener = false;
   }
 
 
@@ -296,7 +297,7 @@ class OeChart extends OECommonMixin(PolymerElement) {
     return randoms[0].toString(36).substring(2, 15) +
       randoms[1].toString(36).substring(2, 15);
   }
-
+  
 
   _init() {
     this._parameterChanged();
@@ -618,7 +619,19 @@ class OeChart extends OECommonMixin(PolymerElement) {
 
     if (container.offsetHeight !== 0 && container.offsetWidth !== 0) {
       this.chart.render(data);
+      let svg = this.shadowRoot.querySelector(`#${this._renderContainerId}_svg`);
+      this.chart.registerEvent('click',svg,()=>{
+        this.fire('oe-chart-selection-changed',[]);
+      })
+      this.chart.addEventHandler('click','dataitems',this._handleItemClick.bind(this));
     }
+  }
+
+  _handleItemClick(event){
+    event.stopPropagation();
+    let items = event._eventData.srcGroup;
+    let selected = items.filter(el => el.getAttribute('filter')).map(el => el.__data__);
+    this.fire('oe-chart-selection-changed',selected);
   }
 
   /**
