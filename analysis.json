@@ -295,6 +295,207 @@
       ],
       "methods": [
         {
+          "name": "_deepValue",
+          "description": "Get the value from the 'obj' based on the 'path'.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 37,
+              "column": 4
+            },
+            "end": {
+              "line": 43,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj",
+              "type": "Object",
+              "description": "object to navigate"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "description": "path for navigation"
+            }
+          ],
+          "return": {
+            "type": "Any",
+            "desc": "value present in the given path of the obj."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "_deepSet",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 45,
+              "column": 4
+            },
+            "end": {
+              "line": 62,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj"
+            },
+            {
+              "name": "path"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "debounce",
+          "description": "Call `debounce` to collapse multiple requests for a named task into\none invocation which is made after the wait time has elapsed with\nno new request.  If no wait time is given, the callback will be called\nat microtask timing (guaranteed before paint).\n\n    debouncedClickAction(e) {\n      // will not call `processClick` more than once per 100ms\n      this.debounce('click', function() {\n       this.processClick();\n      } 100);\n    }",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 88,
+              "column": 4
+            },
+            "end": {
+              "line": 92,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "jobName",
+              "type": "string",
+              "description": "String to identify the debounce job."
+            },
+            {
+              "name": "callback",
+              "type": "function (): void",
+              "description": "Function that is called (with `this`\n  context) when the wait time elapses."
+            },
+            {
+              "name": "wait",
+              "type": "number",
+              "description": "Optional wait time in milliseconds (ms) after the\n  last signal that must elapse before invoking `callback`"
+            }
+          ],
+          "return": {
+            "type": "!Object",
+            "desc": "Returns a debouncer object on which exists the\nfollowing methods: `isActive()` returns true if the debouncer is\nactive; `cancel()` cancels the debouncer if it is active;\n`flush()` immediately invokes the debounced callback if the debouncer\nis active."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "async",
+          "description": "Runs a callback function asynchronously.\n\nBy default (if no waitTime is specified), async callbacks are run at\nmicrotask timing, which will occur before paint.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 106,
+              "column": 4
+            },
+            "end": {
+              "line": 109,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "callback",
+              "type": "!Function",
+              "description": "The callback function to run, bound to `this`."
+            },
+            {
+              "name": "waitTime",
+              "type": "number=",
+              "description": "Time to wait before calling the\n  `callback`.  If unspecified or 0, the callback will be run at microtask\n  timing (before paint)."
+            }
+          ],
+          "return": {
+            "type": "number",
+            "desc": "Handle that may be used to cancel the async job."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "cancelAsync",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 120,
+              "column": 4
+            },
+            "end": {
+              "line": 122,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "handle"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "fire",
+          "description": "Polymer fire function used to dispatch custom events",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 131,
+              "column": 4
+            },
+            "end": {
+              "line": 143,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "type",
+              "type": "string",
+              "description": "event name"
+            },
+            {
+              "name": "detail",
+              "type": "Object",
+              "description": "data to be sent in the event"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "optionals options for the event {bubbles:Boolean,cancelable:Boolean,composed:Boolean,node:HTML Element}"
+            }
+          ],
+          "return": {
+            "type": "Event",
+            "desc": "Custom event created based on the parameters"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
           "name": "connectedCallback",
           "description": "",
           "privacy": "public",
