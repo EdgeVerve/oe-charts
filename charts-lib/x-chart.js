@@ -697,13 +697,18 @@ export class XChartEvents extends XChartUtility {
         var container = this.d3ShadowSelect('#' + renderContainerId);
         eventList.forEach(function (d) {
             var eventTarget = container.selectAll(d.eventTarget);
-            if (eventTarget && typeof eventTarget[0] != 'undefined') {
-                eventTarget[0].forEach(function (e) {
+            var groups = eventTarget._groups || [];
+            let elItems = groups[0];
+            if (groups && typeof elItems != 'undefined') {
+                elItems.forEach(function (e) {
                     if (d.preventDefault) {
                         d3.select(e).on(d._event, null);
                     }
                     e.addEventListener(d._event, function (event) {
-                        event.srcElement = event.srcElement || event.currentTarget;
+                        event._eventData = {
+                            srcElement :  event.srcElement || event.currentTarget,
+                            srcGroup : [].slice.apply(elItems)
+                        };
                         d.eventHandler.call(this, event);
                     });
                 });
@@ -714,7 +719,7 @@ export class XChartEvents extends XChartUtility {
     //For events attached to a single element in the graph
     //Custom event listener explicitly attached by the user
     registerSingleEvent(_event, eventTarget, eventHandler, preventDefault) {
-        var eTarget = d3.select(eventTarget)[0][0];
+        var eTarget = d3.select(eventTarget)['_groups'][0][0];
         if (preventDefault)
             eTarget.on(_event, null);
 

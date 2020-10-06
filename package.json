@@ -2,7 +2,7 @@
   "name": "oe-chart",
   "description": "A template element , used to create oe-ui Polymer 3 elements",
   "main": "oe-chart.js",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "scripts": {
     "test": "polymer test --module-resolution node --skip-selenium-install",
     "lint": "eslint .",
@@ -21,7 +21,7 @@
     "@polymer/iron-test-helpers": "^3.0.1",
     "@polymer/test-fixture": "^4.0.2",
     "@types/d3": "5.7.1",
-    "@webcomponents/webcomponentsjs": "^2.2.7",
+    "@webcomponents/webcomponentsjs": "^2.4.2",
     "axe-core": "3.1.2",
     "chai": "4.2.0",
     "mocha": "5.2.0",
